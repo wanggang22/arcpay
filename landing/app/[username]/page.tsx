@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useAccount, useReadContract, usePublicClient, useWalletClient } from 'wagmi';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { usePrivy } from '@privy-io/react-auth';
 import { formatUnits, parseUnits, keccak256, stringToBytes } from 'viem';
 import Link from 'next/link';
 import { ADDRESSES, registryAbi, tipJarAbi, subscriptionsAbi, contentPaywallAbi } from '@/lib/config';
@@ -58,7 +58,7 @@ export default function CreatorPage() {
           <div className="w-6 h-6 rounded bg-arc-gradient" />
           <span className="font-bold">ArcPay</span>
         </Link>
-        <ConnectButton accountStatus="address" chainStatus="icon" showBalance={false} />
+        <PrivyAuthButton />
       </header>
 
       <main className="max-w-lg mx-auto px-6 pt-6 pb-20">
@@ -101,6 +101,28 @@ export default function CreatorPage() {
           Powered by <Link href="/" className="font-semibold hover:text-gray-700">ArcPay</Link> on Arc Network · USDC native
         </div>
       </main>
+    </div>
+  );
+}
+
+// ─── Privy auth button ─────────────────────────────────────────
+
+function PrivyAuthButton() {
+  const { ready, authenticated, user, login, logout } = usePrivy();
+  if (!ready) return <button className="px-3 py-1.5 rounded-lg bg-gray-100 text-sm">Loading...</button>;
+  if (!authenticated) return (
+    <button onClick={login} className="px-4 py-2 rounded-xl bg-arc-gradient text-white text-sm font-semibold">
+      Sign in to pay
+    </button>
+  );
+  const label = user?.email?.address ?? user?.google?.email
+    ?? (user?.wallet ? `${user.wallet.address.slice(0,6)}...${user.wallet.address.slice(-4)}` : 'You');
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-xs text-gray-500 truncate max-w-[120px]">{label}</span>
+      <button onClick={logout} className="px-2 py-1 rounded-md border border-gray-200 text-xs hover:bg-gray-50">
+        Sign out
+      </button>
     </div>
   );
 }

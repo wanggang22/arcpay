@@ -1,0 +1,25 @@
+[project]
+name = "arcpay"
+version = "0.1.0"
+description = "ArcPay SDK — USDC payments on Arc Network. Tips, subscriptions, paywalls, pay-per-call."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [{ name = "ArcPay" }]
+keywords = ["arc", "circle", "usdc", "stablecoin", "payments"]
+dependencies = [
+    "web3>=7.0.0",
+    "eth-account>=0.13.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/wanggang22/arcpay"
+Documentation = "https://docs.arcpay.io"
+Repository = "https://github.com/wanggang22/arcpay"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

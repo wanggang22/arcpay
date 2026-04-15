@@ -1,0 +1,18 @@
+{
+  "name": "@arcpay/embed",
+  "version": "0.1.0",
+  "description": "Embed ArcPay buttons in any website with one line: <arcpay-tip>, <arcpay-subscribe>, <arcpay-paywall>",
+  "type": "module",
+  "main": "dist/embed.js",
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,iife --global-name ArcPayEmbed --minify --clean",
+    "dev": "tsup src/index.ts --format iife --global-name ArcPayEmbed --watch"
+  },
+  "keywords": ["arcpay", "arc", "circle", "usdc", "embed", "widget", "web-component"],
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.2"
+  }
+}

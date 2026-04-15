@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ArcPay Embed — Demo</title>
+<style>
+  body { font-family: ui-sans-serif, system-ui, -apple-system, "Inter", sans-serif; max-width: 720px; margin: 40px auto; padding: 0 20px; line-height: 1.55; color: #0a0a0f; }
+  h1 { font-size: 2rem; margin: 0 0 0.5rem; }
+  h2 { margin-top: 2rem; font-size: 1.25rem; color: #555; }
+  pre { background: #f5f5f7; padding: 12px 16px; border-radius: 8px; overflow-x: auto; font-size: 13px; }
+  hr { border: none; border-top: 1px solid #eaeaea; margin: 2rem 0; }
+  .row { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
+  .row > div { flex: 1 1 320px; }
+</style>
+</head>
+<body>
+
+<h1>ArcPay Embed</h1>
+<p>Drop USDC payment buttons into any website with one line of HTML.</p>
+
+<pre>&lt;script src="https://cdn.arcpay.io/embed.iife.js"&gt;&lt;/script&gt;
+&lt;arcpay-tip to="alice"&gt;&lt;/arcpay-tip&gt;</pre>
+
+<hr />
+
+<h2>💸 Tip widget</h2>
+<div class="row">
+<div>
+<pre>&lt;arcpay-tip
+  to="alice"
+  amount="0.005"
+  network="testnet"&gt;
+&lt;/arcpay-tip&gt;</pre>
+</div>
+<div>
+<arcpay-tip to="alice" amount="0.005" network="local"></arcpay-tip>
+</div>
+</div>
+
+<h2>📅 Subscribe widget</h2>
+<div class="row">
+<div>
+<pre>&lt;arcpay-subscribe
+  to="alice"
+  plan-id="0"&gt;
+&lt;/arcpay-subscribe&gt;</pre>
+</div>
+<div>
+<arcpay-subscribe to="alice" plan-id="0" network="local"></arcpay-subscribe>
+</div>
+</div>
+
+<h2>🔒 Paywall widget</h2>
+<div class="row">
+<div>
+<pre>&lt;arcpay-paywall
+  to="alice"
+  content-id="0x..."&gt;
+&lt;/arcpay-paywall&gt;</pre>
+</div>
+<div>
+<arcpay-paywall to="alice" content-id="0x4242424242424242424242424242424242424242424242424242424242424242" network="local"></arcpay-paywall>
+</div>
+</div>
+
+<hr />
+<p style="font-size: 14px; color: #666;">
+Powered by <a href="/" style="color: #5b5bd6;">ArcPay</a> on Arc Network.
+Each widget is a sandboxed iframe — your site's visitors authenticate (email/wallet) inside the widget without ever leaving your page.
+</p>
+
+<script src="../dist/embed.iife.js"></script>
+</body>
+</html>

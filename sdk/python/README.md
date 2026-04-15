@@ -1,0 +1,109 @@
+# arcpay (Python SDK)
+
+USDC payments on Arc Network — Python edition. Tips, subscriptions, paywalls, pay-per-call.
+
+Designed for AI agents (LangChain, AutoGen, CrewAI), data pipelines, and Python-native creators.
+
+## Install
+
+```bash
+pip install arcpay
+```
+
+## Quick start
+
+```python
+from arcpay import ArcPayClient
+
+# Read-only client (no key needed)
+client = ArcPayClient(network='testnet')
+print(client.registry.exists('alice'))  # True
+
+# With private key for writes
+client = ArcPayClient(network='testnet', private_key='0x...')
+
+# Tip
+tx = client.tips.send(username='alice', amount='0.005', message='thanks!')
+print(f"tip tx: {tx}")
+
+# Subscribe (3 months)
+client.subs.subscribe(plan_id=0, months=3)
+
+# Pay for API call
+endpoint = client.api.get_endpoint_by_name('alice', 'ai-summarize')
+client.api.pay('alice', 'ai-summarize', endpoint[2])  # endpoint[2] = pricePerCall
+
+# Purchase content
+client.paywall.purchase(content_id='0x' + '42'*32, price_wei=20_000_000_000_000_000)
+```
+
+## Use case: AI agent paying for service
+
+```python
+from langchain.agents import AgentExecutor
+from arcpay import ArcPayClient
+import os
+
+# Agent with its own ArcPay wallet
+arc = ArcPayClient(network='testnet', private_key=os.getenv('AGENT_KEY'))
+
+def call_paid_api(provider: str, endpoint: str, payload: dict):
+    """LangChain tool: pay then call."""
+    ep = arc.api.get_endpoint_by_name(provider, endpoint)
+    arc.api.pay(provider, endpoint, ep[2])
+    # ... actual HTTP call to provider's URL with on-chain receipt
+```
+
+## API
+
+### `ArcPayClient`
+```python
+ArcPayClient(
+    network='local' | 'testnet',
+    private_key='0x...',         # required for writes
+    rpc_url='http://...',        # optional override
+)
+```
+
+### `client.registry`
+- `register(username, display_name='', metadata_uri='')`
+- `exists(username) -> bool`
+- `get_payout_address(username) -> str`
+- `get_creator(username) -> tuple`
+
+### `client.tips`
+- `send(username, amount, message='')`
+- `send_to_address(recipient, amount, message='')`
+- `get_lifetime_received(username) -> int (wei)`
+
+### `client.subs`
+- `create_plan(username, name, price_per_month, metadata_uri='')`
+- `subscribe(plan_id, months)`
+- `cancel(sub_id)`
+- `withdraw(username)`
+- `is_active(subscriber, plan_id) -> bool`
+- `get_plan(plan_id) -> tuple`
+
+### `client.paywall`
+- `create_content(username, content_id, price, metadata_uri='')`
+- `purchase(content_id, price_wei)`
+- `check_access(content_id, user) -> bool`
+
+### `client.api`
+- `register_endpoint(username, name, price_per_call)`
+- `pay(username, endpoint_name, amount_wei)`
+- `get_endpoint_by_name(username, name) -> tuple`
+- `get_receipt(call_id) -> tuple`
+
+## Networks
+
+| Name | Chain ID | RPC |
+|------|----------|-----|
+| `local` | 1337 | http://localhost:8545 |
+| `testnet` | 5042002 | https://rpc.testnet.arc.network |
+
+Mainnet: coming when Arc launches in 2026.
+
+## License
+
+MIT

@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { usePrivy, useWallets } from '@privy-io/react-auth';
 
 export function Header() {
   return (
@@ -17,9 +17,42 @@ export function Header() {
           <Link href="/subscriptions" className="text-sm text-muted hover:text-ink">Subs</Link>
           <Link href="/content" className="text-sm text-muted hover:text-ink">Content</Link>
           <Link href="/api" className="text-sm text-muted hover:text-ink">API</Link>
-          <ConnectButton accountStatus="address" chainStatus="icon" />
+          <AuthButton />
         </nav>
       </div>
     </header>
+  );
+}
+
+function AuthButton() {
+  const { ready, authenticated, user, login, logout } = usePrivy();
+  const { wallets } = useWallets();
+  const wallet = wallets[0];
+
+  if (!ready) {
+    return <button className="px-4 py-2 rounded-xl bg-gray-100 text-sm font-semibold opacity-50">Loading...</button>;
+  }
+
+  if (!authenticated) {
+    return (
+      <button onClick={login}
+        className="px-4 py-2 rounded-xl bg-arc-gradient text-white text-sm font-semibold hover:opacity-90">
+        Sign in
+      </button>
+    );
+  }
+
+  const label = user?.email?.address
+    ?? user?.google?.email
+    ?? (wallet ? `${wallet.address.slice(0, 6)}...${wallet.address.slice(-4)}` : 'Connected');
+
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-xs text-muted truncate max-w-[140px]" title={label}>{label}</span>
+      <button onClick={logout}
+        className="px-3 py-1.5 rounded-lg border border-border text-xs hover:bg-bg">
+        Sign out
+      </button>
+    </div>
   );
 }
