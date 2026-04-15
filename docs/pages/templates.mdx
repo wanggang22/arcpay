@@ -1,0 +1,68 @@
+# Templates
+
+`create-arc-app` ships 5 starter templates. Each is a complete working project.
+
+```bash
+npx create-arc-app my-project
+```
+
+## 1. `creator-tip` — "Buy me a coffee"
+
+A Next.js page with:
+- Preset tip amounts ($0.001 / $0.005 / $0.01 / $0.05)
+- Custom amount input
+- Optional message (280 chars)
+- Wallet connection via RainbowKit
+- Gradient UI, mobile responsive
+
+**Use for**: bloggers, open-source maintainers, creators who just want tips.
+
+## 2. `creator-subscribe` — Subscription platform
+
+Full-featured subscription page:
+- Plan selection (creator defines tiers)
+- Duration picker (1, 3, 6, 12 months)
+- Real-time total calculation
+- Active subscription check
+
+**Use for**: Substack/Patreon alternative, membership sites.
+
+## 3. `content-paywall` — Gated content
+
+Pay-once-access-forever model:
+- Preview snippet + paywall button
+- On-chain access verification
+- IPFS metadata integration
+- Works for articles, videos, courses
+
+**Use for**: premium content, courses, research reports.
+
+## 4. `paywall-api` — x402 paid API
+
+Express server + middleware:
+- Endpoint registration on-chain
+- Payment verification per call
+- Webhook support
+- Rate limiting ready
+
+**Use for**: monetizing APIs, selling AI inference, data services.
+
+## 5. `agent-pay` — AI agent payment gateway
+
+Node.js script for autonomous agents:
+- Read endpoint pricing
+- Make payment before API call
+- Verify receipt
+- Handle failures
+
+**Use for**: AI agents that autonomously purchase services.
+
+## Customizing
+
+All templates use:
+- Next.js 14 (App Router) or plain Node.js
+- `@arcpay/sdk` for on-chain calls
+- Tailwind for styling
+- TypeScript
+
+Modify `.env.local` for your username, network, and preferred defaults.

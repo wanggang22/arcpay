@@ -1,0 +1,69 @@
+# Concepts
+
+## Architecture
+
+ArcPay is 6 contracts working together:
+
+```
+UsernameRegistry     → creator ID → payout address
+    ↓
+    ├── TipJar          → one-time payments
+    ├── Subscriptions   → recurring payments
+    ├── ContentPaywall  → per-item access
+    └── PayPerCall      → x402 API billing
+    ↑
+ArcPayHub           → central directory (read-only)
+```
+
+Each module is independent but shares the single `UsernameRegistry`. Creators register once, use every module.
+
+## Native USDC on Arc
+
+Arc treats USDC as **native gas**. That means:
+
+- `msg.value` IS USDC (not ETH-wrapped)
+- No `approve()` needed for USDC payments
+- Fees paid in USDC
+- Same 18-decimal precision as native currency
+
+This is the opposite of ERC-20 USDC on other chains where you need a separate gas token.
+
+## The 4 payment modes
+
+### Tips
+Lightweight one-time transfers with an optional message. Best for "buy me a coffee" or "thanks for the post" flows.
+
+### Subscriptions
+Pre-paid recurring access. Subscriber pays N months upfront; time-based revenue accrual; prorated refund on cancel.
+
+**Key design**: subscribers control cancel, creators control plan lifecycle. No stuck subscriptions.
+
+### Content Paywall
+Pay-once-access-forever model for articles, videos, courses. Content ID is usually `keccak256(ipfs_cid)` or similar stable identifier.
+
+**Metadata** lives off-chain (IPFS/Arweave/S3) — contract only stores the price and access records.
+
+### Pay-per-call (x402)
+Every API request requires an on-chain payment. Server verifies the receipt before serving.
+
+Compatible with the **HTTP 402** specification: a failed call can return a 402 + payment instructions.
+
+## Protocol fee
+
+2% of each payment goes to the protocol treasury. Capped at 10% in contract.
+
+Creator receives the remaining 98% directly.
+
+## Username system
+
+- 3-32 chars, lowercase, `[a-z0-9_-]`
+- Unique, first-come-first-served
+- Owner can update payout address + metadata
+- Third-party verifiers can mark "verified" (e.g., Twitter/GitHub oracles)
+
+## What ArcPay is NOT
+
+- Not a custodial wallet (users keep their private keys or use Circle Wallets)
+- Not a yield protocol (yield-bearing USDC via USYC/Aave is planned v0.3)
+- Not a market (no bidding, no auctions)
+- Not a compliance product (Circle's CPN does KYC/AML for institutions)

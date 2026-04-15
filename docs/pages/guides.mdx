@@ -1,0 +1,100 @@
+# Guides
+
+## Running locally
+
+### Prerequisites
+- Node.js 20+
+- Foundry (for contract tests)
+- Arc local testnet (optional, testnet works too)
+
+### Full stack up
+
+```bash
+# 1. Contracts (already deployed on Arc testnet — use those if you don't need local)
+cd contracts
+forge build
+
+# 2. Build SDK
+cd ../sdk/js
+npm install
+npm run build
+
+# 3. Dashboard (your creator panel)
+cd ../../dashboard
+npm install
+npm run dev  # :4001
+
+# 4. Landing + Fan payment pages
+cd ../landing
+npm install
+npm run dev  # :4000
+
+# 5. Docs (optional)
+cd ../docs
+npm install
+npm run dev  # :4002
+```
+
+Visit:
+- [http://localhost:4000](http://localhost:4000) — marketing landing
+- [http://localhost:4000/yourname](http://localhost:4000/yourname) — public payment page
+- [http://localhost:4001](http://localhost:4001) — creator dashboard
+- [http://localhost:4002](http://localhost:4002) — these docs
+
+## Integrating into your own site
+
+### Minimal: a single tip button
+
+```html
+<script src="https://unpkg.com/@arcpay/sdk/dist/browser.js"></script>
+<button onclick="arcpay.tip('alice', '0.005')">Tip me $0.005</button>
+```
+
+### Embedded iframe (coming v0.2)
+
+```html
+<iframe src="https://arcpay.io/embed/alice?mode=tip&amount=0.005"></iframe>
+```
+
+### Full control with SDK
+
+```typescript
+import { ArcPayClient } from '@arcpay/sdk';
+
+const client = new ArcPayClient({
+  network: 'testnet',
+  privateKey: process.env.USER_KEY,
+});
+
+await client.tips.send({ username: 'alice', amount: '0.005', message: 'thanks!' });
+```
+
+## WordPress plugin (roadmap v0.2)
+
+Drop-in WordPress shortcode:
+
+```
+[arcpay-tip to="alice" amount="0.005"]
+[arcpay-paywall content-id="0x123..." price="0.02"]
+```
+
+Installs like any WP plugin, adds a "Tip" button to post templates.
+
+## Shopify integration (roadmap v0.3)
+
+Shopify app adds "Pay with USDC" to checkout — no Stripe needed.
+
+## Platform fee
+
+Your 2% protocol fee is split as follows:
+- 100% goes to protocol treasury (owner-controlled)
+- Future: governance-controlled allocation via Arc-native DAO
+
+If you run your own deployment, you control the fee recipient.
+
+## Going to production
+
+1. **Deploy your own contracts** if you need different fee structures or need to be the protocol operator
+2. **Use the SDK's `customConfig`** to point to your addresses
+3. **Get on Arc mainnet** (coming 2026) — contracts deploy identically
+4. **Set up a custom domain** (arcpay.io, your.domain) with Vercel

@@ -53,6 +53,73 @@ export const registryAbi = [
   { type: 'function', name: 'getNameByHash', stateMutability: 'view', inputs: [{ type: 'bytes32' }], outputs: [{ type: 'string' }] },
 ] as const;
 
+// Extended ABIs for full dashboard functionality
+
+export const tipJarFullAbi = [
+  { type: 'function', name: 'getLifetimeReceived', stateMutability: 'view', inputs: [{ type: 'string' }], outputs: [{ type: 'uint256' }] },
+  { type: 'function', name: 'getTipsByCreator', stateMutability: 'view', inputs: [{ type: 'string' }], outputs: [{ type: 'uint256[]' }] },
+  { type: 'function', name: 'getTip', stateMutability: 'view', inputs: [{ type: 'uint256' }],
+    outputs: [{ type: 'tuple', components: [
+      { name: 'from', type: 'address' }, { name: 'usernameHash', type: 'bytes32' },
+      { name: 'amount', type: 'uint256' }, { name: 'timestamp', type: 'uint256' },
+      { name: 'message', type: 'string' },
+    ]}],
+  },
+] as const;
+
+export const subscriptionsFullAbi = [
+  { type: 'function', name: 'createPlan', stateMutability: 'nonpayable', inputs: [{ type: 'string' }, { type: 'string' }, { type: 'uint256' }, { type: 'string' }], outputs: [{ type: 'uint256' }] },
+  { type: 'function', name: 'updatePlan', stateMutability: 'nonpayable', inputs: [{ type: 'uint256' }, { type: 'bool' }, { type: 'uint256' }, { type: 'string' }], outputs: [] },
+  { type: 'function', name: 'withdraw', stateMutability: 'nonpayable', inputs: [{ type: 'string' }], outputs: [] },
+  { type: 'function', name: 'claimableRevenue', stateMutability: 'view', inputs: [{ type: 'string' }], outputs: [{ type: 'uint256' }] },
+  { type: 'function', name: 'getPlan', stateMutability: 'view', inputs: [{ type: 'uint256' }],
+    outputs: [{ type: 'tuple', components: [
+      { name: 'creatorHash', type: 'bytes32' }, { name: 'name', type: 'string' },
+      { name: 'pricePerMonth', type: 'uint256' }, { name: 'metadataURI', type: 'string' },
+      { name: 'active', type: 'bool' },
+    ]}],
+  },
+  { type: 'function', name: 'getPlanSubscribers', stateMutability: 'view', inputs: [{ type: 'uint256' }], outputs: [{ type: 'uint256[]' }] },
+] as const;
+
+export const contentPaywallFullAbi = [
+  { type: 'function', name: 'createContent', stateMutability: 'nonpayable', inputs: [{ type: 'string' }, { type: 'bytes32' }, { type: 'uint256' }, { type: 'string' }], outputs: [] },
+  { type: 'function', name: 'updateContent', stateMutability: 'nonpayable', inputs: [{ type: 'string' }, { type: 'bytes32' }, { type: 'bool' }, { type: 'uint256' }, { type: 'string' }], outputs: [] },
+  { type: 'function', name: 'withdraw', stateMutability: 'nonpayable', inputs: [{ type: 'string' }], outputs: [] },
+  { type: 'function', name: 'claimableRevenue', stateMutability: 'view', inputs: [{ type: 'string' }], outputs: [{ type: 'uint256' }] },
+  { type: 'function', name: 'getCreatorContents', stateMutability: 'view', inputs: [{ type: 'string' }], outputs: [{ type: 'bytes32[]' }] },
+  { type: 'function', name: 'getContent', stateMutability: 'view', inputs: [{ type: 'bytes32' }],
+    outputs: [{ type: 'tuple', components: [
+      { name: 'contentId', type: 'bytes32' }, { name: 'creatorHash', type: 'bytes32' },
+      { name: 'price', type: 'uint256' }, { name: 'metadataURI', type: 'string' },
+      { name: 'active', type: 'bool' }, { name: 'totalSales', type: 'uint256' },
+      { name: 'totalRevenue', type: 'uint256' },
+    ]}],
+  },
+] as const;
+
+export const payPerCallFullAbi = [
+  { type: 'function', name: 'registerEndpoint', stateMutability: 'nonpayable', inputs: [{ type: 'string' }, { type: 'string' }, { type: 'uint256' }], outputs: [{ type: 'bytes32' }] },
+  { type: 'function', name: 'updateEndpoint', stateMutability: 'nonpayable', inputs: [{ type: 'string' }, { type: 'string' }, { type: 'bool' }, { type: 'uint256' }], outputs: [] },
+  { type: 'function', name: 'withdraw', stateMutability: 'nonpayable', inputs: [{ type: 'string' }], outputs: [] },
+  { type: 'function', name: 'claimableRevenue', stateMutability: 'view', inputs: [{ type: 'string' }], outputs: [{ type: 'uint256' }] },
+  { type: 'function', name: 'getCreatorEndpoints', stateMutability: 'view', inputs: [{ type: 'string' }], outputs: [{ type: 'bytes32[]' }] },
+  { type: 'function', name: 'getEndpoint', stateMutability: 'view', inputs: [{ type: 'bytes32' }],
+    outputs: [{ type: 'tuple', components: [
+      { name: 'creatorHash', type: 'bytes32' }, { name: 'name', type: 'string' },
+      { name: 'pricePerCall', type: 'uint256' }, { name: 'active', type: 'bool' },
+      { name: 'totalCalls', type: 'uint256' }, { name: 'totalRevenue', type: 'uint256' },
+    ]}],
+  },
+  { type: 'function', name: 'getEndpointByName', stateMutability: 'view', inputs: [{ type: 'string' }, { type: 'string' }],
+    outputs: [{ type: 'tuple', components: [
+      { name: 'creatorHash', type: 'bytes32' }, { name: 'name', type: 'string' },
+      { name: 'pricePerCall', type: 'uint256' }, { name: 'active', type: 'bool' },
+      { name: 'totalCalls', type: 'uint256' }, { name: 'totalRevenue', type: 'uint256' },
+    ]}],
+  },
+] as const;
+
 export const tipJarAbi = [
   { type: 'function', name: 'getLifetimeReceived', stateMutability: 'view', inputs: [{ type: 'string' }], outputs: [{ type: 'uint256' }] },
   { type: 'function', name: 'getTipsByCreator', stateMutability: 'view', inputs: [{ type: 'string' }], outputs: [{ type: 'uint256[]' }] },

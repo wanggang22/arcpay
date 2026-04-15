@@ -1,0 +1,72 @@
+# ArcPay
+
+**USDC payments on Arc Network.** Tips, subscriptions, paywalls, and pay-per-call billing. Built for creators, developers, and AI agents.
+
+## What ArcPay is
+
+ArcPay is the **Stripe of USDC on Arc**. A unified protocol for every USDC payment pattern:
+
+- 💸 **Tips** — one-time support with messages
+- 📅 **Subscriptions** — recurring monthly/yearly plans
+- 🔒 **Content Paywall** — per-item unlock access
+- ⚡ **Pay-per-call** — x402-compatible API billing
+
+All four share one `UsernameRegistry` — creators claim `@yourhandle` once, use it everywhere.
+
+## Why Arc
+
+| | Existing stablecoin chains | Arc |
+|-|--------------------------|-----|
+| Gas token | Separate (ETH/SOL/MATIC) | **USDC native** |
+| Finality | 13 seconds to 12 minutes | **~0.5 seconds** |
+| Cost per tx | $0.01 - $5+ | **~$0.0001** |
+| Regulatory | Varies | **Circle-backed, institutional-ready** |
+
+## Get started in 30 seconds
+
+```bash
+npx create-arc-app my-tip-page
+```
+
+Or install the SDK directly:
+
+```bash
+npm install @arcpay/sdk
+```
+
+```typescript
+import { ArcPayClient } from '@arcpay/sdk';
+
+const client = new ArcPayClient({
+  network: 'testnet',
+  privateKey: process.env.PRIVATE_KEY,
+});
+
+// Send a tip to @alice
+await client.tips.send({
+  username: 'alice',
+  amount: '0.005',
+  message: 'Great post!',
+});
+```
+
+That's it. Real USDC moves on-chain. No Stripe setup, no KYC paperwork, no $0.30 minimum.
+
+## Fee model
+
+**2% per transaction** (vs Stripe 2.9% + $0.30, Patreon 8-12%).
+
+The protocol fee is capped at 10% and currently set to 2% for all modules.
+
+## What's next
+
+- Read the [Quick Start](/quickstart) to ship your first payment flow in 5 minutes
+- Explore [Concepts](/concepts/overview) to understand the 4 payment modes
+- Check [SDK Reference](/sdk/client) for the full API
+- Browse [Templates](/templates/overview) for working starter projects
+
+## Links
+
+- **GitHub**: [github.com/wanggang22/arcpay](https://github.com/wanggang22/arcpay)
+- **Dashboard**: [arcpay.io/dashboard](http://localhost:4001)
+- **Landing**: [arcpay.io](http://localhost:4000)

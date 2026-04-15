@@ -1,0 +1,68 @@
+# Contracts
+
+## Live deployments
+
+### Arc Testnet (public, chainId 5042002)
+
+| Contract | Address |
+|----------|---------|
+| ArcPayHub | `0x79ab5a4B2770BF087aF2fF4CEdb0E67A413bf293` |
+| UsernameRegistry | `0xBF6c8b430BE134C40fEF316601ef002a4F8e2dBb` |
+| TipJar | `0x45daE58fB5b89C4E994216D2af0B73232641DF3B` |
+| Subscriptions | `0xbb84078Aa19b9c5Eb397782dE9b58939C38d1380` |
+| ContentPaywall | `0x680884124F21939548Ba7f982B4F275A55783484` |
+| PayPerCall | `0xe407A796D81302987Ef950bdC01Ef4eA0b081b6C` |
+
+### Arc Local (chainId 1337)
+
+| Contract | Address |
+|----------|---------|
+| ArcPayHub | `0x1b38dE812703aaED3fE7B584e2a0E8D0b95F60Cb` |
+| UsernameRegistry | `0xD85677eBC8b242E5110C69f1d1f134389319632C` |
+| TipJar | `0xC627bf4D1f21dcc82Ef563191f63723CD290959f` |
+| Subscriptions | `0x0D4e458145A8eE377FD90295dd3332ee5BC90aE4` |
+| ContentPaywall | `0x352fc9770F1c72c0B91d7D62946EDa67A6288A95` |
+| PayPerCall | `0xc6f99Bdb0985aC8c5E7819f3e89dccA7C8A4C06a` |
+
+## Deploy your own
+
+```bash
+git clone https://github.com/wanggang22/arcpay
+cd arcpay/contracts
+forge build
+
+RPC=https://rpc.testnet.arc.network \
+  PK=0x<your-private-key> \
+  FEE_RECIPIENT=0x<your-address> \
+  FEE_BPS=200 \
+  bash script/deploy.sh
+```
+
+## Testing
+
+```bash
+forge test -vvv
+```
+
+21 tests cover the full lifecycle of all 4 payment modes plus edge cases (invalid username, wrong payment, unauthorized access, fee caps).
+
+## Gas costs (Arc testnet, USDC native)
+
+| Action | Gas | Cost @ 1gwei |
+|--------|-----|--------------|
+| Register username | ~180k | $0.00018 |
+| Tip (registered user) | ~180k | $0.00018 |
+| Create subscription plan | ~240k | $0.00024 |
+| Subscribe (3 months) | ~260k | $0.00026 |
+| Create content | ~230k | $0.00023 |
+| Purchase content | ~190k | $0.00019 |
+| Register API endpoint | ~230k | $0.00023 |
+| Pay API call | ~180k | $0.00018 |
+
+## Security notes
+
+- Protocol fee capped at 10% (currently 2%)
+- `claimRefund` is permissionless (per ERC-8183 anti-block pattern)
+- Single-evaluator design (no disputes, by design; use reputation layer for high-value jobs)
+- No reentrancy guards needed — all external calls are at end-of-function after state changes
+- Contract is not upgradeable (immutable-by-design)

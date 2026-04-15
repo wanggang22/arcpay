@@ -1,0 +1,95 @@
+# Quick Start
+
+Ship a working ArcPay flow in 5 minutes.
+
+## 1. Install the SDK
+
+```bash
+npm install @arcpay/sdk
+```
+
+## 2. Initialize the client
+
+```typescript
+import { ArcPayClient } from '@arcpay/sdk';
+
+const client = new ArcPayClient({
+  network: 'testnet',        // or 'local'
+  privateKey: process.env.PRIVATE_KEY as `0x${string}`,
+});
+```
+
+## 3. Claim a username
+
+```typescript
+await client.registry.register('alice', 'Alice Chen', '');
+```
+
+Usernames are 3-32 characters, `[a-z0-9_-]`. One-time registration; maps to your payout address.
+
+## 4. Pick your payment mode
+
+### 💸 Tips
+
+```typescript
+// Receive tip (anyone can send to your username)
+await fan.tips.send({
+  username: 'alice',
+  amount: '0.005',
+  message: 'Great post!',
+});
+
+// Check lifetime received
+const total = await client.tips.getLifetimeReceived('alice');
+```
+
+### 📅 Subscriptions
+
+```typescript
+// Creator creates plan
+const planTx = await client.subs.createPlan('alice', 'Pro Tier', '0.005', '');
+
+// Fan subscribes for 3 months
+await fan.subs.subscribe(planId, 3);
+
+// Check active subscription
+const isActive = await fan.subs.isActive(fanAddress, planId);
+```
+
+### 🔒 Content Paywall
+
+```typescript
+import { keccak256, stringToBytes } from 'viem';
+
+// Creator publishes paywalled content
+const contentId = keccak256(stringToBytes('my-article'));
+await client.paywall.createContent('alice', contentId, '0.02', 'ipfs://meta');
+
+// Fan purchases access
+await fan.paywall.purchase(contentId, parseUnits('0.02', 18));
+
+// Verify access
+const hasAccess = await client.paywall.checkAccess(contentId, fanAddress);
+```
+
+### ⚡ Pay-per-call
+
+```typescript
+// Creator registers endpoint with price
+await client.api.registerEndpoint('alice', 'ai-summarize', '0.001');
+
+// Fan pays per call
+const endpoint = await client.api.getEndpointByName('alice', 'ai-summarize');
+await fan.api.pay('alice', 'ai-summarize', endpoint.pricePerCall);
+// → emits on-chain event, server can verify via receipt
+```
+
+## 5. That's it
+
+All operations are fully on-chain. No Stripe account, no KYC, no monthly subscription fees.
+
+## Next steps
+
+- [Concepts](/concepts/overview) — deep dive on each payment mode
+- [Templates](/templates/overview) — copy a starter project
+- [SDK Reference](/sdk/client) — full API

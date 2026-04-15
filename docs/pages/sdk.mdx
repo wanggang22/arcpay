@@ -1,0 +1,111 @@
+# SDK Reference
+
+## `ArcPayClient`
+
+```typescript
+new ArcPayClient({
+  network: 'local' | 'testnet',  // preset network
+  customConfig?: NetworkConfig,  // override addresses
+  privateKey?: Hex,              // required for writes
+  rpcUrl?: string,               // override RPC endpoint
+})
+```
+
+## `client.registry`
+
+```typescript
+// Register a username (one-time)
+await client.registry.register(username, displayName, metadataURI)
+
+// Read
+await client.registry.exists(username): boolean
+await client.registry.getPayoutAddress(username): Address
+await client.registry.getCreator(username): Creator
+```
+
+## `client.tips`
+
+```typescript
+// Send tip
+await client.tips.send({
+  username: string,
+  amount: string | bigint,  // '0.005' or wei bigint
+  message?: string,
+})
+
+// Send direct to address (bypass username)
+await client.tips.sendToAddress(address, amount, message)
+
+// Read
+await client.tips.getLifetimeReceived(username): bigint
+await client.tips.getTipsByCreator(username): bigint[]
+await client.tips.getTip(tipId): Tip
+```
+
+## `client.subs`
+
+```typescript
+await client.subs.createPlan(username, name, pricePerMonth, metadataURI)
+await client.subs.subscribe(planId, months)
+await client.subs.cancel(subId)
+await client.subs.withdraw(username)
+await client.subs.isActive(subscriber, planId): boolean
+await client.subs.getPlan(planId): Plan
+```
+
+## `client.paywall`
+
+```typescript
+await client.paywall.createContent(username, contentId, price, metadataURI)
+await client.paywall.purchase(contentId, price)
+await client.paywall.checkAccess(contentId, user): boolean
+await client.paywall.getContent(contentId): Content
+```
+
+## `client.api`
+
+```typescript
+await client.api.registerEndpoint(username, name, pricePerCall)
+await client.api.pay(username, endpointName, amount)  // uses payByName
+await client.api.getEndpointByName(username, name): Endpoint
+await client.api.getReceipt(callId): CallReceipt
+```
+
+## Types
+
+```typescript
+interface Creator {
+  payoutAddress: Address;
+  registeredAt: bigint;
+  displayName: string;
+  metadataURI: string;
+  verified: boolean;
+}
+
+interface Plan {
+  creatorHash: Hex;
+  name: string;
+  pricePerMonth: bigint;
+  metadataURI: string;
+  active: boolean;
+}
+
+interface Content {
+  contentId: Hex;
+  creatorHash: Hex;
+  price: bigint;
+  metadataURI: string;
+  active: boolean;
+  totalSales: bigint;
+  totalRevenue: bigint;
+}
+
+interface Endpoint {
+  creatorHash: Hex;
+  name: string;
+  pricePerCall: bigint;
+  active: boolean;
+  totalCalls: bigint;
+  totalRevenue: bigint;
+}
+```
