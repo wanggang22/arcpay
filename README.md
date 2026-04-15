@@ -2,6 +2,8 @@
 
 **USDC payments, programmable like the internet.**
 
+🌐 **Live**: [arcpay.finance](https://arcpay.finance) · [app.arcpay.finance](https://app.arcpay.finance) · [docs.arcpay.finance](https://docs.arcpay.finance)
+
 Tips, subscriptions, paywalls, and pay-per-call billing on Arc Network. 2% fee. No Stripe account required. Native USDC gas — no separate gas token to manage.
 
 ---
