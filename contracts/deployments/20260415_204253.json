@@ -1,0 +1,14 @@
+{
+  "rpc": "http://localhost:8545",
+  "timestamp": "2026-04-15T20:42:53+08:00",
+  "protocolFeeBps": 200,
+  "feeRecipient": "0xbF023dbEaF786AfEb40C4fa3B53dC5bF4461D084",
+  "contracts": {
+    "UsernameRegistry": "0xD85677eBC8b242E5110C69f1d1f134389319632C",
+    "TipJar": "0xC627bf4D1f21dcc82Ef563191f63723CD290959f",
+    "Subscriptions": "0x0D4e458145A8eE377FD90295dd3332ee5BC90aE4",
+    "ContentPaywall": "0x352fc9770F1c72c0B91d7D62946EDa67A6288A95",
+    "PayPerCall": "0xc6f99Bdb0985aC8c5E7819f3e89dccA7C8A4C06a",
+    "ArcPayHub": "0x1b38dE812703aaED3fE7B584e2a0E8D0b95F60Cb"
+  }
+}

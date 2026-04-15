@@ -1,0 +1,4 @@
+ARCPAY_NETWORK={{network}}
+PRIVATE_KEY=
+PROVIDER_USERNAME=alice
+ENDPOINT_NAME=ai-summarize

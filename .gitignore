@@ -1,0 +1,14 @@
+node_modules/
+.next/
+.env
+.env.local
+out/
+cache/
+broadcast/
+dist/
+.DS_Store
+*.log
+deployments/*.json
+# keep deployments folder
+!deployments/.gitkeep
+_legacy-arcrouter/

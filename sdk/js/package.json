@@ -1,0 +1,32 @@
+{
+  "name": "@arcpay/sdk",
+  "version": "0.1.0",
+  "description": "ArcPay SDK — USDC payments on Arc Network. Tips, subscriptions, paywalls, and pay-per-call billing.",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
+    "test": "node --import tsx test/smoke.test.ts"
+  },
+  "keywords": ["arc", "circle", "usdc", "stablecoin", "payments", "tips", "subscriptions", "paywall", "x402"],
+  "license": "MIT",
+  "dependencies": {
+    "viem": "^2.21.25"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.2"
+  }
+}
