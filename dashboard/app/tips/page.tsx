@@ -4,6 +4,7 @@ import { Header } from '@/components/Header';
 import { useAccount, useReadContract, usePublicClient } from 'wagmi';
 import { formatUnits, keccak256, stringToBytes } from 'viem';
 import { ADDRESSES, tipJarFullAbi, registryAbi, NETWORK } from '@/lib/config';
+import { TxLink, AddressLink } from '@/components/TxLink';
 import Link from 'next/link';
 
 export default function TipsPage() {
@@ -65,9 +66,9 @@ export default function TipsPage() {
       <div className="bg-arc-gradient text-white p-6 rounded-3xl mb-8">
         <div className="text-sm opacity-80">Share your tip link</div>
         <div className="text-xl font-mono mt-1 flex items-center gap-3">
-          <span>{NETWORK === 'testnet' ? 'arcpay.io' : 'localhost:4000'}/{username}</span>
+          <span>{NETWORK === 'testnet' ? 'arcpay.finance' : 'localhost:4000'}/{username}</span>
           <button onClick={() => navigator.clipboard.writeText(
-            NETWORK === 'testnet' ? `https://arcpay.io/${username}` : `http://localhost:4000/${username}`
+            NETWORK === 'testnet' ? `https://arcpay.finance/${username}` : `http://localhost:4000/${username}`
           )} className="px-3 py-1 bg-white/20 rounded-full text-xs font-semibold hover:bg-white/30">
             Copy
           </button>
@@ -90,7 +91,7 @@ export default function TipsPage() {
                 {t.from.slice(2, 3).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="font-mono text-xs text-muted">{t.from.slice(0, 8)}...{t.from.slice(-4)}</div>
+                <AddressLink address={t.from} />
                 {t.message && <div className="text-sm mt-1">{t.message}</div>}
                 <div className="text-xs text-muted mt-1">{new Date(Number(t.timestamp) * 1000).toLocaleString()}</div>
               </div>

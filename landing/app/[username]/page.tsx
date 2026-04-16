@@ -1,11 +1,15 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { useAccount, useReadContract, usePublicClient, useWalletClient } from 'wagmi';
-import { usePrivy } from '@privy-io/react-auth';
+import { useAccount, useConnect, useDisconnect, useReadContract, usePublicClient, useWalletClient, useBalance } from 'wagmi';
+import { usePrivy, useWallets } from '@privy-io/react-auth';
+
+const PRIVY_APP_ID_ENV = process.env.NEXT_PUBLIC_PRIVY_APP_ID || '';
+const HAS_PRIVY_BTN = PRIVY_APP_ID_ENV.length >= 20 && !PRIVY_APP_ID_ENV.includes('demo') && !PRIVY_APP_ID_ENV.includes('replace');
 import { formatUnits, parseUnits, keccak256, stringToBytes } from 'viem';
 import Link from 'next/link';
 import { ADDRESSES, registryAbi, tipJarAbi, subscriptionsAbi, contentPaywallAbi } from '@/lib/config';
+import { TxLink, AddressLink } from '@/components/TxLink';
 
 type Tab = 'tip' | 'subscribe' | 'content';
 
@@ -105,22 +109,47 @@ export default function CreatorPage() {
   );
 }
 
-// ─── Privy auth button ─────────────────────────────────────────
+// ─── Wallet Badge + Auth Button ───────────────────────────────
+
+function WalletBadge({ address }: { address: string }) {
+  const { data: bal } = useBalance({ address: address as `0x${string}` });
+  const [copied, setCopied] = useState(false);
+  const short = `${address.slice(0, 6)}...${address.slice(-4)}`;
+  const copy = () => {
+    navigator.clipboard.writeText(address);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+  return (
+    <button onClick={copy}
+      className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-gray-200 hover:border-indigo-400 transition"
+      title="Click to copy full address">
+      <span className="text-xs font-mono text-gray-700">{copied ? '✓ Copied!' : short}</span>
+      {bal && (
+        <span className="text-xs font-semibold text-indigo-600">
+          {Number(formatUnits(bal.value, 18)).toFixed(3)} USDC
+        </span>
+      )}
+    </button>
+  );
+}
 
 function PrivyAuthButton() {
   const { ready, authenticated, user, login, logout } = usePrivy();
+  const { wallets } = useWallets();
+  const wallet = wallets[0];
   if (!ready) return <button className="px-3 py-1.5 rounded-lg bg-gray-100 text-sm">Loading...</button>;
   if (!authenticated) return (
-    <button onClick={login} className="px-4 py-2 rounded-xl bg-arc-gradient text-white text-sm font-semibold">
+    <button onClick={() => login()} className="px-4 py-2 rounded-xl bg-arc-gradient text-white text-sm font-semibold">
       Sign in to pay
     </button>
   );
-  const label = user?.email?.address ?? user?.google?.email
-    ?? (user?.wallet ? `${user.wallet.address.slice(0,6)}...${user.wallet.address.slice(-4)}` : 'You');
+  const email = user?.email?.address ?? user?.google?.email;
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-xs text-gray-500 truncate max-w-[120px]">{label}</span>
-      <button onClick={logout} className="px-2 py-1 rounded-md border border-gray-200 text-xs hover:bg-gray-50">
+    <div className="flex items-center gap-2 flex-wrap justify-end">
+      {wallet && <WalletBadge address={wallet.address} />}
+      {email && <span className="text-xs text-gray-500 truncate max-w-[140px] hidden md:inline" title={email}>{email}</span>}
+      <button onClick={() => logout()} className="px-2 py-1 rounded-md border border-gray-200 text-xs hover:bg-gray-50">
         Sign out
       </button>
     </div>
@@ -182,7 +211,7 @@ function TipForm({ username }: { username: string }) {
       )}
 
       {tx && <div className="mt-3 text-green-600 text-sm bg-green-50 p-3 rounded-xl text-center">
-        ✓ Tip sent! <span className="font-mono text-xs">{tx.slice(0, 10)}...{tx.slice(-6)}</span>
+        ✓ Tip sent! <TxLink tx={tx} />
       </div>}
       {err && <div className="mt-3 text-red-500 text-sm bg-red-50 p-2 rounded-xl">{err}</div>}
     </div>

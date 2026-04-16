@@ -90,7 +90,7 @@ export default function Page() {
                 <div className="flex items-center gap-3 mt-1">
                   <h1 className="text-3xl font-bold font-mono">@{username}</h1>
                   <button
-                    onClick={() => navigator.clipboard.writeText(`https://arcpay.io/${username}`)}
+                    onClick={() => navigator.clipboard.writeText(`https://arcpay.finance/${username}`)}
                     className="px-3 py-1 rounded-full bg-accent/10 text-accent text-xs font-semibold hover:bg-accent/20">
                     Copy link
                   </button>
@@ -136,7 +136,7 @@ export default function Page() {
             {/* Share link */}
             <div className="mt-8 p-6 bg-arc-gradient rounded-3xl text-white">
               <div className="text-sm opacity-80">Your public payment link</div>
-              <div className="text-2xl font-mono mt-1">arcpay.io/{username}</div>
+              <div className="text-2xl font-mono mt-1">arcpay.finance/{username}</div>
               <div className="text-sm opacity-80 mt-3">
                 Share this link to accept tips, subscriptions, content unlocks — all in USDC.
               </div>

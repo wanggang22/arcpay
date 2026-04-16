@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0a0f"/>
+      <stop offset="100%" stop-color="#1a1a2e"/>
+    </linearGradient>
+    <linearGradient id="arc" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#5B5BD6"/>
+      <stop offset="50%" stop-color="#D65B9C"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+    <linearGradient id="text" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#d4d4e0"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="0.2" cy="0.3" r="0.6">
+      <stop offset="0%" stop-color="#5B5BD6" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#5B5BD6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="0.8" cy="0.7" r="0.5">
+      <stop offset="0%" stop-color="#D65B9C" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#D65B9C" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#glow1)"/>
+  <rect width="1600" height="900" fill="url(#glow2)"/>
+
+  <!-- Grid pattern -->
+  <g stroke="#ffffff" stroke-opacity="0.04" stroke-width="1">
+    <line x1="0" y1="225" x2="1600" y2="225"/>
+    <line x1="0" y1="450" x2="1600" y2="450"/>
+    <line x1="0" y1="675" x2="1600" y2="675"/>
+    <line x1="400" y1="0" x2="400" y2="900"/>
+    <line x1="800" y1="0" x2="800" y2="900"/>
+    <line x1="1200" y1="0" x2="1200" y2="900"/>
+  </g>
+
+  <!-- Abstract payment flow arcs -->
+  <g fill="none" stroke-width="3" opacity="0.7">
+    <path d="M 100 700 Q 400 200, 800 450 T 1500 250" stroke="url(#arc)"/>
+    <path d="M 50 550 Q 400 350, 900 600 T 1550 400" stroke="url(#arc)" opacity="0.5"/>
+    <path d="M 200 800 Q 600 500, 1100 750 T 1550 650" stroke="url(#arc)" opacity="0.3"/>
+  </g>
+
+  <!-- Nodes -->
+  <g fill="url(#arc)">
+    <circle cx="100" cy="700" r="10"/>
+    <circle cx="800" cy="450" r="12"/>
+    <circle cx="1500" cy="250" r="10"/>
+    <circle cx="50" cy="550" r="8"/>
+    <circle cx="900" cy="600" r="10"/>
+    <circle cx="1550" cy="400" r="8"/>
+    <circle cx="200" cy="800" r="8"/>
+    <circle cx="1100" cy="750" r="10"/>
+  </g>
+
+  <!-- ArcPay logo mark -->
+  <g transform="translate(140, 380)">
+    <rect x="0" y="0" width="60" height="60" rx="12" fill="url(#arc)"/>
+    <path d="M 15 45 Q 30 10, 45 45" stroke="#0a0a0f" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <circle cx="30" cy="30" r="4" fill="#0a0a0f"/>
+  </g>
+
+  <!-- Text: ArcPay -->
+  <text x="220" y="440" font-family="Inter, -apple-system, sans-serif" font-weight="800" font-size="140" fill="url(#text)">ArcPay</text>
+
+  <!-- Tagline -->
+  <text x="225" y="500" font-family="Inter, sans-serif" font-weight="500" font-size="32" fill="#a0a0b0">
+    USDC payments for the agentic economy on Arc
+  </text>
+
+  <!-- Feature pills -->
+  <g font-family="Inter, sans-serif" font-size="20" font-weight="600" fill="#ffffff">
+    <g transform="translate(225, 540)">
+      <rect x="0" y="0" width="130" height="44" rx="22" fill="#ffffff" fill-opacity="0.08" stroke="#ffffff" stroke-opacity="0.15"/>
+      <text x="65" y="28" text-anchor="middle">💸 Tips</text>
+    </g>
+    <g transform="translate(370, 540)">
+      <rect x="0" y="0" width="190" height="44" rx="22" fill="#ffffff" fill-opacity="0.08" stroke="#ffffff" stroke-opacity="0.15"/>
+      <text x="95" y="28" text-anchor="middle">📅 Subscriptions</text>
+    </g>
+    <g transform="translate(575, 540)">
+      <rect x="0" y="0" width="160" height="44" rx="22" fill="#ffffff" fill-opacity="0.08" stroke="#ffffff" stroke-opacity="0.15"/>
+      <text x="80" y="28" text-anchor="middle">🔒 Paywalls</text>
+    </g>
+    <g transform="translate(750, 540)">
+      <rect x="0" y="0" width="210" height="44" rx="22" fill="#ffffff" fill-opacity="0.08" stroke="#ffffff" stroke-opacity="0.15"/>
+      <text x="105" y="28" text-anchor="middle">⚡ Pay-per-call</text>
+    </g>
+  </g>
+
+  <!-- Bottom info -->
+  <g font-family="Inter, sans-serif" fill="#707080">
+    <text x="140" y="820" font-size="22" font-weight="500">arcpay.finance</text>
+    <text x="140" y="855" font-size="18" font-weight="400">Built on Arc Network · Native USDC gas · 2% fee · Open source</text>
+  </g>
+
+  <!-- Corner accent -->
+  <g transform="translate(1350, 700)" opacity="0.8">
+    <rect x="0" y="0" width="140" height="140" rx="20" fill="url(#arc)" fill-opacity="0.15" stroke="url(#arc)" stroke-width="2"/>
+    <text x="70" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#ffffff" fill-opacity="0.6">LIVE ON</text>
+    <text x="70" y="95" text-anchor="middle" font-family="Inter, sans-serif" font-size="26" font-weight="700" fill="url(#text)">Arc</text>
+    <text x="70" y="120" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="500" fill="#ffffff" fill-opacity="0.5">TESTNET</text>
+  </g>
+</svg>
