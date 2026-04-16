@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "ArcPay — Tip on X with USDC",
+  "version": "0.1.0",
+  "description": "Tip any X user with USDC on Arc Network. Instant settlement, 2% fee, no KYC. Works with email or wallet login.",
+  "homepage_url": "https://arcpay.finance",
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://x.com/*",
+    "https://twitter.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://x.com/*", "https://twitter.com/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "ArcPay — Tip on X with USDC"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["icon-*.png"],
+      "matches": ["https://x.com/*", "https://twitter.com/*"]
+    }
+  ]
+}

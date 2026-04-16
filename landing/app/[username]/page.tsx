@@ -8,7 +8,7 @@ const PRIVY_APP_ID_ENV = process.env.NEXT_PUBLIC_PRIVY_APP_ID || '';
 const HAS_PRIVY_BTN = PRIVY_APP_ID_ENV.length >= 20 && !PRIVY_APP_ID_ENV.includes('demo') && !PRIVY_APP_ID_ENV.includes('replace');
 import { formatUnits, parseUnits, keccak256, stringToBytes } from 'viem';
 import Link from 'next/link';
-import { ADDRESSES, registryAbi, tipJarAbi, subscriptionsAbi, contentPaywallAbi, payPerCallAbi } from '@/lib/config';
+import { ADDRESSES, registryAbi, tipJarAbi, tipJarByHandleAbi, subscriptionsAbi, contentPaywallAbi, payPerCallAbi } from '@/lib/config';
 import { TxLink, AddressLink } from '@/components/TxLink';
 
 type Tab = 'tip' | 'subscribe' | 'content' | 'api';
@@ -34,16 +34,7 @@ export default function CreatorPage() {
   });
 
   if (exists === false) {
-    return (
-      <main className="max-w-lg mx-auto p-6 pt-20 text-center">
-        <div className="text-6xl mb-4">🤔</div>
-        <h1 className="text-2xl font-bold">@{username} hasn't claimed this handle yet</h1>
-        <p className="text-gray-600 mt-3">
-          Is this you? <Link href="/dashboard" className="text-indigo-600 font-semibold">Claim it →</Link>
-        </p>
-        <Link href="/" className="inline-block mt-8 text-sm text-gray-500 hover:text-gray-900">← Back to arcpay.io</Link>
-      </main>
-    );
+    return <HandleOnlyPage username={username} />;
   }
 
   const displayName = creator?.displayName || username;
@@ -159,6 +150,17 @@ function PrivyAuthButton() {
 
 // ─── Tip Form ──────────────────────────────────────────────────
 
+interface RecentTip { id: string; from: string; amount: bigint; message: string; timestamp: number }
+
+function formatRelativeTime(ts: number): string {
+  if (!ts) return '';
+  const diff = Math.floor(Date.now() / 1000 - ts);
+  if (diff < 60) return `${diff}s ago`;
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  return `${Math.floor(diff / 86400)}d ago`;
+}
+
 function TipForm({ username }: { username: string }) {
   const { address } = useAccount();
   const pub = usePublicClient();
@@ -169,6 +171,44 @@ function TipForm({ username }: { username: string }) {
   const [tx, setTx] = useState<string | null>(null);
   const [err, setErr] = useState('');
   const [myStats, setMyStats] = useState<{ count: number; total: bigint } | null>(null);
+  const [recentTips, setRecentTips] = useState<RecentTip[]>([]);
+
+  useEffect(() => {
+    if (!pub) return;
+    const loadRecent = async () => {
+      try {
+        const [ids, bps] = await Promise.all([
+          pub.readContract({
+            address: ADDRESSES.tipJar, abi: tipJarAbi, functionName: 'getTipsByCreator', args: [username],
+          }) as Promise<bigint[]>,
+          pub.readContract({
+            address: ADDRESSES.tipJar, abi: tipJarAbi, functionName: 'protocolFeeBps', args: [],
+          }) as Promise<bigint>,
+        ]);
+        const last10 = [...(ids as bigint[])].slice(-10).reverse();
+        const tips = await Promise.all(last10.map(async (id) => {
+          try {
+            const t: any = await pub.readContract({
+              address: ADDRESSES.tipJar, abi: tipJarAbi, functionName: 'getTip', args: [id],
+            });
+            const net = t.amount as bigint;
+            const gross = bps < 10000n ? (net * 10000n) / (10000n - bps) : net;
+            return {
+              id: id.toString(),
+              from: t.from as string,
+              amount: gross,
+              message: t.message as string,
+              timestamp: Number(t.timestamp),
+            } as RecentTip;
+          } catch {
+            return null;
+          }
+        }));
+        setRecentTips(tips.filter((t): t is RecentTip => t !== null));
+      } catch {}
+    };
+    loadRecent();
+  }, [pub, username, tx]);
 
   useEffect(() => {
     if (!pub || !address) { setMyStats(null); return; }
@@ -223,6 +263,40 @@ function TipForm({ username }: { username: string }) {
           💸 You've tipped @{username} <strong>{myStats.count}</strong> time{myStats.count !== 1 ? 's' : ''} · <strong>{Number(formatUnits(myStats.total, 18)).toFixed(4)} USDC</strong>
         </div>
       )}
+
+      {recentTips.length > 0 && (
+        <div className="mb-4 border border-gray-100 rounded-xl bg-gray-50/60 p-3">
+          <div className="text-[11px] text-gray-500 font-semibold uppercase tracking-wider mb-2 flex items-center gap-1">
+            🎉 Recent supporters · {recentTips.length}
+          </div>
+          <div className="space-y-1.5 max-h-44 overflow-y-auto pr-1">
+            {recentTips.map((t) => {
+              const short = `${t.from.slice(0, 6)}...${t.from.slice(-4)}`;
+              const seed = t.from.slice(2, 4);
+              const hue = (parseInt(seed, 16) * 137) % 360;
+              return (
+                <div key={t.id} className="flex items-start gap-2 text-xs">
+                  <div
+                    className="w-6 h-6 rounded-full flex items-center justify-center text-white font-bold text-[10px] shrink-0"
+                    style={{ background: `linear-gradient(135deg, hsl(${hue},70%,55%), hsl(${(hue+60)%360},70%,60%))` }}
+                  >
+                    {seed.toUpperCase()}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-baseline gap-1.5 flex-wrap">
+                      <span className="font-mono text-gray-600">{short}</span>
+                      <span className="font-bold text-pink-600">{Number(formatUnits(t.amount, 18)).toFixed(4)} USDC</span>
+                      {t.timestamp > 0 && <span className="text-gray-400 text-[10px]">· {formatRelativeTime(t.timestamp)}</span>}
+                    </div>
+                    {t.message && <div className="text-gray-700 italic mt-0.5 truncate" title={t.message}>"{t.message}"</div>}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       <div className="text-sm text-gray-600 mb-3">Support @{username} with a USDC tip</div>
       <div className="grid grid-cols-4 gap-2 mb-3">
         {presets.map(p => (
@@ -637,6 +711,158 @@ function ApiList({ username }: { username: string }) {
           <div className="text-xs text-green-700 mt-2">
             Credits are bound to your wallet address. Your app / AI agent must sign each request with the same wallet — the <Link href="/" className="underline">ArcPay SDK</Link> handles signing automatically.
           </div>
+        </div>
+      )}
+      {err && <div className="mt-3 text-red-500 text-sm bg-red-50 p-2 rounded-xl">{err}</div>}
+    </div>
+  );
+}
+
+// ─── Handle-only page (for unregistered X handles) ────────────
+
+function HandleOnlyPage({ username }: { username: string }) {
+  const [xProfile, setXProfile] = useState<{ name: string; avatar: string; description?: string } | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`/api/x-profile?handle=${encodeURIComponent(username)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => { if (!cancelled && d && !d.error) setXProfile(d); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [username]);
+
+  const displayName = xProfile?.name || username;
+  const bio = xProfile?.description;
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50">
+      <header className="max-w-2xl mx-auto px-6 py-4 flex justify-between items-center">
+        <Link href="/" className="flex items-center gap-2">
+          <div className="w-6 h-6 rounded bg-arc-gradient" />
+          <span className="font-bold">ArcPay</span>
+        </Link>
+        <PrivyAuthButton />
+      </header>
+      <main className="max-w-lg mx-auto px-6 pt-6 pb-20">
+        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+          <div className="h-24 bg-arc-gradient" />
+          <div className="px-6 pb-6 -mt-10">
+            {xProfile?.avatar ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={xProfile.avatar}
+                alt={displayName}
+                className="w-20 h-20 rounded-full border-4 border-white shadow-lg object-cover"
+              />
+            ) : (
+              <div className="w-20 h-20 rounded-full bg-white border-4 border-white shadow-lg flex items-center justify-center text-3xl font-bold text-indigo-600">
+                {displayName.charAt(0).toUpperCase()}
+              </div>
+            )}
+            <div className="mt-3">
+              <h1 className="text-2xl font-bold">{displayName}</h1>
+              <a href={`https://x.com/${username}`} target="_blank" rel="noopener noreferrer"
+                className="text-gray-500 font-mono text-sm hover:text-indigo-600">
+                @{username} ↗
+              </a>
+              {bio && <p className="mt-3 text-gray-700 text-sm">{bio}</p>}
+              <div className="mt-3 text-xs bg-amber-50 border border-amber-200 text-amber-800 rounded-lg p-2.5">
+                ⏳ @{username} hasn&apos;t claimed ArcPay yet. Tips are safely held on-chain.
+                They can{' '}
+                <Link href="/claim" className="font-bold underline">claim via X OAuth</Link> any time.
+              </div>
+            </div>
+          </div>
+          <div className="border-t border-gray-100 p-6">
+            <HandleTipForm username={username} />
+          </div>
+        </div>
+        <div className="text-center mt-6 text-xs text-gray-400">
+          Powered by <Link href="/" className="font-semibold hover:text-gray-700">ArcPay</Link> on Arc Network · USDC native
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function HandleTipForm({ username }: { username: string }) {
+  const { address } = useAccount();
+  const pub = usePublicClient();
+  const { data: wallet } = useWalletClient();
+  const [amount, setAmount] = useState('0.005');
+  const [message, setMessage] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [tx, setTx] = useState<string | null>(null);
+  const [err, setErr] = useState('');
+  const [available, setAvailable] = useState<bigint | null>(null);
+
+  useEffect(() => {
+    if (!pub) return;
+    (async () => {
+      try {
+        const amt = await pub.readContract({
+          address: ADDRESSES.tipJarByHandle, abi: tipJarByHandleAbi,
+          functionName: 'availableToClaim', args: [username],
+        }) as bigint;
+        setAvailable(amt);
+      } catch {}
+    })();
+  }, [pub, username, tx]);
+
+  const send = async () => {
+    if (!wallet || !address || !pub) return;
+    setBusy(true); setErr(''); setTx(null);
+    try {
+      const hash = await wallet.writeContract({
+        address: ADDRESSES.tipJarByHandle, abi: tipJarByHandleAbi,
+        functionName: 'tipByHandle',
+        args: [username, message], value: parseUnits(amount, 18),
+      });
+      await pub.waitForTransactionReceipt({ hash });
+      setTx(hash); setMessage('');
+    } catch (e: any) { setErr(e.shortMessage || e.message); }
+    finally { setBusy(false); }
+  };
+
+  const presets = ['0.001', '0.005', '0.01', '0.05'];
+
+  return (
+    <div>
+      <div className="text-sm text-gray-600 mb-2">
+        Support @{username} with a USDC tip — held on-chain until they claim.
+      </div>
+      {available !== null && available > 0n && (
+        <div className="mb-3 text-xs bg-pink-50 border border-pink-200 text-pink-800 rounded-lg p-2">
+          💸 Pending for @{username}: <strong>{Number(formatUnits(available, 18)).toFixed(4)} USDC</strong>
+        </div>
+      )}
+      <div className="grid grid-cols-4 gap-2 mb-3">
+        {presets.map(p => (
+          <button key={p} onClick={() => setAmount(p)}
+            className={`py-2 rounded-xl text-sm font-semibold border-2 transition
+              ${amount === p ? 'border-indigo-500 bg-indigo-50 text-indigo-700' : 'border-gray-200'}`}>
+            ${p}
+          </button>
+        ))}
+      </div>
+      <input value={amount} onChange={e => setAmount(e.target.value.replace(/[^0-9.]/g, ''))}
+        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 focus:outline-none mb-3" placeholder="Custom amount" inputMode="decimal" />
+      <textarea value={message} onChange={e => setMessage(e.target.value.slice(0, 280))}
+        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 focus:outline-none resize-none h-20 mb-3" placeholder="Message (optional)" />
+
+      {!address ? (
+        <div className="text-center py-3 text-gray-500 text-sm bg-gray-50 rounded-xl">Connect wallet or sign in to tip</div>
+      ) : (
+        <button onClick={send} disabled={busy || !amount}
+          className="w-full py-3 rounded-xl font-bold text-white bg-arc-gradient disabled:opacity-60">
+          {busy ? 'Sending...' : `Send $${amount} tip`}
+        </button>
+      )}
+
+      {tx && (
+        <div className="mt-3 text-green-600 text-sm bg-green-50 p-3 rounded-xl text-center">
+          ✓ Tip sent! It&apos;s held for @{username} until they claim. <TxLink tx={tx} />
         </div>
       )}
       {err && <div className="mt-3 text-red-500 text-sm bg-red-50 p-2 rounded-xl">{err}</div>}

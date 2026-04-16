@@ -27,6 +27,7 @@ export const ADDRESSES = NETWORK === 'testnet' ? {
   subscriptions:   '0xbb84078Aa19b9c5Eb397782dE9b58939C38d1380',
   contentPaywall:  '0x680884124F21939548Ba7f982B4F275A55783484',
   payPerCall:      '0x3a399A310965A5cbD5a2B9F21a3B9885B6372def',
+  tipJarByHandle:  '0x291b86d46027f734cF43Eca9BA2394F46dcd529C',
 } as const : {
   hub:             '0x1b38dE812703aaED3fE7B584e2a0E8D0b95F60Cb',
   registry:        '0xD85677eBC8b242E5110C69f1d1f134389319632C',
@@ -34,6 +35,7 @@ export const ADDRESSES = NETWORK === 'testnet' ? {
   subscriptions:   '0x0D4e458145A8eE377FD90295dd3332ee5BC90aE4',
   contentPaywall:  '0x352fc9770F1c72c0B91d7D62946EDa67A6288A95',
   payPerCall:      '0xc6f99Bdb0985aC8c5E7819f3e89dccA7C8A4C06a',
+  tipJarByHandle:  '0x0000000000000000000000000000000000000000',
 } as const;
 
 export const registryAbi = [

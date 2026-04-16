@@ -1,0 +1,12 @@
+{
+  "rpc": "https://rpc.testnet.arc.network",
+  "contract": "TipJarByHandle",
+  "address": "0x291b86d46027f734cF43Eca9BA2394F46dcd529C",
+  "deployTx": "0xe6e5655ed0cfcac5380854ff30e51c36fe22d3a28242738a326ad18dd0cbb061",
+  "initialAttestationSigner": "0x2eA729df4b0E44Bf1dD9C5277292641F0f7A3571",
+  "rotatedAttestationSigner": "0xaCee06B20BB5d07Bc6a0d833af0A44607b713532",
+  "rotationTx": "0x529e95f2ffc6e75a403003c7a34b96575ff1e53515ca4ef2259ba0699841f8b6",
+  "protocolFeeBps": 200,
+  "feeRecipient": "0xbF023dbEaF786AfEb40C4fa3B53dC5bF4461D084",
+  "notes": "Standalone handle-based tip jar for Chrome extension + claim flow. Attestations signed by dedicated signer EOA (not deployer wallet) — backend holds that private key in Vercel env ATTESTATION_SIGNER_PK."
+}

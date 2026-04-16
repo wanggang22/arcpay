@@ -23,6 +23,7 @@ export function Header() {
           <Link href="/subscriptions" className="text-sm text-muted hover:text-ink">Subs</Link>
           <Link href="/content" className="text-sm text-muted hover:text-ink">Content</Link>
           <Link href="/api" className="text-sm text-muted hover:text-ink">API</Link>
+          <Link href="/embed" className="text-sm text-muted hover:text-ink">Embed</Link>
           <Link href="/activity" className="text-sm text-muted hover:text-ink">Activity</Link>
           {HAS_PRIVY ? <PrivyAuthButton /> : <WagmiAuthButton />}
         </nav>

@@ -1,0 +1,50 @@
+.arcpay-tip-wrap {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+}
+
+.arcpay-tip-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 11px;
+  border-radius: 9999px;
+  border: 0;
+  background: linear-gradient(135deg, #6366f1, #d946ef);
+  color: #fff;
+  font-family: "TwitterChirp", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.2s ease, filter 0.15s ease;
+  -webkit-font-smoothing: antialiased;
+}
+
+.arcpay-tip-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(99, 102, 241, 0.35);
+  filter: brightness(1.08);
+}
+
+.arcpay-tip-btn:active {
+  transform: translateY(0);
+}
+
+.arcpay-tip-btn .arcpay-emoji {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.arcpay-tip-btn .arcpay-label {
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+/* Dark mode polish */
+@media (prefers-color-scheme: dark) {
+  .arcpay-tip-btn {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  }
+}
