@@ -26,7 +26,7 @@ export const ADDRESSES = NETWORK === 'testnet' ? {
   tipJar:          '0x45daE58fB5b89C4E994216D2af0B73232641DF3B',
   subscriptions:   '0xbb84078Aa19b9c5Eb397782dE9b58939C38d1380',
   contentPaywall:  '0x680884124F21939548Ba7f982B4F275A55783484',
-  payPerCall:      '0xe407A796D81302987Ef950bdC01Ef4eA0b081b6C',
+  payPerCall:      '0x3a399A310965A5cbD5a2B9F21a3B9885B6372def',
 } as const : {
   hub:             '0x1b38dE812703aaED3fE7B584e2a0E8D0b95F60Cb',
   registry:        '0xD85677eBC8b242E5110C69f1d1f134389319632C',
@@ -58,6 +58,7 @@ export const registryAbi = [
 export const tipJarFullAbi = [
   { type: 'function', name: 'getLifetimeReceived', stateMutability: 'view', inputs: [{ type: 'string' }], outputs: [{ type: 'uint256' }] },
   { type: 'function', name: 'getTipsByCreator', stateMutability: 'view', inputs: [{ type: 'string' }], outputs: [{ type: 'uint256[]' }] },
+  { type: 'function', name: 'getTipsByFan', stateMutability: 'view', inputs: [{ type: 'address' }], outputs: [{ type: 'uint256[]' }] },
   { type: 'function', name: 'getTip', stateMutability: 'view', inputs: [{ type: 'uint256' }],
     outputs: [{ type: 'tuple', components: [
       { name: 'from', type: 'address' }, { name: 'usernameHash', type: 'bytes32' },
@@ -65,6 +66,45 @@ export const tipJarFullAbi = [
       { name: 'message', type: 'string' },
     ]}],
   },
+  { type: 'event', name: 'TipSent',
+    inputs: [
+      { type: 'uint256', name: 'tipId', indexed: true },
+      { type: 'bytes32', name: 'usernameHash', indexed: true },
+      { type: 'address', name: 'from', indexed: true },
+      { type: 'uint256', name: 'netAmount', indexed: false },
+      { type: 'uint256', name: 'protocolFee', indexed: false },
+      { type: 'string', name: 'message', indexed: false },
+    ] },
+] as const;
+
+export const subscriptionsEventsAbi = [
+  { type: 'event', name: 'Subscribed',
+    inputs: [
+      { type: 'uint256', name: 'subId', indexed: true },
+      { type: 'uint256', name: 'planId', indexed: true },
+      { type: 'address', name: 'subscriber', indexed: true },
+      { type: 'uint256', name: 'months', indexed: false },
+      { type: 'uint256', name: 'amount', indexed: false },
+    ] },
+] as const;
+
+export const contentPaywallEventsAbi = [
+  { type: 'event', name: 'AccessPurchased',
+    inputs: [
+      { type: 'bytes32', name: 'contentId', indexed: true },
+      { type: 'address', name: 'buyer', indexed: true },
+      { type: 'uint256', name: 'amount', indexed: false },
+    ] },
+] as const;
+
+export const payPerCallEventsAbi = [
+  { type: 'event', name: 'Paid',
+    inputs: [
+      { type: 'uint256', name: 'callId', indexed: true },
+      { type: 'bytes32', name: 'endpointId', indexed: true },
+      { type: 'address', name: 'payer', indexed: true },
+      { type: 'uint256', name: 'amount', indexed: false },
+    ] },
 ] as const;
 
 export const subscriptionsFullAbi = [

@@ -115,6 +115,38 @@ contract PayPerCall {
         emit Paid(callId, endpointId, msg.sender, msg.value);
     }
 
+    /// @notice Buy `count` call credits in a single transaction. Emits `count` Paid events.
+    /// @dev Used by clients/agents that want to prepay multiple API calls up-front.
+    function batchPay(bytes32 endpointId, uint256 count) external payable returns (uint256 firstCallId) {
+        if (count == 0) revert WrongPayment();
+        Endpoint storage e = endpoints[endpointId];
+        if (e.creatorHash == bytes32(0)) revert EndpointNotFound();
+        if (!e.active) revert EndpointInactive();
+        if (msg.value != e.pricePerCall * count) revert WrongPayment();
+
+        uint256 fee = (msg.value * protocolFeeBps) / 10000;
+        uint256 net = msg.value - fee;
+
+        firstCallId = callCounter;
+        uint256 per = e.pricePerCall;
+        for (uint256 i = 0; i < count; i++) {
+            uint256 callId = callCounter++;
+            receipts[callId] = CallReceipt({
+                callId: callId,
+                endpointId: endpointId,
+                payer: msg.sender,
+                amount: per,
+                timestamp: block.timestamp
+            });
+            emit Paid(callId, endpointId, msg.sender, per);
+        }
+
+        e.totalCalls += count;
+        e.totalRevenue += msg.value;
+        creatorRevenue[e.creatorHash] += net;
+        accumulatedProtocolFees += fee;
+    }
+
     /// @notice Helper: pay by (username, name) without computing id client-side
     function payByName(string calldata username, string calldata name) external payable returns (uint256 callId) {
         bytes32 id = _endpointId(username, name);

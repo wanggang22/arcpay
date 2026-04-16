@@ -8,10 +8,10 @@ const PRIVY_APP_ID_ENV = process.env.NEXT_PUBLIC_PRIVY_APP_ID || '';
 const HAS_PRIVY_BTN = PRIVY_APP_ID_ENV.length >= 20 && !PRIVY_APP_ID_ENV.includes('demo') && !PRIVY_APP_ID_ENV.includes('replace');
 import { formatUnits, parseUnits, keccak256, stringToBytes } from 'viem';
 import Link from 'next/link';
-import { ADDRESSES, registryAbi, tipJarAbi, subscriptionsAbi, contentPaywallAbi } from '@/lib/config';
+import { ADDRESSES, registryAbi, tipJarAbi, subscriptionsAbi, contentPaywallAbi, payPerCallAbi } from '@/lib/config';
 import { TxLink, AddressLink } from '@/components/TxLink';
 
-type Tab = 'tip' | 'subscribe' | 'content';
+type Tab = 'tip' | 'subscribe' | 'content' | 'api';
 
 export default function CreatorPage() {
   const params = useParams();
@@ -78,18 +78,18 @@ export default function CreatorPage() {
               {bio && <p className="mt-3 text-gray-700">{bio}</p>}
               {lifetime !== undefined && lifetime > 0n && (
                 <div className="mt-3 text-xs text-gray-500">
-                  Lifetime received: {Number(formatUnits(lifetime, 18)).toFixed(4)} USDC
+                  💸 Lifetime tips: {Number(formatUnits(lifetime, 18)).toFixed(4)} USDC
                 </div>
               )}
             </div>
           </div>
 
           <div className="border-t border-gray-100">
-            <div className="grid grid-cols-3 border-b border-gray-100">
-              {(['tip', 'subscribe', 'content'] as Tab[]).map(t => (
+            <div className="grid grid-cols-4 border-b border-gray-100">
+              {(['tip', 'subscribe', 'content', 'api'] as Tab[]).map(t => (
                 <button key={t} onClick={() => setTab(t)}
                   className={`py-3 text-sm font-semibold ${tab === t ? 'text-indigo-600 border-b-2 border-indigo-600' : 'text-gray-500'}`}>
-                  {t === 'tip' ? '💸 Tip' : t === 'subscribe' ? '📅 Subscribe' : '🔒 Content'}
+                  {t === 'tip' ? '💸 Tip' : t === 'subscribe' ? '📅 Subscribe' : t === 'content' ? '🔒 Content' : '⚡ API'}
                 </button>
               ))}
             </div>
@@ -97,6 +97,7 @@ export default function CreatorPage() {
               {tab === 'tip' && <TipForm username={username} />}
               {tab === 'subscribe' && <SubscribePanel username={username} />}
               {tab === 'content' && <ContentList username={username} />}
+              {tab === 'api' && <ApiList username={username} />}
             </div>
           </div>
         </div>
@@ -167,6 +168,37 @@ function TipForm({ username }: { username: string }) {
   const [busy, setBusy] = useState(false);
   const [tx, setTx] = useState<string | null>(null);
   const [err, setErr] = useState('');
+  const [myStats, setMyStats] = useState<{ count: number; total: bigint } | null>(null);
+
+  useEffect(() => {
+    if (!pub || !address) { setMyStats(null); return; }
+    const load = async () => {
+      try {
+        const usernameHash = keccak256(stringToBytes(username));
+        const [ids, bps] = await Promise.all([
+          pub.readContract({
+            address: ADDRESSES.tipJar, abi: tipJarAbi, functionName: 'getTipsByFan', args: [address],
+          }) as Promise<bigint[]>,
+          pub.readContract({
+            address: ADDRESSES.tipJar, abi: tipJarAbi, functionName: 'protocolFeeBps', args: [],
+          }) as Promise<bigint>,
+        ]);
+        let count = 0; let netTotal = 0n;
+        await Promise.all(ids.map(async (id) => {
+          try {
+            const t: any = await pub.readContract({
+              address: ADDRESSES.tipJar, abi: tipJarAbi, functionName: 'getTip', args: [id],
+            });
+            if (t.usernameHash === usernameHash) { count++; netTotal += t.amount as bigint; }
+          } catch {}
+        }));
+        // Fan paid gross = net * 10000 / (10000 - bps)
+        const gross = bps < 10000n ? (netTotal * 10000n) / (10000n - bps) : netTotal;
+        setMyStats({ count, total: gross });
+      } catch {}
+    };
+    load();
+  }, [pub, address, username, tx]);
 
   const send = async () => {
     if (!wallet || !address || !pub) return;
@@ -186,6 +218,11 @@ function TipForm({ username }: { username: string }) {
 
   return (
     <div>
+      {myStats && myStats.count > 0 && (
+        <div className="mb-3 p-3 rounded-xl bg-pink-50 border border-pink-200 text-sm text-pink-800">
+          💸 You've tipped @{username} <strong>{myStats.count}</strong> time{myStats.count !== 1 ? 's' : ''} · <strong>{Number(formatUnits(myStats.total, 18)).toFixed(4)} USDC</strong>
+        </div>
+      )}
       <div className="text-sm text-gray-600 mb-3">Support @{username} with a USDC tip</div>
       <div className="grid grid-cols-4 gap-2 mb-3">
         {presets.map(p => (
@@ -228,6 +265,7 @@ function SubscribePanel({ username }: { username: string }) {
   const [busy, setBusy] = useState(false);
   const [tx, setTx] = useState<string | null>(null);
   const [err, setErr] = useState('');
+  const [myActive, setMyActive] = useState<{ planId: number; planName: string; paidUntil: number } | null>(null);
 
   useEffect(() => {
     if (!pub) return;
@@ -246,9 +284,33 @@ function SubscribePanel({ username }: { username: string }) {
       }
       setPlans(found);
       if (found[0]) setSelectedPlan(found[0].id);
+
+      // Check if current wallet has an active sub to any of these plans
+      if (address) {
+        for (const plan of found) {
+          try {
+            const slot: any = await pub.readContract({
+              address: ADDRESSES.subscriptions, abi: subscriptionsAbi,
+              functionName: 'activeSubOf', args: [address, BigInt(plan.id)],
+            });
+            if (slot > 0n) {
+              const sub: any = await pub.readContract({
+                address: ADDRESSES.subscriptions, abi: subscriptionsAbi,
+                functionName: 'getSubscription', args: [slot - 1n],
+              });
+              const paidUntil = Number(sub.paidUntil);
+              if (sub.active && paidUntil * 1000 > Date.now()) {
+                setMyActive({ planId: plan.id, planName: plan.name, paidUntil });
+                return;
+              }
+            }
+          } catch {}
+        }
+        setMyActive(null);
+      }
     };
     load();
-  }, [pub, username]);
+  }, [pub, username, address, tx]);
 
   const subscribe = async () => {
     if (!wallet || !address || !pub || selectedPlan === null) return;
@@ -273,6 +335,11 @@ function SubscribePanel({ username }: { username: string }) {
 
   return (
     <div>
+      {myActive && (
+        <div className="mb-3 p-3 rounded-xl bg-blue-50 border border-blue-200 text-sm text-blue-800">
+          ✓ Active subscription: <strong>{myActive.planName}</strong> · valid until <strong>{new Date(myActive.paidUntil * 1000).toLocaleDateString()}</strong>
+        </div>
+      )}
       <div className="text-sm text-gray-600 mb-3">Subscribe to @{username}</div>
       <div className="space-y-2 mb-4">
         {plans.filter(p => p.active).map(p => (
@@ -317,6 +384,7 @@ function ContentList({ username }: { username: string }) {
   const pub = usePublicClient();
   const { data: wallet } = useWalletClient();
   const [items, setItems] = useState<any[]>([]);
+  const [accessMap, setAccessMap] = useState<Record<string, boolean>>({});
   const [busy, setBusy] = useState<string | null>(null);
   const [err, setErr] = useState('');
 
@@ -337,10 +405,24 @@ function ContentList({ username }: { username: string }) {
           out.push({ id, ...c });
         }
         setItems(out);
+
+        // Check access for current wallet
+        if (address) {
+          const accessChecks = await Promise.all(out.map(async (item) => {
+            try {
+              const has: any = await pub.readContract({
+                address: ADDRESSES.contentPaywall, abi: contentPaywallAbi,
+                functionName: 'checkAccess', args: [item.id, address],
+              });
+              return [item.id as string, Boolean(has)] as const;
+            } catch { return [item.id as string, false] as const; }
+          }));
+          setAccessMap(Object.fromEntries(accessChecks));
+        }
       } catch {}
     };
     load();
-  }, [pub, username]);
+  }, [pub, username, address, busy]);
 
   const buy = async (id: string, price: bigint) => {
     if (!wallet || !pub) return;
@@ -351,6 +433,7 @@ function ContentList({ username }: { username: string }) {
         args: [id as `0x${string}`], value: price,
       });
       await pub.waitForTransactionReceipt({ hash });
+      setAccessMap(prev => ({ ...prev, [id]: true }));
     } catch (e: any) { setErr(e.shortMessage || e.message); }
     finally { setBusy(null); }
   };
@@ -359,24 +442,43 @@ function ContentList({ username }: { username: string }) {
     return <div className="text-center py-8 text-gray-500 text-sm">No paywalled content yet.</div>;
   }
 
+  const activeItems = items.filter(i => i.active);
+  const unlockedCount = activeItems.filter(i => accessMap[i.id]).length;
+
   return (
     <div>
+      {address && unlockedCount > 0 && (
+        <div className="mb-3 p-3 rounded-xl bg-purple-50 border border-purple-200 text-sm text-purple-800">
+          🔓 You've unlocked <strong>{unlockedCount}</strong> of <strong>{activeItems.length}</strong> item{activeItems.length !== 1 ? 's' : ''} from @{username}
+        </div>
+      )}
       <div className="text-sm text-gray-600 mb-3">Premium content from @{username}</div>
       <div className="space-y-3">
-        {items.filter(i => i.active).map(item => {
+        {activeItems.map(item => {
           let meta: any = {};
           try {
             if (item.metadataURI?.startsWith('data:application/json,')) {
               meta = JSON.parse(decodeURIComponent(item.metadataURI.slice('data:application/json,'.length)));
             }
           } catch {}
+          const unlocked = accessMap[item.id];
           return (
-            <div key={item.id} className="p-4 rounded-xl border border-gray-200">
+            <div key={item.id} className={`p-4 rounded-xl border ${unlocked ? 'border-green-300 bg-green-50/50' : 'border-gray-200'}`}>
               <div className="font-bold">{meta.title || item.id.slice(0, 10) + '...'}</div>
               {meta.description && <div className="text-sm text-gray-600 mt-1">{meta.description}</div>}
+              {unlocked && meta.url && (
+                <a href={meta.url} target="_blank" rel="noopener noreferrer"
+                  className="mt-2 inline-block text-sm text-indigo-600 hover:text-indigo-800 underline">
+                  🔓 Open content ↗
+                </a>
+              )}
               <div className="flex items-center justify-between mt-3">
                 <div className="text-sm font-bold">${formatUnits(item.price, 18)}</div>
-                {address ? (
+                {unlocked ? (
+                  <div className="px-4 py-1.5 bg-green-500 text-white rounded-full text-sm font-semibold">
+                    ✓ Unlocked
+                  </div>
+                ) : address ? (
                   <button onClick={() => buy(item.id, item.price)} disabled={busy === item.id}
                     className="px-4 py-1.5 bg-arc-gradient text-white rounded-full text-sm font-semibold disabled:opacity-60">
                     {busy === item.id ? 'Buying...' : 'Unlock'}
@@ -389,6 +491,154 @@ function ContentList({ username }: { username: string }) {
           );
         })}
       </div>
+      {err && <div className="mt-3 text-red-500 text-sm bg-red-50 p-2 rounded-xl">{err}</div>}
+    </div>
+  );
+}
+
+function ApiList({ username }: { username: string }) {
+  const { address } = useAccount();
+  const pub = usePublicClient();
+  const { data: wallet } = useWalletClient();
+  const [items, setItems] = useState<any[]>([]);
+  const [busy, setBusy] = useState<string | null>(null);
+  const [err, setErr] = useState('');
+  const [lastBatch, setLastBatch] = useState<{ callIds: string[]; txs: string[] } | null>(null);
+  const [copied, setCopied] = useState<string | null>(null);
+  const [qtyMap, setQtyMap] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    if (!pub) return;
+    const load = async () => {
+      try {
+        const ids: any = await pub.readContract({
+          address: ADDRESSES.payPerCall, abi: payPerCallAbi,
+          functionName: 'getCreatorEndpoints', args: [username],
+        });
+        const out: any[] = [];
+        for (const id of ids) {
+          const e: any = await pub.readContract({
+            address: ADDRESSES.payPerCall, abi: payPerCallAbi,
+            functionName: 'getEndpoint', args: [id],
+          });
+          out.push({ id, ...e });
+        }
+        setItems(out);
+      } catch {}
+    };
+    load();
+  }, [pub, username, lastBatch]);
+
+  const payN = async (id: string, price: bigint, count: number) => {
+    if (!wallet || !pub || count < 1) return;
+    setBusy(id); setErr(''); setLastBatch(null);
+    try {
+      const hash = await wallet.writeContract({
+        address: ADDRESSES.payPerCall, abi: payPerCallAbi,
+        functionName: 'batchPay', args: [id as `0x${string}`, BigInt(count)],
+        value: price * BigInt(count),
+      });
+      const receipt = await pub.waitForTransactionReceipt({ hash });
+      const paidLogs = receipt.logs.filter(l => l.address.toLowerCase() === ADDRESSES.payPerCall.toLowerCase());
+      const callIds = paidLogs.map(l => l.topics[1] ? (BigInt(l.topics[1]) + 1n).toString() : '?');
+      setLastBatch({ callIds, txs: [hash] });
+    } catch (e: any) {
+      setErr(e.shortMessage || e.message);
+    }
+    finally { setBusy(null); }
+  };
+
+  const copyToClipboard = async (text: string, key: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(key);
+      setTimeout(() => setCopied(null), 1500);
+    } catch {}
+  };
+
+  const activeItems = items.filter(i => i.active);
+
+  if (activeItems.length === 0) {
+    return <div className="text-center py-8 text-gray-500 text-sm">@{username} hasn't registered any paid API endpoints yet.</div>;
+  }
+
+  return (
+    <div>
+      <div className="text-xs text-gray-600 mb-3 bg-amber-50 border border-amber-200 rounded-lg p-2">
+        ⚡ <strong>For developers & AI agents.</strong> Pay-per-call endpoints are designed for programmatic access via the ArcPay SDK.
+      </div>
+      <div className="space-y-3">
+        {activeItems.map(item => {
+          const qty = qtyMap[item.id] ?? 1;
+          const total = item.pricePerCall * BigInt(qty);
+          return (
+            <div key={item.id} className="p-4 rounded-xl border border-gray-200">
+              <div className="flex items-start justify-between">
+                <div className="flex-1 min-w-0">
+                  <div className="font-bold font-mono">{item.name}</div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    {Number(item.totalCalls)} total calls served
+                  </div>
+                </div>
+                <div className="text-right shrink-0 ml-3">
+                  <div className="font-bold">${formatUnits(item.pricePerCall, 18)}</div>
+                  <div className="text-xs text-gray-500">/ call</div>
+                </div>
+              </div>
+              <div className="mt-3 flex items-center gap-2">
+                <div className="flex-1 text-xs font-mono text-gray-500 truncate" title={item.id}>
+                  {item.id.slice(0, 14)}...{item.id.slice(-6)}
+                </div>
+                <button onClick={() => copyToClipboard(item.id, item.id)}
+                  className="px-2 py-1 text-xs border border-gray-200 rounded-md hover:bg-gray-50"
+                  title="Copy endpointId">
+                  {copied === item.id ? '✓' : '📋'}
+                </button>
+              </div>
+              <div className="mt-3 flex items-center gap-2">
+                <label className="text-xs text-gray-500">Calls:</label>
+                {[1, 5, 10, 50].map(n => (
+                  <button key={n} onClick={() => setQtyMap(m => ({ ...m, [item.id]: n }))}
+                    className={`px-2.5 py-1 rounded-full text-xs font-semibold transition
+                      ${qty === n ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
+                    {n}
+                  </button>
+                ))}
+                <input type="number" min={1} value={qty}
+                  onChange={e => setQtyMap(m => ({ ...m, [item.id]: Math.max(1, parseInt(e.target.value || '1')) }))}
+                  className="w-16 px-2 py-1 rounded-md border border-gray-200 text-xs" />
+              </div>
+              <div className="mt-3 flex items-center justify-between">
+                <div className="text-sm text-gray-600">
+                  Total: <span className="font-bold text-black">${formatUnits(total, 18)} USDC</span>
+                </div>
+                {address ? (
+                  <button onClick={() => payN(item.id, item.pricePerCall, qty)} disabled={busy === item.id}
+                    className="px-4 py-1.5 bg-arc-gradient text-white rounded-full text-sm font-semibold disabled:opacity-60">
+                    {busy === item.id
+                      ? 'Paying...'
+                      : qty === 1 ? 'Pay for 1 call' : `Pay for ${qty} calls`}
+                  </button>
+                ) : (
+                  <div className="text-xs text-gray-500">Connect wallet</div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {lastBatch && lastBatch.callIds.length > 0 && (
+        <div className="mt-4 p-4 rounded-xl bg-green-50 border border-green-200">
+          <div className="text-sm font-bold text-green-800">
+            ✓ Purchased {lastBatch.callIds.length} call credit{lastBatch.callIds.length !== 1 ? 's' : ''} · receipt{lastBatch.callIds.length !== 1 ? 's' : ''} #{lastBatch.callIds[0]}{lastBatch.callIds.length > 1 ? `–#${lastBatch.callIds[lastBatch.callIds.length - 1]}` : ''}
+          </div>
+          <div className="text-xs mt-1"><TxLink tx={lastBatch.txs[0]} /></div>
+          <div className="text-xs text-green-700 mt-2">
+            Credits are bound to your wallet address. Your app / AI agent must sign each request with the same wallet — the <Link href="/" className="underline">ArcPay SDK</Link> handles signing automatically.
+          </div>
+        </div>
+      )}
       {err && <div className="mt-3 text-red-500 text-sm bg-red-50 p-2 rounded-xl">{err}</div>}
     </div>
   );

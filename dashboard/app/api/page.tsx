@@ -103,21 +103,35 @@ export default function APIPage() {
                   <div className="text-xs text-muted">{Number(e.totalCalls)} calls · {formatUnits(e.totalRevenue, 18)} gross</div>
                 </div>
               </div>
-              <div className="mt-3 p-3 bg-bg rounded-xl text-xs font-mono break-all">
-                endpointId: {e.id.slice(0, 20)}...
-              </div>
+              <EndpointIdBox id={e.id} />
             </div>
           ))}
         </div>
       )}
 
       <div className="mt-8 bg-arc-gradient text-white p-6 rounded-3xl">
-        <div className="font-bold">How clients pay</div>
+        <div className="font-bold">Share with your API clients</div>
+        <p className="text-xs opacity-80 mt-1">
+          Copy this snippet to your API docs so developers and AI agents can integrate billing.
+        </p>
         <pre className="mt-3 text-xs bg-black/20 p-3 rounded-lg overflow-x-auto">{`import { ArcPayClient } from '@arcpay/sdk';
-const client = new ArcPayClient({ network: 'testnet', privateKey });
-const ep = await client.api.getEndpointByName('${username}', 'my-api');
-await client.api.pay('${username}', 'my-api', ep.pricePerCall);
-// then call your HTTP endpoint with the on-chain callId for verification`}</pre>
+
+const client = new ArcPayClient({
+  network: 'testnet',
+  privateKey: process.env.CLIENT_PK, // your AI agent's wallet
+});
+
+// Option A — pay per call
+await client.api.pay('${username}', '${endpoints[0]?.name || 'my-api'}');
+
+// Option B — prepay 100 calls in one tx
+await client.api.batchPay('${username}', '${endpoints[0]?.name || 'my-api'}', 100);
+
+// Each request: SDK auto-signs with your wallet.
+// Server verifies the signature matches the on-chain payer.
+const result = await client.api.call('${username}', '${endpoints[0]?.name || 'my-api'}', {
+  prompt: 'hello',
+});`}</pre>
       </div>
     </Shell>
   );
@@ -168,6 +182,29 @@ function CreateEndpointForm({ username, onDone }: { username: string; onDone: ()
           <button onClick={onDone} className="px-4 py-3 rounded-xl border border-border">Cancel</button>
         </div>
       </div>
+    </div>
+  );
+}
+
+function EndpointIdBox({ id }: { id: string }) {
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(id);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {}
+  };
+  return (
+    <div className="mt-3 p-3 bg-bg rounded-xl text-xs font-mono flex items-start gap-2">
+      <div className="flex-1 break-all">
+        <span className="text-muted">endpointId:</span> {id}
+      </div>
+      <button onClick={copy}
+        className="shrink-0 px-2 py-1 rounded-md border border-border text-xs hover:bg-panel transition whitespace-nowrap"
+        title="Copy endpointId">
+        {copied ? '✓ Copied' : '📋 Copy'}
+      </button>
     </div>
   );
 }

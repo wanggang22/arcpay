@@ -1,0 +1,9 @@
+{
+  "rpc": "https://rpc.testnet.arc.network",
+  "change": "Added batchPay(endpointId, count) to enable prepaid call credits in one tx",
+  "contract": "PayPerCall",
+  "newAddress": "0x3a399A310965A5cbD5a2B9F21a3B9885B6372def",
+  "deployTx": "0x104583a49145c25ea43681c70c8935d52a56b1f3c542157184279cbd2f419041",
+  "replaces": "0xe407A796D81302987Ef950bdC01Ef4eA0b081b6C",
+  "note": "Only PayPerCall redeployed; Registry/TipJar/Subscriptions/ContentPaywall unchanged. Existing API endpoints must be re-registered under the new address."
+}
