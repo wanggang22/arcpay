@@ -2,10 +2,13 @@
 import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useAccount, usePublicClient } from 'wagmi';
+import { usePrivy, useWallets } from '@privy-io/react-auth';
 import { keccak256, stringToBytes } from 'viem';
 import { ADDRESSES, subscriptionsAbi } from '@/lib/config';
 
 const AUTHOR = 'gavin';
+const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID || '';
+const HAS_PRIVY = PRIVY_APP_ID.length >= 20 && !PRIVY_APP_ID.includes('demo') && !PRIVY_APP_ID.includes('replace');
 
 export default function DemoBlog() {
   const { address } = useAccount();
@@ -87,6 +90,7 @@ export default function DemoBlog() {
           <div className="flex items-center gap-3">
             <Link href="/faucet" className="text-xs text-gray-600 hover:text-indigo-600">💧 Faucet</Link>
             <Link href={`/${AUTHOR}`} className="text-xs text-gray-600 hover:text-indigo-600">Creator page</Link>
+            <DemoAuthBar />
           </div>
         </div>
       </header>
@@ -220,6 +224,57 @@ function Paywall({ plans, hasAddress }: { plans: Array<{ id: number; name: strin
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+function DemoAuthBar() {
+  if (!HAS_PRIVY) return null;
+  return <PrivyAuthBar />;
+}
+
+function PrivyAuthBar() {
+  const { ready, authenticated, user, login, logout } = usePrivy();
+  const { wallets } = useWallets();
+
+  if (!ready) return <span className="text-xs text-gray-400">…</span>;
+  if (!authenticated) {
+    return (
+      <button onClick={() => login()}
+        className="text-xs px-3 py-1.5 rounded-lg bg-gray-900 text-white font-bold hover:bg-gray-700">
+        Sign in
+      </button>
+    );
+  }
+
+  const u: any = user;
+  const ident = (() => {
+    if (u?.twitter?.username) return { label: `@${u.twitter.username}`, avatar: u.twitter.profilePictureUrl, emoji: '𝕏' };
+    if (u?.google?.email) return { label: u.google.name || u.google.email, emoji: 'G' };
+    if (u?.discord?.username) return { label: u.discord.username, emoji: '💬' };
+    if (u?.farcaster?.username) return { label: `@${u.farcaster.username}`, avatar: u.farcaster.pfp, emoji: 'ᶠ' };
+    if (u?.github?.username) return { label: u.github.username, emoji: '⌨' };
+    if (u?.email?.address) return { label: u.email.address, emoji: '✉' };
+    return null;
+  })();
+  const w = wallets[0];
+  const short = w ? `${w.address.slice(0, 6)}…${w.address.slice(-4)}` : '';
+
+  return (
+    <div className="flex items-center gap-2">
+      {ident && (
+        <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-gray-50 border border-gray-200 max-w-[160px]">
+          {ident.avatar ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={ident.avatar} alt="" className="w-5 h-5 rounded-full object-cover" />
+          ) : (
+            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-indigo-400 to-pink-400 text-white flex items-center justify-center text-[10px] font-bold">{ident.emoji}</div>
+          )}
+          <span className="text-xs font-medium truncate" title={ident.label}>{ident.label}</span>
+        </div>
+      )}
+      {w && <span className="hidden md:inline text-xs font-mono text-gray-500">{short}</span>}
+      <button onClick={() => logout()} className="text-xs text-gray-500 hover:text-gray-800">sign out</button>
     </div>
   );
 }
