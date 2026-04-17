@@ -67,6 +67,7 @@ function BuildHeader() {
         <nav className="flex items-center gap-3 text-xs">
           <Link href="/demo-blog" className="text-gray-600 hover:text-indigo-600">📝 Blog demo</Link>
           <Link href="/demo-product" className="text-gray-600 hover:text-indigo-600">🛒 Product demo</Link>
+          <Link href="/demo-agent" className="text-gray-600 hover:text-indigo-600">🤖 Agent demo</Link>
           <Link href="/faucet" className="text-gray-600 hover:text-indigo-600">💧 Faucet</Link>
           <a href="https://github.com/wanggang22/arcpay" target="_blank" rel="noopener noreferrer"
             className="text-gray-600 hover:text-indigo-600">GitHub</a>
@@ -413,6 +414,9 @@ app.post('/summarize-paper', async (req, res) => {
           { title: 'Agent-to-agent commerce', body: 'Agent A pays Agent B without either needing a Stripe account.' },
         ]}
       />
+      <p className="text-sm text-gray-500 mt-4">
+        Live example: <Link href="/demo-agent" className="underline text-indigo-600">arcpay.finance/demo-agent</Link> (x402 translation agent)
+      </p>
     </>
   );
 }
@@ -537,6 +541,7 @@ function Resources() {
     ['📦 Source code', 'https://github.com/wanggang22/arcpay', 'Contracts, SDK, landing, dashboard, extension — all MIT'],
     ['📝 Demo: Subscribe (Substack-style)', 'https://arcpay.finance/demo-blog', 'Paywalled blog with auto-unlock on subscription'],
     ['🛒 Demo: Content Paywall (Gumroad-style)', 'https://arcpay.finance/demo-product', 'Single-item sales page with on-chain receipt'],
+    ['🤖 Demo: Pay-per-call AI Agent', 'https://arcpay.finance/demo-agent', 'x402 translation agent with on-chain signature verification'],
     ['💧 Faucet', 'https://arcpay.finance/faucet', 'Grab testnet USDC to start building'],
     ['🐦 Chrome extension', 'https://github.com/wanggang22/arcpay/releases', 'Load unpacked in Chrome/Edge/Brave — Tip on x.com'],
     ['🎁 Claim flow', 'https://arcpay.finance/claim', 'If someone tipped your X handle before you joined'],

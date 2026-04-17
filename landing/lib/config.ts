@@ -139,4 +139,11 @@ export const payPerCallAbi = [
       { name: 'totalCalls', type: 'uint256' }, { name: 'totalRevenue', type: 'uint256' },
     ]}],
   },
+  { type: 'function', name: 'getReceipt', stateMutability: 'view', inputs: [{ type: 'uint256' }],
+    outputs: [{ type: 'tuple', components: [
+      { name: 'callId', type: 'uint256' }, { name: 'endpointId', type: 'bytes32' },
+      { name: 'payer', type: 'address' }, { name: 'amount', type: 'uint256' },
+      { name: 'timestamp', type: 'uint256' },
+    ]}],
+  },
 ] as const;
