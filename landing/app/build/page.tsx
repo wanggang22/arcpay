@@ -65,7 +65,8 @@ function BuildHeader() {
           <span className="text-xs text-gray-400 ml-1">/ build</span>
         </Link>
         <nav className="flex items-center gap-3 text-xs">
-          <Link href="/demo-blog" className="text-gray-600 hover:text-indigo-600">Live demo</Link>
+          <Link href="/demo-blog" className="text-gray-600 hover:text-indigo-600">📝 Blog demo</Link>
+          <Link href="/demo-product" className="text-gray-600 hover:text-indigo-600">🛒 Product demo</Link>
           <Link href="/faucet" className="text-gray-600 hover:text-indigo-600">💧 Faucet</Link>
           <a href="https://github.com/wanggang22/arcpay" target="_blank" rel="noopener noreferrer"
             className="text-gray-600 hover:text-indigo-600">GitHub</a>
@@ -311,6 +312,9 @@ app.use('/api/premium/*', async (req, res, next) => {
         <Scenario title="B. Discord bot (premium role on subscription)" code={discordExample} />
         <Scenario title="C. Express API middleware (HTTP 402 on unpaid)" code={expressExample} />
       </div>
+      <p className="text-sm text-gray-500 mt-4">
+        Live example: <Link href="/demo-blog" className="underline text-indigo-600">arcpay.finance/demo-blog</Link> (Substack-style paywall)
+      </p>
     </>
   );
 }
@@ -351,6 +355,9 @@ if (hasAccess) revealUrl();`;
           { title: 'Course drip', body: 'Each lesson is a content item; unlock them one by one.' },
         ]}
       />
+      <p className="text-sm text-gray-500 mt-4">
+        Live example: <Link href="/demo-product" className="underline text-indigo-600">arcpay.finance/demo-product</Link> (Gumroad-style)
+      </p>
     </>
   );
 }
@@ -528,9 +535,10 @@ function Contracts() {
 function Resources() {
   const links: Array<[string, string, string]> = [
     ['📦 Source code', 'https://github.com/wanggang22/arcpay', 'Contracts, SDK, landing, dashboard, extension — all MIT'],
-    ['🎬 Live demo', 'https://arcpay.finance/demo-blog', 'Mock Substack blog with USDC paywall'],
+    ['📝 Demo: Subscribe (Substack-style)', 'https://arcpay.finance/demo-blog', 'Paywalled blog with auto-unlock on subscription'],
+    ['🛒 Demo: Content Paywall (Gumroad-style)', 'https://arcpay.finance/demo-product', 'Single-item sales page with on-chain receipt'],
     ['💧 Faucet', 'https://arcpay.finance/faucet', 'Grab testnet USDC to start building'],
-    ['🐦 Chrome extension', 'https://github.com/wanggang22/arcpay/releases', 'Load unpacked in Chrome/Edge/Brave'],
+    ['🐦 Chrome extension', 'https://github.com/wanggang22/arcpay/releases', 'Load unpacked in Chrome/Edge/Brave — Tip on x.com'],
     ['🎁 Claim flow', 'https://arcpay.finance/claim', 'If someone tipped your X handle before you joined'],
     ['🏠 Creator Dashboard', 'https://app.arcpay.finance', 'Register username, manage plans/content/APIs, withdraw'],
   ];
