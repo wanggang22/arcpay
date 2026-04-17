@@ -54,6 +54,7 @@ export const tipJarAbi = [
 
 export const subscriptionsAbi = [
   { type: 'function', name: 'subscribe', stateMutability: 'payable', inputs: [{ type: 'uint256' }, { type: 'uint256' }], outputs: [{ type: 'uint256' }] },
+  { type: 'function', name: 'cancel', stateMutability: 'nonpayable', inputs: [{ type: 'uint256' }], outputs: [] },
   { type: 'function', name: 'getPlan', stateMutability: 'view', inputs: [{ type: 'uint256' }],
     outputs: [{ type: 'tuple', components: [
       { name: 'creatorHash', type: 'bytes32' }, { name: 'name', type: 'string' },

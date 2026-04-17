@@ -417,7 +417,7 @@ function SubscribePanel({ username }: { username: string }) {
   const [busy, setBusy] = useState(false);
   const [tx, setTx] = useState<string | null>(null);
   const [err, setErr] = useState('');
-  const [myActive, setMyActive] = useState<{ planId: number; planName: string; paidUntil: number } | null>(null);
+  const [myActive, setMyActive] = useState<{ planId: number; planName: string; paidUntil: number; subId: bigint; startedAt: number } | null>(null);
 
   useEffect(() => {
     if (!pub) return;
@@ -453,8 +453,9 @@ function SubscribePanel({ username }: { username: string }) {
                 functionName: 'getSubscription', args: [slot - 1n],
               });
               const paidUntil = Number(sub.paidUntil);
+              const startedAt = Number(sub.startedAt);
               if (sub.active && paidUntil * 1000 > Date.now()) {
-                setMyActive({ planId: plan.id, planName: plan.name, paidUntil });
+                setMyActive({ planId: plan.id, planName: plan.name, paidUntil, subId: slot - 1n, startedAt });
                 return;
               }
             }
@@ -479,6 +480,27 @@ function SubscribePanel({ username }: { username: string }) {
       });
       await pub.waitForTransactionReceipt({ hash });
       setTx(hash);
+    } catch (e: any) { setErr(e.shortMessage || e.message); }
+    finally { setBusy(false); }
+  };
+
+  const cancelSub = async () => {
+    if (!wallet || !pub || !myActive) return;
+    const confirmed = confirm(
+      `Cancel subscription to "${myActive.planName}"?\n\n` +
+      `You'll get a prorated refund for the unused portion (contract computes this automatically). ` +
+      `You can re-subscribe anytime.`
+    );
+    if (!confirmed) return;
+    setBusy(true); setErr(''); setTx(null);
+    try {
+      const hash = await wallet.writeContract({
+        address: ADDRESSES.subscriptions, abi: subscriptionsAbi, functionName: 'cancel',
+        args: [myActive.subId],
+      });
+      await pub.waitForTransactionReceipt({ hash });
+      setTx(hash);
+      setMyActive(null);
     } catch (e: any) { setErr(e.shortMessage || e.message); }
     finally { setBusy(false); }
   };
@@ -511,8 +533,17 @@ function SubscribePanel({ username }: { username: string }) {
   return (
     <div>
       {myActive && (
-        <div className="mb-3 p-3 rounded-xl bg-blue-50 border border-blue-200 text-sm text-blue-800">
-          ✓ Active subscription: <strong>{myActive.planName}</strong> · valid until <strong>{new Date(myActive.paidUntil * 1000).toLocaleDateString()}</strong>
+        <div className="mb-3 p-3 rounded-xl bg-blue-50 border border-blue-200 text-sm text-blue-800 flex items-center justify-between gap-3 flex-wrap">
+          <div className="flex-1 min-w-0">
+            ✓ Active subscription: <strong>{myActive.planName}</strong> · valid until <strong>{new Date(myActive.paidUntil * 1000).toLocaleDateString()}</strong>
+          </div>
+          <button
+            onClick={cancelSub}
+            disabled={busy}
+            className="shrink-0 px-2.5 py-1 rounded-lg border border-blue-300 hover:bg-blue-100 text-[11px] font-bold disabled:opacity-60"
+            title="Cancel and refund the unused portion">
+            Cancel &amp; refund
+          </button>
         </div>
       )}
       <div className="text-sm text-gray-600 mb-3">Subscribe to @{username}</div>
