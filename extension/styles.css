@@ -48,3 +48,36 @@
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
   }
 }
+
+/* Toast (shown when tip confirmed from popup) */
+#arcpay-toast-root {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 2147483647;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.arcpay-toast {
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6366f1, #d946ef);
+  color: #fff;
+  font-family: "TwitterChirp", system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  box-shadow: 0 10px 30px rgba(118, 75, 162, 0.35), 0 1px 4px rgba(0, 0, 0, 0.12);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  pointer-events: auto;
+}
+
+.arcpay-toast-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
