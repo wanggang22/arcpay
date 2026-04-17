@@ -1,10 +1,44 @@
 import { NextResponse } from 'next/server';
 import { createPublicClient, http, verifyMessage } from 'viem';
+import { Redis } from '@upstash/redis';
 import { ADDRESSES, CHAIN, payPerCallAbi } from '@/lib/config';
 
-// In-memory "consumed" set. Lost on cold start — fine for demo.
-// In production you'd use Redis / Postgres.
-const consumed = new Set<string>();
+/**
+ * Replay protection for x402 callIds.
+ *
+ * Prefers Upstash Redis (Vercel Marketplace → free tier) if configured — that
+ * gives durable, cross-instance replay protection. Without Redis we fall back
+ * to an in-memory Set which is sufficient for local demos but **loses state
+ * on every serverless cold start**. In production, provision Redis.
+ *
+ * To enable Redis:
+ *   1. Vercel Dashboard → Storage → Upstash → create free DB
+ *   2. Vercel injects UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN envs
+ *   3. Redeploy — this route auto-detects and switches.
+ */
+const redis =
+  process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
+    ? Redis.fromEnv()
+    : null;
+
+const memConsumed = new Set<string>();
+
+async function isConsumed(callId: string): Promise<boolean> {
+  if (redis) {
+    const v = await redis.exists(`arcpay:consumed:${callId}`);
+    return v === 1;
+  }
+  return memConsumed.has(callId);
+}
+
+async function markConsumed(callId: string): Promise<void> {
+  if (redis) {
+    // TTL 90 days — prevents the set from growing forever in Redis
+    await redis.set(`arcpay:consumed:${callId}`, '1', { ex: 60 * 60 * 24 * 90 });
+    return;
+  }
+  memConsumed.add(callId);
+}
 
 export const runtime = 'nodejs';
 
@@ -21,7 +55,7 @@ export async function POST(request: Request) {
     }
 
     // 402 — payment required: callId already consumed
-    if (consumed.has(String(callId))) {
+    if (await isConsumed(String(callId))) {
       return NextResponse.json(
         { error: 'This callId was already consumed.', code: 'already_consumed', callId },
         { status: 402 }
@@ -79,7 +113,7 @@ export async function POST(request: Request) {
     }
 
     // All checks passed — mark consumed, do the work
-    consumed.add(String(callId));
+    await markConsumed(String(callId));
 
     const translated = mockTranslate(String(text));
 
