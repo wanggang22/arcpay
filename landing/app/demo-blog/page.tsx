@@ -80,16 +80,36 @@ export default function DemoBlog() {
   return (
     <div className="min-h-screen bg-[#fbf9f5] text-gray-900">
       {/* Fake blog header */}
-      <header className="border-b border-gray-200 bg-white">
-        <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded bg-gradient-to-br from-orange-400 to-red-500 text-white flex items-center justify-center text-sm font-bold">📰</div>
-            <span className="font-bold font-serif text-lg">Gavin&apos;s Substack</span>
-            <span className="text-xs text-gray-400 ml-2">· pay-with-USDC demo</span>
+      <header className="border-b border-gray-200 bg-white sticky top-0 z-10">
+        <div className="max-w-3xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
+          {/* Brand */}
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-orange-400 to-red-500 text-white flex items-center justify-center text-lg shadow-sm shrink-0">
+              📰
+            </div>
+            <div className="min-w-0 leading-tight">
+              <div className="font-bold font-serif text-base truncate">Gavin&apos;s Substack</div>
+              <div className="text-[10px] uppercase tracking-wider text-gray-400 hidden sm:block">
+                pay-with-USDC demo
+              </div>
+            </div>
           </div>
-          <div className="flex items-center gap-3">
-            <Link href="/faucet" className="text-xs text-gray-600 hover:text-indigo-600">💧 Faucet</Link>
-            <Link href={`/${AUTHOR}`} className="text-xs text-gray-600 hover:text-indigo-600">Creator page</Link>
+
+          {/* Nav + Auth */}
+          <div className="flex items-center gap-1">
+            <Link href="/faucet"
+              className="flex items-center gap-1 text-xs text-gray-600 px-2.5 py-1.5 rounded-lg hover:bg-gray-100 transition"
+              title="Get free testnet USDC">
+              <span>💧</span>
+              <span className="hidden sm:inline">Faucet</span>
+            </Link>
+            <Link href={`/${AUTHOR}`}
+              className="flex items-center gap-1 text-xs text-gray-600 px-2.5 py-1.5 rounded-lg hover:bg-gray-100 transition"
+              title={`Go to @${AUTHOR}'s ArcPay page`}>
+              <span>↗</span>
+              <span className="hidden sm:inline">Creator</span>
+            </Link>
+            <div className="hidden sm:block w-px h-6 bg-gray-200 mx-1" />
             <DemoAuthBar />
           </div>
         </div>
@@ -236,12 +256,15 @@ function DemoAuthBar() {
 function PrivyAuthBar() {
   const { ready, authenticated, user, login, logout } = usePrivy();
   const { wallets } = useWallets();
+  const [open, setOpen] = useState(false);
 
-  if (!ready) return <span className="text-xs text-gray-400">…</span>;
+  if (!ready) {
+    return <div className="w-8 h-8 rounded-full bg-gray-100 animate-pulse" />;
+  }
   if (!authenticated) {
     return (
       <button onClick={() => login()}
-        className="text-xs px-3 py-1.5 rounded-lg bg-gray-900 text-white font-bold hover:bg-gray-700">
+        className="text-xs px-3.5 py-1.5 rounded-lg bg-gray-900 text-white font-bold hover:bg-gray-700 transition">
         Sign in
       </button>
     );
@@ -255,26 +278,68 @@ function PrivyAuthBar() {
     if (u?.farcaster?.username) return { label: `@${u.farcaster.username}`, avatar: u.farcaster.pfp, emoji: 'ᶠ' };
     if (u?.github?.username) return { label: u.github.username, emoji: '⌨' };
     if (u?.email?.address) return { label: u.email.address, emoji: '✉' };
-    return null;
+    return { label: 'Signed in', emoji: '✓' };
   })();
   const w = wallets[0];
   const short = w ? `${w.address.slice(0, 6)}…${w.address.slice(-4)}` : '';
+  const full = w?.address || '';
+
+  const copy = async () => {
+    if (!full) return;
+    try { await navigator.clipboard.writeText(full); } catch {}
+  };
 
   return (
-    <div className="flex items-center gap-2">
-      {ident && (
-        <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-gray-50 border border-gray-200 max-w-[160px]">
-          {ident.avatar ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={ident.avatar} alt="" className="w-5 h-5 rounded-full object-cover" />
-          ) : (
-            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-indigo-400 to-pink-400 text-white flex items-center justify-center text-[10px] font-bold">{ident.emoji}</div>
-          )}
-          <span className="text-xs font-medium truncate" title={ident.label}>{ident.label}</span>
+    <div className="relative">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="flex items-center gap-2 pl-1 pr-2.5 py-1 rounded-full bg-gray-50 border border-gray-200 hover:border-gray-300 transition"
+      >
+        {ident.avatar ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={ident.avatar} alt="" className="w-7 h-7 rounded-full object-cover" />
+        ) : (
+          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-500 to-pink-500 text-white flex items-center justify-center text-xs font-bold">
+            {ident.emoji}
+          </div>
+        )}
+        <div className="hidden md:flex flex-col items-start leading-tight">
+          <span className="text-xs font-bold truncate max-w-[120px]">{ident.label}</span>
+          {short && <span className="text-[10px] font-mono text-gray-500">{short}</span>}
         </div>
+        <svg viewBox="0 0 20 20" className="w-3 h-3 text-gray-400 hidden md:block" fill="currentColor">
+          <path d="M5 8l5 5 5-5H5z" />
+        </svg>
+      </button>
+
+      {open && (
+        <>
+          <button
+            onClick={() => setOpen(false)}
+            className="fixed inset-0 z-10 cursor-default"
+            aria-label="Close menu"
+          />
+          <div className="absolute right-0 top-full mt-1 w-60 rounded-xl bg-white border border-gray-200 shadow-lg z-20 overflow-hidden">
+            <div className="p-3 border-b border-gray-100">
+              <div className="text-xs text-gray-500 uppercase tracking-wider">Signed in as</div>
+              <div className="mt-1 font-bold text-sm truncate">{ident.label}</div>
+            </div>
+            {w && (
+              <button onClick={copy} className="w-full p-3 text-left hover:bg-gray-50 border-b border-gray-100">
+                <div className="text-xs text-gray-500 uppercase tracking-wider">Wallet</div>
+                <div className="mt-1 font-mono text-xs truncate" title={full}>{short}</div>
+                <div className="text-[10px] text-indigo-600 mt-0.5">Click to copy full address</div>
+              </button>
+            )}
+            <button
+              onClick={() => { setOpen(false); logout(); }}
+              className="w-full p-3 text-left hover:bg-red-50 text-xs text-red-600 font-bold"
+            >
+              Sign out
+            </button>
+          </div>
+        </>
       )}
-      {w && <span className="hidden md:inline text-xs font-mono text-gray-500">{short}</span>}
-      <button onClick={() => logout()} className="text-xs text-gray-500 hover:text-gray-800">sign out</button>
     </div>
   );
 }
