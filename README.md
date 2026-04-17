@@ -58,7 +58,13 @@ ArcPay is a **protocol** with multiple ways to surface it to end users:
 ### As a developer (SDK)
 
 ```bash
-npm install @arcpay/sdk
+# The SDK is in this monorepo at sdk/js. A published @arcpay/sdk on npm
+# is planned post-hackathon. For now, install from source:
+git clone https://github.com/wanggang22/arcpay
+cd arcpay/sdk/js
+npm install && npm run build
+# Then reference as a local file dependency in your project:
+#   npm install /path/to/arcpay/sdk/js
 ```
 
 ```typescript

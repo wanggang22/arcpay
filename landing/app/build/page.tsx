@@ -143,7 +143,14 @@ function Section({ id, title, kicker, children }: { id: string; title: string; k
 }
 
 function Quickstart() {
-  const install = `npm install @arcpay/sdk viem`;
+  const install = `# Install from source (SDK lives in sdk/js/ of the monorepo)
+git clone https://github.com/wanggang22/arcpay
+cd arcpay/sdk/js && npm install && npm run build
+# Reference as local file in your project:
+npm install $(pwd)
+
+# (A published @arcpay/sdk on npm is planned post-hackathon —
+#  for now, the source build above is the canonical install path.)`;
   const connect = `import { ArcPayClient } from '@arcpay/sdk';
 
 const client = new ArcPayClient({
