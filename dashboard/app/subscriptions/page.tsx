@@ -96,22 +96,87 @@ export default function SubsPage() {
       ) : (
         <div className="space-y-2">
           {plans.map(p => (
-            <div key={p.id} className="bg-panel border border-border rounded-2xl p-5">
-              <div className="flex justify-between items-start">
-                <div>
-                  <div className="font-bold text-lg">{p.name}</div>
-                  <div className="text-sm text-muted">Plan #{p.id} · {p.active ? '🟢 active' : '⚪ inactive'}</div>
-                </div>
-                <div className="text-right">
-                  <div className="text-xl font-bold">${formatUnits(p.pricePerMonth, 18)}<span className="text-sm text-muted"> /mo</span></div>
-                  <div className="text-xs text-muted">{p.subscriberCount} subscriber{p.subscriberCount !== 1 ? 's' : ''}</div>
-                </div>
-              </div>
-            </div>
+            <PlanRow key={p.id} plan={p} />
           ))}
         </div>
       )}
     </Shell>
+  );
+}
+
+function PlanRow({ plan }: { plan: any }) {
+  const pub = usePublicClient();
+  const { data: wallet } = useWalletClient();
+  const [editing, setEditing] = useState(false);
+  const [newPrice, setNewPrice] = useState('');
+  const [newActive, setNewActive] = useState(plan.active);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+
+  const save = async () => {
+    if (!wallet || !pub) return;
+    setBusy(true); setErr('');
+    try {
+      // Contract signature: updatePlan(planId, active, newPrice /* 0 = unchanged */, newMetadata /* '' = unchanged */)
+      const price = newPrice ? parseUnits(newPrice, 18) : 0n;
+      const hash = await wallet.writeContract({
+        address: ADDRESSES.subscriptions, abi: subscriptionsFullAbi, functionName: 'updatePlan',
+        args: [BigInt(plan.id), newActive, price, ''],
+      });
+      await pub.waitForTransactionReceipt({ hash });
+      setEditing(false);
+      window.location.reload();
+    } catch (e: any) { setErr(e.shortMessage || e.message); }
+    finally { setBusy(false); }
+  };
+
+  return (
+    <div className="bg-panel border border-border rounded-2xl p-5">
+      <div className="flex justify-between items-start gap-3">
+        <div className="min-w-0">
+          <div className="font-bold text-lg truncate">{plan.name}</div>
+          <div className="text-sm text-muted">Plan #{plan.id} · {plan.active ? '🟢 active' : '⚪ inactive'}</div>
+        </div>
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="text-right">
+            <div className="text-xl font-bold">${formatUnits(plan.pricePerMonth, 18)}<span className="text-sm text-muted"> /mo</span></div>
+            <div className="text-xs text-muted">{plan.subscriberCount} subscriber{plan.subscriberCount !== 1 ? 's' : ''}</div>
+          </div>
+          <button onClick={() => { setEditing(!editing); setNewActive(plan.active); setNewPrice(''); setErr(''); }}
+            className="p-2 rounded-lg border border-border hover:bg-bg text-sm"
+            title="Edit plan">
+            ⚙️
+          </button>
+        </div>
+      </div>
+      {editing && (
+        <div className="mt-4 pt-4 border-t border-border space-y-3">
+          <div className="flex items-center gap-3">
+            <label className="text-sm font-medium shrink-0">New price (USDC, optional)</label>
+            <input value={newPrice} onChange={e => setNewPrice(e.target.value.replace(/[^0-9.]/g, ''))}
+              placeholder={formatUnits(plan.pricePerMonth, 18)}
+              className="flex-1 px-3 py-1.5 rounded-lg border border-border focus:border-accent focus:outline-none text-sm" />
+          </div>
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" checked={newActive} onChange={e => setNewActive(e.target.checked)} />
+            Active (fans can subscribe)
+          </label>
+          {err && <div className="text-red-500 text-xs">{err}</div>}
+          <div className="flex gap-2">
+            <button onClick={save} disabled={busy}
+              className="px-4 py-1.5 rounded-lg bg-arc-gradient text-white text-sm font-bold disabled:opacity-60">
+              {busy ? 'Saving…' : 'Save'}
+            </button>
+            <button onClick={() => setEditing(false)} className="px-4 py-1.5 rounded-lg border border-border text-sm">
+              Cancel
+            </button>
+          </div>
+          <div className="text-[11px] text-muted">
+            Leave price blank to keep <code className="font-mono">{formatUnits(plan.pricePerMonth, 18)}</code>. Existing subscribers keep their current paid period; new subscriptions use the new price.
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 

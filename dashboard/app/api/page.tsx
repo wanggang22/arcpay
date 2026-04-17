@@ -91,21 +91,7 @@ export default function APIPage() {
         </div>
       ) : (
         <div className="space-y-2">
-          {endpoints.map(e => (
-            <div key={e.id} className="bg-panel border border-border rounded-2xl p-5">
-              <div className="flex justify-between items-start">
-                <div className="flex-1 min-w-0">
-                  <div className="font-bold font-mono">{e.name}</div>
-                  <div className="text-xs text-muted mt-1">{e.active ? '🟢 active' : '⚪ inactive'}</div>
-                </div>
-                <div className="text-right">
-                  <div className="text-xl font-bold">${formatUnits(e.pricePerCall, 18)}<span className="text-sm text-muted"> /call</span></div>
-                  <div className="text-xs text-muted">{Number(e.totalCalls)} calls · {formatUnits(e.totalRevenue, 18)} gross</div>
-                </div>
-              </div>
-              <EndpointIdBox id={e.id} />
-            </div>
-          ))}
+          {endpoints.map(e => <EndpointRow key={e.id} endpoint={e} username={username} />)}
         </div>
       )}
 
@@ -182,6 +168,83 @@ function CreateEndpointForm({ username, onDone }: { username: string; onDone: ()
           <button onClick={onDone} className="px-4 py-3 rounded-xl border border-border">Cancel</button>
         </div>
       </div>
+    </div>
+  );
+}
+
+function EndpointRow({ endpoint, username }: { endpoint: any; username: string }) {
+  const pub = usePublicClient();
+  const { data: wallet } = useWalletClient();
+  const [editing, setEditing] = useState(false);
+  const [newPrice, setNewPrice] = useState('');
+  const [newActive, setNewActive] = useState(endpoint.active);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+
+  const save = async () => {
+    if (!wallet || !pub) return;
+    setBusy(true); setErr('');
+    try {
+      // updateEndpoint(username, name, active, newPrice)
+      const price = newPrice ? parseUnits(newPrice, 18) : 0n;
+      const hash = await wallet.writeContract({
+        address: ADDRESSES.payPerCall, abi: payPerCallFullAbi, functionName: 'updateEndpoint',
+        args: [username, endpoint.name, newActive, price],
+      });
+      await pub.waitForTransactionReceipt({ hash });
+      setEditing(false);
+      window.location.reload();
+    } catch (e: any) { setErr(e.shortMessage || e.message); }
+    finally { setBusy(false); }
+  };
+
+  return (
+    <div className="bg-panel border border-border rounded-2xl p-5">
+      <div className="flex justify-between items-start gap-3">
+        <div className="flex-1 min-w-0">
+          <div className="font-bold font-mono">{endpoint.name}</div>
+          <div className="text-xs text-muted mt-1">{endpoint.active ? '🟢 active' : '⚪ inactive'}</div>
+        </div>
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="text-right">
+            <div className="text-xl font-bold">${formatUnits(endpoint.pricePerCall, 18)}<span className="text-sm text-muted"> /call</span></div>
+            <div className="text-xs text-muted">{Number(endpoint.totalCalls)} calls · {formatUnits(endpoint.totalRevenue, 18)} gross</div>
+          </div>
+          <button onClick={() => { setEditing(!editing); setNewActive(endpoint.active); setNewPrice(''); setErr(''); }}
+            className="p-2 rounded-lg border border-border hover:bg-bg text-sm"
+            title="Edit endpoint">
+            ⚙️
+          </button>
+        </div>
+      </div>
+      <EndpointIdBox id={endpoint.id} />
+      {editing && (
+        <div className="mt-4 pt-4 border-t border-border space-y-3">
+          <div className="flex items-center gap-3">
+            <label className="text-sm font-medium shrink-0">New price (USDC, optional)</label>
+            <input value={newPrice} onChange={e => setNewPrice(e.target.value.replace(/[^0-9.]/g, ''))}
+              placeholder={formatUnits(endpoint.pricePerCall, 18)}
+              className="flex-1 px-3 py-1.5 rounded-lg border border-border focus:border-accent focus:outline-none text-sm" />
+          </div>
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" checked={newActive} onChange={e => setNewActive(e.target.checked)} />
+            Active (callers can pay)
+          </label>
+          {err && <div className="text-red-500 text-xs">{err}</div>}
+          <div className="flex gap-2">
+            <button onClick={save} disabled={busy}
+              className="px-4 py-1.5 rounded-lg bg-arc-gradient text-white text-sm font-bold disabled:opacity-60">
+              {busy ? 'Saving…' : 'Save'}
+            </button>
+            <button onClick={() => setEditing(false)} className="px-4 py-1.5 rounded-lg border border-border text-sm">
+              Cancel
+            </button>
+          </div>
+          <div className="text-[11px] text-muted">
+            Leave price blank to keep current. Previously-purchased callIds retain their value.
+          </div>
+        </div>
+      )}
     </div>
   );
 }
