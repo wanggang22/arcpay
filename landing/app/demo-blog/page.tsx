@@ -2,13 +2,11 @@
 import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useAccount, usePublicClient } from 'wagmi';
-import { usePrivy, useWallets } from '@privy-io/react-auth';
 import { keccak256, stringToBytes } from 'viem';
 import { ADDRESSES, subscriptionsAbi } from '@/lib/config';
+import { AuthPill } from '@/components/AuthPill';
 
 const AUTHOR = 'gavin';
-const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID || '';
-const HAS_PRIVY = PRIVY_APP_ID.length >= 20 && !PRIVY_APP_ID.includes('demo') && !PRIVY_APP_ID.includes('replace');
 
 export default function DemoBlog() {
   const { address } = useAccount();
@@ -110,7 +108,7 @@ export default function DemoBlog() {
               <span className="hidden sm:inline">Creator</span>
             </Link>
             <div className="hidden sm:block w-px h-6 bg-gray-200 mx-1" />
-            <DemoAuthBar />
+            <AuthPill />
           </div>
         </div>
       </header>
@@ -251,98 +249,3 @@ function Paywall({ plans, hasAddress }: { plans: Array<{ id: number; name: strin
   );
 }
 
-function DemoAuthBar() {
-  if (!HAS_PRIVY) return null;
-  return <PrivyAuthBar />;
-}
-
-function PrivyAuthBar() {
-  const { ready, authenticated, user, login, logout } = usePrivy();
-  const { wallets } = useWallets();
-  const [open, setOpen] = useState(false);
-
-  if (!ready) {
-    return <div className="w-8 h-8 rounded-full bg-gray-100 animate-pulse" />;
-  }
-  if (!authenticated) {
-    return (
-      <button onClick={() => login()}
-        className="text-xs px-3.5 py-1.5 rounded-lg bg-gray-900 text-white font-bold hover:bg-gray-700 transition">
-        Sign in
-      </button>
-    );
-  }
-
-  const u: any = user;
-  const ident = (() => {
-    if (u?.twitter?.username) return { label: `@${u.twitter.username}`, avatar: u.twitter.profilePictureUrl, emoji: '𝕏' };
-    if (u?.google?.email) return { label: u.google.name || u.google.email, emoji: 'G' };
-    if (u?.discord?.username) return { label: u.discord.username, emoji: '💬' };
-    if (u?.farcaster?.username) return { label: `@${u.farcaster.username}`, avatar: u.farcaster.pfp, emoji: 'ᶠ' };
-    if (u?.github?.username) return { label: u.github.username, emoji: '⌨' };
-    if (u?.email?.address) return { label: u.email.address, emoji: '✉' };
-    return { label: 'Signed in', emoji: '✓' };
-  })();
-  const w = wallets[0];
-  const short = w ? `${w.address.slice(0, 6)}…${w.address.slice(-4)}` : '';
-  const full = w?.address || '';
-
-  const copy = async () => {
-    if (!full) return;
-    try { await navigator.clipboard.writeText(full); } catch {}
-  };
-
-  return (
-    <div className="relative">
-      <button
-        onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-2 pl-1 pr-2.5 py-1 rounded-full bg-gray-50 border border-gray-200 hover:border-gray-300 transition"
-      >
-        {ident.avatar ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={ident.avatar} alt="" className="w-7 h-7 rounded-full object-cover" />
-        ) : (
-          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-500 to-pink-500 text-white flex items-center justify-center text-xs font-bold">
-            {ident.emoji}
-          </div>
-        )}
-        <div className="hidden md:flex flex-col items-start leading-tight">
-          <span className="text-xs font-bold truncate max-w-[120px]">{ident.label}</span>
-          {short && <span className="text-[10px] font-mono text-gray-500">{short}</span>}
-        </div>
-        <svg viewBox="0 0 20 20" className="w-3 h-3 text-gray-400 hidden md:block" fill="currentColor">
-          <path d="M5 8l5 5 5-5H5z" />
-        </svg>
-      </button>
-
-      {open && (
-        <>
-          <button
-            onClick={() => setOpen(false)}
-            className="fixed inset-0 z-10 cursor-default"
-            aria-label="Close menu"
-          />
-          <div className="absolute right-0 top-full mt-1 w-60 rounded-xl bg-white border border-gray-200 shadow-lg z-20 overflow-hidden">
-            <div className="p-3 border-b border-gray-100">
-              <div className="text-xs text-gray-500 uppercase tracking-wider">Signed in as</div>
-              <div className="mt-1 font-bold text-sm truncate">{ident.label}</div>
-            </div>
-            {w && (
-              <button onClick={copy} className="w-full p-3 text-left hover:bg-gray-50 border-b border-gray-100">
-                <div className="text-xs text-gray-500 uppercase tracking-wider">Wallet</div>
-                <div className="mt-1 font-mono text-xs truncate" title={full}>{short}</div>
-                <div className="text-[10px] text-indigo-600 mt-0.5">Click to copy full address</div>
-              </button>
-            )}
-            <button
-              onClick={() => { setOpen(false); logout(); }}
-              className="w-full p-3 text-left hover:bg-red-50 text-xs text-red-600 font-bold"
-            >
-              Sign out
-            </button>
-          </div>
-        </>
-      )}
-    </div>
-  );
-}

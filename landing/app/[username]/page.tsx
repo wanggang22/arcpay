@@ -411,6 +411,7 @@ function SubscribePanel({ username }: { username: string }) {
   const pub = usePublicClient();
   const { data: wallet } = useWalletClient();
   const [plans, setPlans] = useState<Array<{ id: number; name: string; price: bigint; active: boolean }>>([]);
+  const [loadingPlans, setLoadingPlans] = useState(true);
   const [months, setMonths] = useState(1);
   const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
@@ -421,6 +422,7 @@ function SubscribePanel({ username }: { username: string }) {
   useEffect(() => {
     if (!pub) return;
     const load = async () => {
+      setLoadingPlans(true);
       const found: Array<{ id: number; name: string; price: bigint; active: boolean }> = [];
       const usernameHash = keccak256(stringToBytes(username));
       for (let i = 0; i < 20; i++) {
@@ -434,6 +436,7 @@ function SubscribePanel({ username }: { username: string }) {
         } catch { break; }
       }
       setPlans(found);
+      setLoadingPlans(false);
       if (found[0]) setSelectedPlan(found[0].id);
 
       // Check if current wallet has an active sub to any of these plans
@@ -480,8 +483,29 @@ function SubscribePanel({ username }: { username: string }) {
     finally { setBusy(false); }
   };
 
+  if (loadingPlans) {
+    return (
+      <div className="space-y-3">
+        <div className="h-4 w-2/3 rounded bg-gray-100 animate-pulse" />
+        <div className="p-4 rounded-xl border border-gray-100 bg-gray-50 space-y-2">
+          <div className="h-4 w-1/2 rounded bg-gray-200 animate-pulse" />
+          <div className="h-3 w-1/3 rounded bg-gray-200 animate-pulse" />
+        </div>
+        <div className="p-4 rounded-xl border border-gray-100 bg-gray-50 space-y-2">
+          <div className="h-4 w-1/3 rounded bg-gray-200 animate-pulse" />
+          <div className="h-3 w-1/4 rounded bg-gray-200 animate-pulse" />
+        </div>
+      </div>
+    );
+  }
   if (plans.length === 0) {
-    return <div className="text-center py-8 text-gray-500 text-sm">@{username} hasn't created any subscription plans yet.</div>;
+    return (
+      <div className="text-center py-10 px-6 border-2 border-dashed border-gray-200 rounded-2xl">
+        <div className="text-4xl mb-2">📅</div>
+        <div className="font-bold">@{username} hasn&apos;t created a subscription plan yet.</div>
+        <div className="text-sm text-gray-500 mt-1">Tips and content may still be available in the other tabs.</div>
+      </div>
+    );
   }
 
   return (
