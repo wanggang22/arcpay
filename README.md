@@ -58,17 +58,13 @@ ArcPay is a **protocol** with multiple ways to surface it to end users:
 ### As a developer (SDK)
 
 ```bash
-# The SDK is in this monorepo at sdk/js. A published @arcpay/sdk on npm
-# is planned post-hackathon. For now, install from source:
-git clone https://github.com/wanggang22/arcpay
-cd arcpay/sdk/js
-npm install && npm run build
-# Then reference as a local file dependency in your project:
-#   npm install /path/to/arcpay/sdk/js
+npm install @wanggang22/arcpay-sdk
 ```
 
+> Published under `@wanggang22` scope. An `@arcpay` npm org is planned post-hackathon; package will be mirror-published with version parity.
+
 ```typescript
-import { ArcPayClient } from '@arcpay/sdk';
+import { ArcPayClient } from '@wanggang22/arcpay-sdk';
 
 const client = new ArcPayClient({
   network: 'testnet',
@@ -157,7 +153,7 @@ arcpay/
 │   ├── src/PayPerCall.sol          # w/ batchPay for AI agents
 │   └── src/ArcPayHub.sol
 ├── sdk/
-│   ├── js/                          # @arcpay/sdk (TypeScript)
+│   ├── js/                          # @wanggang22/arcpay-sdk (TypeScript)
 │   └── python/                      # arcpay-sdk (Python, for AI agents)
 ├── cli/                             # create-arc-app CLI + 5 templates
 ├── landing/                         # arcpay.finance — public site + OAuth + /claim
