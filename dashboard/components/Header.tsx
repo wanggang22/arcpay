@@ -57,6 +57,42 @@ function WalletBadge({ address }: { address: string }) {
   );
 }
 
+type SocialIdent = {
+  source: 'twitter' | 'google' | 'discord' | 'farcaster' | 'github' | 'email' | 'apple';
+  label: string;
+  avatar?: string;
+};
+
+function identityFromPrivyUser(user: any): SocialIdent | null {
+  if (!user) return null;
+  if (user.twitter?.username) return { source: 'twitter', label: `@${user.twitter.username}`, avatar: user.twitter.profilePictureUrl };
+  if (user.google?.email) return { source: 'google', label: user.google.name || user.google.email };
+  if (user.discord?.username) return { source: 'discord', label: user.discord.username };
+  if (user.farcaster?.username) return { source: 'farcaster', label: `@${user.farcaster.username}`, avatar: user.farcaster.pfp };
+  if (user.github?.username) return { source: 'github', label: user.github.username };
+  if (user.apple?.email) return { source: 'apple', label: user.apple.email };
+  if (user.email?.address) return { source: 'email', label: user.email.address };
+  return null;
+}
+
+function sourceEmoji(s: SocialIdent['source']): string {
+  return ({ twitter: '𝕏', google: 'G', discord: '💬', farcaster: 'ᶠ', github: '⌨', apple: '', email: '✉' } as Record<SocialIdent['source'], string>)[s] || '';
+}
+
+function IdentityBadge({ ident }: { ident: SocialIdent }) {
+  return (
+    <div className="hidden md:flex items-center gap-1.5 px-2 py-1 rounded-lg bg-bg border border-border max-w-[200px]">
+      {ident.avatar ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={ident.avatar} alt="" className="w-5 h-5 rounded-full object-cover" />
+      ) : (
+        <div className="w-5 h-5 rounded-full bg-arc-gradient text-white flex items-center justify-center text-[10px] font-bold">{sourceEmoji(ident.source)}</div>
+      )}
+      <span className="text-xs font-medium truncate" title={ident.label}>{ident.label}</span>
+    </div>
+  );
+}
+
 function PrivyAuthButton() {
   const { ready, authenticated, user, login, logout } = usePrivy();
   const { wallets } = useWallets();
@@ -69,12 +105,12 @@ function PrivyAuthButton() {
     </button>
   );
 
-  const email = user?.email?.address ?? user?.google?.email;
+  const ident = identityFromPrivyUser(user);
 
   return (
     <div className="flex items-center gap-2">
+      {ident && <IdentityBadge ident={ident} />}
       {wallet && <WalletBadge address={wallet.address} />}
-      {email && <span className="text-xs text-muted hidden md:inline max-w-[140px] truncate" title={email}>{email}</span>}
       <button onClick={() => logout()} className="px-3 py-1.5 rounded-lg border border-border text-xs hover:bg-bg">
         Sign out
       </button>

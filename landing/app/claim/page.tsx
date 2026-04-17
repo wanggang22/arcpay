@@ -234,8 +234,30 @@ function AuthBar() {
       );
     }
     const w = wallets[0];
+    const u: any = privy.user;
+    const ident = (() => {
+      if (!u) return null;
+      if (u.twitter?.username) return { label: `@${u.twitter.username}`, avatar: u.twitter.profilePictureUrl, emoji: '𝕏' };
+      if (u.google?.email) return { label: u.google.name || u.google.email, emoji: 'G' };
+      if (u.discord?.username) return { label: u.discord.username, emoji: '💬' };
+      if (u.farcaster?.username) return { label: `@${u.farcaster.username}`, avatar: u.farcaster.pfp, emoji: 'ᶠ' };
+      if (u.github?.username) return { label: u.github.username, emoji: '⌨' };
+      if (u.email?.address) return { label: u.email.address, emoji: '✉' };
+      return null;
+    })();
     return (
       <div className="flex items-center gap-2">
+        {ident && (
+          <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white border border-gray-200 max-w-[180px]">
+            {ident.avatar ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={ident.avatar} alt="" className="w-5 h-5 rounded-full object-cover" />
+            ) : (
+              <div className="w-5 h-5 rounded-full bg-gradient-to-br from-indigo-400 to-pink-400 text-white flex items-center justify-center text-[10px] font-bold">{ident.emoji}</div>
+            )}
+            <span className="text-xs font-medium truncate" title={ident.label}>{ident.label}</span>
+          </div>
+        )}
         {w && <span className="text-xs font-mono text-gray-600">{w.address.slice(0, 6)}…{w.address.slice(-4)}</span>}
         <button onClick={() => privy.logout()} className="px-2 py-1 rounded-md border border-gray-200 text-xs">Sign out</button>
       </div>

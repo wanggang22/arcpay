@@ -194,10 +194,21 @@ function AuthSlot() {
   return <div className="text-xs text-gray-500 text-center py-2">Connect a wallet in your browser.</div>;
 }
 
+function identOf(user: any): { label: string; avatar?: string; emoji: string } | null {
+  if (!user) return null;
+  if (user.twitter?.username) return { label: `@${user.twitter.username}`, avatar: user.twitter.profilePictureUrl, emoji: '𝕏' };
+  if (user.google?.email) return { label: user.google.name || user.google.email, emoji: 'G' };
+  if (user.discord?.username) return { label: user.discord.username, emoji: '💬' };
+  if (user.farcaster?.username) return { label: `@${user.farcaster.username}`, avatar: user.farcaster.pfp, emoji: 'ᶠ' };
+  if (user.github?.username) return { label: user.github.username, emoji: '⌨' };
+  if (user.email?.address) return { label: user.email.address, emoji: '✉' };
+  return null;
+}
+
 function PrivySlot() {
   const { ready, authenticated, user, login, logout } = usePrivy();
   const { wallets } = useWallets();
-  const { isConnected, address } = useAccount();
+  const { address } = useAccount();
 
   if (!ready) {
     return <div className="w-full py-2 text-xs text-center text-gray-500">Loading wallet…</div>;
@@ -212,22 +223,28 @@ function PrivySlot() {
     );
   }
 
-  // authenticated — show brief badge
   const wallet = wallets[0];
   const shown = wallet?.address || address;
   const short = shown ? `${shown.slice(0, 6)}…${shown.slice(-4)}` : '';
-  const email = user?.email?.address || (user as any)?.twitter?.username;
+  const ident = identOf(user);
 
   return (
     <div className="flex items-center justify-between gap-2 py-1.5 px-2.5 rounded-lg bg-gray-50 border border-gray-200">
-      <div className="flex items-center gap-1.5 min-w-0">
-        <div className="w-5 h-5 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 text-white text-[9px] flex items-center justify-center font-bold">✓</div>
+      <div className="flex items-center gap-1.5 min-w-0 flex-1">
+        {ident?.avatar ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={ident.avatar} alt="" className="w-6 h-6 rounded-full object-cover shrink-0" />
+        ) : (
+          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-500 to-pink-500 text-white text-[10px] flex items-center justify-center font-bold shrink-0">
+            {ident?.emoji || '✓'}
+          </div>
+        )}
         <div className="min-w-0">
-          <div className="text-[11px] font-mono truncate">{short}</div>
-          {email && <div className="text-[10px] text-gray-500 truncate">{email}</div>}
+          {ident && <div className="text-[11px] font-medium truncate">{ident.label}</div>}
+          <div className="text-[10px] font-mono text-gray-500 truncate">{short}</div>
         </div>
       </div>
-      <button onClick={() => logout()} className="text-[10px] text-gray-500 hover:text-gray-800">sign out</button>
+      <button onClick={() => logout()} className="text-[10px] text-gray-500 hover:text-gray-800 shrink-0">sign out</button>
     </div>
   );
 }
