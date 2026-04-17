@@ -25,6 +25,10 @@ export function Header() {
           <Link href="/api" className="text-sm text-muted hover:text-ink">API</Link>
           <Link href="/embed" className="text-sm text-muted hover:text-ink">Embed</Link>
           <Link href="/activity" className="text-sm text-muted hover:text-ink">Activity</Link>
+          <a href="https://arcpay.finance/faucet" target="_blank" rel="noopener noreferrer"
+            className="text-sm text-muted hover:text-ink" title="Get free testnet USDC">
+            💧 Faucet
+          </a>
           {HAS_PRIVY ? <PrivyAuthButton /> : <WagmiAuthButton />}
         </nav>
       </div>

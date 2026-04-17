@@ -48,12 +48,19 @@ export default function CreatorPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50">
-      <header className="max-w-2xl mx-auto px-6 py-4 flex justify-between items-center">
+      <header className="max-w-2xl mx-auto px-6 py-4 flex justify-between items-center gap-2">
         <Link href="/" className="flex items-center gap-2">
           <div className="w-6 h-6 rounded bg-arc-gradient" />
           <span className="font-bold">ArcPay</span>
         </Link>
-        <PrivyAuthButton />
+        <div className="flex items-center gap-2">
+          <Link href="/faucet"
+            className="hidden sm:inline text-xs px-3 py-1.5 rounded-lg border border-gray-200 hover:border-indigo-400 transition"
+            title="Get free testnet USDC">
+            💧 Faucet
+          </Link>
+          <PrivyAuthButton />
+        </div>
       </header>
 
       <main className="max-w-lg mx-auto px-6 pt-6 pb-20">
@@ -801,12 +808,19 @@ function HandleOnlyPage({ username }: { username: string }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50">
-      <header className="max-w-2xl mx-auto px-6 py-4 flex justify-between items-center">
+      <header className="max-w-2xl mx-auto px-6 py-4 flex justify-between items-center gap-2">
         <Link href="/" className="flex items-center gap-2">
           <div className="w-6 h-6 rounded bg-arc-gradient" />
           <span className="font-bold">ArcPay</span>
         </Link>
-        <PrivyAuthButton />
+        <div className="flex items-center gap-2">
+          <Link href="/faucet"
+            className="hidden sm:inline text-xs px-3 py-1.5 rounded-lg border border-gray-200 hover:border-indigo-400 transition"
+            title="Get free testnet USDC">
+            💧 Faucet
+          </Link>
+          <PrivyAuthButton />
+        </div>
       </header>
       <main className="max-w-lg mx-auto px-6 pt-6 pb-20">
         <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
