@@ -198,6 +198,9 @@ if (slot > 0n) {
           <div className="mt-3 text-sm text-gray-700">
             Your app / Discord bot / course platform does the same query. No database, no webhooks, no Stripe dashboard. The contract is the source of truth.
           </div>
+          <Link href="/build" className="mt-4 inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-gray-900 text-white text-xs font-bold hover:bg-gray-700">
+            See full developer guide →
+          </Link>
         </aside>
       </main>
 
