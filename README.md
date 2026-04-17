@@ -113,6 +113,8 @@ Pick from 5 templates:
 ## Live deployments
 
 ### Arc Testnet (public, chainId 5042002)
+Canonical source: [`contracts/deployments/current.json`](./contracts/deployments/current.json)
+
 - ArcPayHub:        `0x79ab5a4B2770BF087aF2fF4CEdb0E67A413bf293`
 - UsernameRegistry: `0xBF6c8b430BE134C40fEF316601ef002a4F8e2dBb`
 - TipJar:           `0x45daE58fB5b89C4E994216D2af0B73232641DF3B`
@@ -122,6 +124,11 @@ Pick from 5 templates:
 - PayPerCall:       `0x3a399A310965A5cbD5a2B9F21a3B9885B6372def` (v2, with batchPay)
 
 Explorer: [testnet.arcscan.app](https://testnet.arcscan.app)
+
+**Redeploying contracts?** Edit `contracts/deployments/current.json`, then run
+`node scripts/sync-addresses.mjs` from repo root — it regenerates
+`landing/lib/addresses.generated.ts` and `dashboard/lib/addresses.generated.ts`
+so every frontend picks up the new addresses automatically.
 
 ### Arc Local (chainId 1337)
 - ArcPayHub: `0x1b38dE812703aaED3fE7B584e2a0E8D0b95F60Cb`

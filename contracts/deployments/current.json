@@ -1,0 +1,41 @@
+{
+  "_comment": "Canonical deployment addresses — single source of truth. Update this file and run `node scripts/sync-addresses.mjs` from repo root. All frontends/SDK re-read from here.",
+  "version": "v0.3.0",
+  "networks": {
+    "testnet": {
+      "name": "Arc Testnet",
+      "chainId": 5042002,
+      "rpc": "https://rpc.testnet.arc.network",
+      "explorer": "https://testnet.arcscan.app",
+      "addresses": {
+        "hub": "0x79ab5a4B2770BF087aF2fF4CEdb0E67A413bf293",
+        "registry": "0xBF6c8b430BE134C40fEF316601ef002a4F8e2dBb",
+        "tipJar": "0x45daE58fB5b89C4E994216D2af0B73232641DF3B",
+        "tipJarByHandle": "0x291b86d46027f734cF43Eca9BA2394F46dcd529C",
+        "subscriptions": "0xbb84078Aa19b9c5Eb397782dE9b58939C38d1380",
+        "contentPaywall": "0x680884124F21939548Ba7f982B4F275A55783484",
+        "payPerCall": "0x3a399A310965A5cbD5a2B9F21a3B9885B6372def"
+      },
+      "meta": {
+        "attestationSigner": "0xaCee06B20BB5d07Bc6a0d833af0A44607b713532",
+        "protocolFeeRecipient": "0xbF023dbEaF786AfEb40C4fa3B53dC5bF4461D084",
+        "protocolFeeBps": 200
+      }
+    },
+    "local": {
+      "name": "Arc Local",
+      "chainId": 1337,
+      "rpc": "http://localhost:8545",
+      "explorer": "",
+      "addresses": {
+        "hub": "0x1b38dE812703aaED3fE7B584e2a0E8D0b95F60Cb",
+        "registry": "0xD85677eBC8b242E5110C69f1d1f134389319632C",
+        "tipJar": "0xC627bf4D1f21dcc82Ef563191f63723CD290959f",
+        "tipJarByHandle": "0x0000000000000000000000000000000000000000",
+        "subscriptions": "0x0D4e458145A8eE377FD90295dd3332ee5BC90aE4",
+        "contentPaywall": "0x352fc9770F1c72c0B91d7D62946EDa67A6288A95",
+        "payPerCall": "0xc6f99Bdb0985aC8c5E7819f3e89dccA7C8A4C06a"
+      }
+    }
+  }
+}
