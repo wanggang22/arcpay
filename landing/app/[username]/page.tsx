@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { useAccount, useConnect, useDisconnect, useReadContract, usePublicClient, useWalletClient, useBalance } from 'wagmi';
 import { usePrivy, useWallets } from '@privy-io/react-auth';
 
@@ -15,9 +15,15 @@ type Tab = 'tip' | 'subscribe' | 'content' | 'api';
 
 export default function CreatorPage() {
   const params = useParams();
+  const sp = useSearchParams();
   const username = params.username as string;
 
-  const [tab, setTab] = useState<Tab>('tip');
+  const initialTab = ((): Tab => {
+    const t = sp.get('tab');
+    if (t === 'subscribe' || t === 'content' || t === 'api' || t === 'tip') return t;
+    return 'tip';
+  })();
+  const [tab, setTab] = useState<Tab>(initialTab);
 
   const { data: exists } = useReadContract({
     address: ADDRESSES.registry, abi: registryAbi, functionName: 'exists', args: [username],

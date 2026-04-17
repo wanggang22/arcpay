@@ -46,6 +46,35 @@ export function TipButton() {
   );
 }`;
 
+  const subscribeIframe = `<iframe
+  src="https://arcpay.finance/embed/subscribe/${username}"
+  width="420" height="360" frameborder="0"
+  style="border:0; max-width:100%"
+  loading="lazy"
+  title="Subscribe to ${username} on ArcPay"></iframe>`;
+
+  const subscribeGating = `// Client-side gating: is this wallet an active subscriber?
+import { readContract } from 'viem/actions';
+import { ADDRESSES, subscriptionsAbi } from '@arcpay/sdk';
+
+async function isSubscriber(wallet: \`0x\${string}\`, planId: bigint) {
+  const slot = await readContract(publicClient, {
+    address: ADDRESSES.subscriptions, abi: subscriptionsAbi,
+    functionName: 'activeSubOf', args: [wallet, planId],
+  });
+  if (slot === 0n) return false;
+  const sub = await readContract(publicClient, {
+    address: ADDRESSES.subscriptions, abi: subscriptionsAbi,
+    functionName: 'getSubscription', args: [slot - 1n],
+  });
+  return sub.active && Number(sub.paidUntil) * 1000 > Date.now();
+}
+
+// Use anywhere: article paywall, Discord bot role, API gate
+if (await isSubscriber(visitor.wallet, MY_PLAN_ID)) {
+  return renderFullArticle();
+}`;
+
   return (
     <div>
       <Header />
@@ -115,6 +144,37 @@ export function TipButton() {
           title="React / Next.js component"
           desc="If you ship a Next.js site, just drop an iframe in JSX."
           code={reactSnippet}
+        />
+
+        <div className="mt-12 mb-4">
+          <h2 className="text-xl font-bold">📅 Subscriptions — the Patreon replacement</h2>
+          <p className="text-muted text-sm mt-1">
+            Your readers subscribe in USDC; the chain is your subscriber database.{' '}
+            <a href="https://arcpay.finance/demo-blog" target="_blank" rel="noopener noreferrer"
+              className="text-accent underline">Live demo: a paywalled blog post ↗</a>
+          </p>
+        </div>
+
+        <CopyBlock
+          num="6"
+          title="Subscribe embed — iframe"
+          desc="Drop this on your blog / Notion / landing page so readers can subscribe without leaving."
+          code={subscribeIframe}
+          preview={
+            <iframe
+              src={`https://arcpay.finance/embed/subscribe/${username}`}
+              width={420} height={360}
+              style={{ border: 0, maxWidth: '100%' }}
+              title="preview"
+            />
+          }
+        />
+
+        <CopyBlock
+          num="7"
+          title="Subscription gating — check any wallet's status"
+          desc="Server-side or client-side, 10 lines of code. No webhook, no database, the contract IS the subscriber DB."
+          code={subscribeGating}
         />
 
         <div className="mt-10 p-5 bg-arc-gradient text-white rounded-3xl">
