@@ -26,7 +26,6 @@ const RESERVED: Record<string, string> = {
   home: 'https://arcpay.finance',
   about: 'https://arcpay.finance',
   pricing: 'https://arcpay.finance',
-  blog: 'https://arcpay.finance/demo-blog',
   shop: 'https://arcpay.finance/demo-product',
   product: 'https://arcpay.finance/demo-product',
   products: 'https://arcpay.finance/demo-product',
