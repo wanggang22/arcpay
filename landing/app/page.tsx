@@ -357,7 +357,7 @@ function Code() {
     <section id="code" className="max-w-5xl mx-auto px-6 py-16 md:py-20 border-t border-gray-200">
       <h2 className="text-3xl md:text-4xl font-bold">One SDK. Four modes.</h2>
       <p className="text-gray-600 mt-3 max-w-2xl">
-        Install <code className="bg-gray-100 px-1.5 py-0.5 rounded text-sm">@arcpay/sdk</code>, connect a wallet, start accepting USDC on Arc. No Stripe verification. No country restrictions.
+        Install <code className="bg-gray-100 px-1.5 py-0.5 rounded text-sm">@wanggang22/arcpay-sdk</code>, connect a wallet, start accepting USDC on Arc. No Stripe verification. No country restrictions.
       </p>
 
       <div className="mt-8 rounded-3xl bg-ink text-paper overflow-hidden border border-gray-800">
