@@ -53,15 +53,15 @@ export default function CreatorPage() {
   } catch {}
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50">
+    <div className="min-h-screen bg-paper">
       <header className="max-w-2xl mx-auto px-6 py-4 flex justify-between items-center gap-2">
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded bg-arc-gradient" />
+          <div className="w-6 h-6 rounded bg-accent" />
           <span className="font-bold">ArcPay</span>
         </Link>
         <div className="flex items-center gap-2">
           <Link href="/faucet"
-            className="hidden sm:inline text-xs px-3 py-1.5 rounded-lg border border-gray-200 hover:border-indigo-400 transition"
+            className="hidden sm:inline text-xs px-3 py-1.5 rounded-lg border border-gray-200 hover:border-accent transition"
             title="Get free testnet USDC">
             💧 Faucet
           </Link>
@@ -71,9 +71,9 @@ export default function CreatorPage() {
 
       <main className="max-w-lg mx-auto px-6 pt-6 pb-20">
         <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-          <div className="h-24 bg-arc-gradient" />
+          <div className="h-24 bg-accent" />
           <div className="px-6 pb-6 -mt-10">
-            <div className="w-20 h-20 rounded-full bg-white border-4 border-white shadow-lg flex items-center justify-center text-3xl font-bold text-indigo-600">
+            <div className="w-20 h-20 rounded-full bg-white border-4 border-white shadow-lg flex items-center justify-center text-3xl font-bold text-accent">
               {displayName.charAt(0).toUpperCase()}
             </div>
             <div className="mt-3">
@@ -92,7 +92,7 @@ export default function CreatorPage() {
             <div className="grid grid-cols-4 border-b border-gray-100">
               {(['tip', 'subscribe', 'content', 'api'] as Tab[]).map(t => (
                 <button key={t} onClick={() => setTab(t)}
-                  className={`py-3 text-sm font-semibold ${tab === t ? 'text-indigo-600 border-b-2 border-indigo-600' : 'text-gray-500'}`}>
+                  className={`py-3 text-sm font-semibold ${tab === t ? 'text-accent border-b-2 border-accent' : 'text-gray-500'}`}>
                   {t === 'tip' ? '💸 Tip' : t === 'subscribe' ? '📅 Subscribe' : t === 'content' ? '🔒 Content' : '⚡ API'}
                 </button>
               ))}
@@ -127,11 +127,11 @@ function WalletBadge({ address }: { address: string }) {
   };
   return (
     <button onClick={copy}
-      className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-gray-200 hover:border-indigo-400 transition"
+      className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-gray-200 hover:border-accent transition"
       title="Click to copy full address">
       <span className="text-xs font-mono text-gray-700">{copied ? '✓ Copied!' : short}</span>
       {bal && (
-        <span className="text-xs font-semibold text-indigo-600">
+        <span className="text-xs font-semibold text-accent">
           {Number(formatUnits(bal.value, 18)).toFixed(3)} USDC
         </span>
       )}
@@ -145,7 +145,7 @@ function PrivyAuthButton() {
   const wallet = wallets[0];
   if (!ready) return <button className="px-3 py-1.5 rounded-lg bg-gray-100 text-sm">Loading...</button>;
   if (!authenticated) return (
-    <button onClick={() => login()} className="px-4 py-2 rounded-xl bg-arc-gradient text-white text-sm font-semibold">
+    <button onClick={() => login()} className="px-4 py-2 rounded-xl bg-accent text-white text-sm font-semibold">
       Sign in to pay
     </button>
   );
@@ -216,7 +216,7 @@ function IdentityBadge({ ident }: { ident: SocialIdent }) {
         // eslint-disable-next-line @next/next/no-img-element
         <img src={ident.avatar} alt="" className="w-5 h-5 rounded-full object-cover" />
       ) : (
-        <div className="w-5 h-5 rounded-full bg-gradient-to-br from-indigo-400 to-pink-400 text-white flex items-center justify-center text-[10px] font-bold">
+        <div className="w-5 h-5 rounded-full bg-accent text-white flex items-center justify-center text-[10px] font-bold">
           {sourceEmoji(ident.source)}
         </div>
       )}
@@ -336,7 +336,7 @@ function TipForm({ username }: { username: string }) {
   return (
     <div>
       {myStats && myStats.count > 0 && (
-        <div className="mb-3 p-3 rounded-xl bg-pink-50 border border-pink-200 text-sm text-pink-800">
+        <div className="mb-3 p-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-800">
           💸 You've tipped @{username} <strong>{myStats.count}</strong> time{myStats.count !== 1 ? 's' : ''} · <strong>{Number(formatUnits(myStats.total, 18)).toFixed(4)} USDC</strong>
         </div>
       )}
@@ -362,7 +362,7 @@ function TipForm({ username }: { username: string }) {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline gap-1.5 flex-wrap">
                       <span className="font-mono text-gray-600">{short}</span>
-                      <span className="font-bold text-pink-600">{Number(formatUnits(t.amount, 18)).toFixed(4)} USDC</span>
+                      <span className="font-bold text-accent">{Number(formatUnits(t.amount, 18)).toFixed(4)} USDC</span>
                       {t.timestamp > 0 && <span className="text-gray-400 text-[10px]">· {formatRelativeTime(t.timestamp)}</span>}
                     </div>
                     {t.message && <div className="text-gray-700 italic mt-0.5 truncate" title={t.message}>"{t.message}"</div>}
@@ -379,21 +379,21 @@ function TipForm({ username }: { username: string }) {
         {presets.map(p => (
           <button key={p} onClick={() => setAmount(p)}
             className={`py-2 rounded-xl text-sm font-semibold border-2 transition
-              ${amount === p ? 'border-indigo-500 bg-indigo-50 text-indigo-700' : 'border-gray-200'}`}>
+              ${amount === p ? 'border-accent bg-accent/10 text-accent' : 'border-gray-200'}`}>
             ${p}
           </button>
         ))}
       </div>
       <input value={amount} onChange={e => setAmount(e.target.value.replace(/[^0-9.]/g, ''))}
-        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 focus:outline-none mb-3" placeholder="Custom amount" inputMode="decimal" />
+        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-accent focus:outline-none mb-3" placeholder="Custom amount" inputMode="decimal" />
       <textarea value={message} onChange={e => setMessage(e.target.value.slice(0, 280))}
-        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 focus:outline-none resize-none h-20 mb-3" placeholder="Message (optional)" />
+        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-accent focus:outline-none resize-none h-20 mb-3" placeholder="Message (optional)" />
 
       {!address ? (
         <div className="text-center py-3 text-gray-500 text-sm bg-gray-50 rounded-xl">Connect wallet to send tip</div>
       ) : (
         <button onClick={send} disabled={busy || !amount}
-          className="w-full py-3 rounded-xl font-bold text-white bg-arc-gradient disabled:opacity-60">
+          className="w-full py-3 rounded-xl font-bold text-white bg-accent disabled:opacity-60">
           {busy ? 'Sending...' : `Send $${amount} tip`}
         </button>
       )}
@@ -551,7 +551,7 @@ function SubscribePanel({ username }: { username: string }) {
         {plans.filter(p => p.active).map(p => (
           <button key={p.id} onClick={() => setSelectedPlan(p.id)}
             className={`w-full p-4 rounded-xl border-2 text-left transition
-              ${selectedPlan === p.id ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200'}`}>
+              ${selectedPlan === p.id ? 'border-accent bg-accent/5' : 'border-gray-200'}`}>
             <div className="font-bold">{p.name}</div>
             <div className="text-sm text-gray-600">${formatUnits(p.price, 18)} / month</div>
           </button>
@@ -561,7 +561,7 @@ function SubscribePanel({ username }: { username: string }) {
         <label className="text-sm text-gray-600">Duration:</label>
         {[1, 3, 6, 12].map(n => (
           <button key={n} onClick={() => setMonths(n)}
-            className={`px-3 py-1 rounded-full text-sm ${months === n ? 'bg-indigo-600 text-white' : 'bg-gray-100'}`}>
+            className={`px-3 py-1 rounded-full text-sm ${months === n ? 'bg-accent text-white' : 'bg-gray-100'}`}>
             {n}mo
           </button>
         ))}
@@ -575,7 +575,7 @@ function SubscribePanel({ username }: { username: string }) {
         <div className="text-center py-3 text-gray-500 text-sm bg-gray-50 rounded-xl">Connect wallet to subscribe</div>
       ) : (
         <button onClick={subscribe} disabled={busy || selectedPlan === null}
-          className="w-full py-3 rounded-xl font-bold text-white bg-arc-gradient disabled:opacity-60">
+          className="w-full py-3 rounded-xl font-bold text-white bg-accent disabled:opacity-60">
           {busy ? 'Subscribing...' : 'Subscribe'}
         </button>
       )}
@@ -674,7 +674,7 @@ function ContentList({ username }: { username: string }) {
               {meta.description && <div className="text-sm text-gray-600 mt-1">{meta.description}</div>}
               {unlocked && meta.url && (
                 <a href={meta.url} target="_blank" rel="noopener noreferrer"
-                  className="mt-2 inline-block text-sm text-indigo-600 hover:text-indigo-800 underline">
+                  className="mt-2 inline-block text-sm text-accent hover:text-accent/80 underline">
                   🔓 Open content ↗
                 </a>
               )}
@@ -686,7 +686,7 @@ function ContentList({ username }: { username: string }) {
                   </div>
                 ) : address ? (
                   <button onClick={() => buy(item.id, item.price)} disabled={busy === item.id}
-                    className="px-4 py-1.5 bg-arc-gradient text-white rounded-full text-sm font-semibold disabled:opacity-60">
+                    className="px-4 py-1.5 bg-accent text-white rounded-full text-sm font-semibold disabled:opacity-60">
                     {busy === item.id ? 'Buying...' : 'Unlock'}
                   </button>
                 ) : (
@@ -806,7 +806,7 @@ function ApiList({ username }: { username: string }) {
                 {[1, 5, 10, 50].map(n => (
                   <button key={n} onClick={() => setQtyMap(m => ({ ...m, [item.id]: n }))}
                     className={`px-2.5 py-1 rounded-full text-xs font-semibold transition
-                      ${qty === n ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
+                      ${qty === n ? 'bg-accent text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
                     {n}
                   </button>
                 ))}
@@ -820,7 +820,7 @@ function ApiList({ username }: { username: string }) {
                 </div>
                 {address ? (
                   <button onClick={() => payN(item.id, item.pricePerCall, qty)} disabled={busy === item.id}
-                    className="px-4 py-1.5 bg-arc-gradient text-white rounded-full text-sm font-semibold disabled:opacity-60">
+                    className="px-4 py-1.5 bg-accent text-white rounded-full text-sm font-semibold disabled:opacity-60">
                     {busy === item.id
                       ? 'Paying...'
                       : qty === 1 ? 'Pay for 1 call' : `Pay for ${qty} calls`}
@@ -868,15 +868,15 @@ function HandleOnlyPage({ username }: { username: string }) {
   const bio = xProfile?.description;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50">
+    <div className="min-h-screen bg-paper">
       <header className="max-w-2xl mx-auto px-6 py-4 flex justify-between items-center gap-2">
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded bg-arc-gradient" />
+          <div className="w-6 h-6 rounded bg-accent" />
           <span className="font-bold">ArcPay</span>
         </Link>
         <div className="flex items-center gap-2">
           <Link href="/faucet"
-            className="hidden sm:inline text-xs px-3 py-1.5 rounded-lg border border-gray-200 hover:border-indigo-400 transition"
+            className="hidden sm:inline text-xs px-3 py-1.5 rounded-lg border border-gray-200 hover:border-accent transition"
             title="Get free testnet USDC">
             💧 Faucet
           </Link>
@@ -885,7 +885,7 @@ function HandleOnlyPage({ username }: { username: string }) {
       </header>
       <main className="max-w-lg mx-auto px-6 pt-6 pb-20">
         <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-          <div className="h-24 bg-arc-gradient" />
+          <div className="h-24 bg-accent" />
           <div className="px-6 pb-6 -mt-10">
             {xProfile?.avatar ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -895,14 +895,14 @@ function HandleOnlyPage({ username }: { username: string }) {
                 className="w-20 h-20 rounded-full border-4 border-white shadow-lg object-cover"
               />
             ) : (
-              <div className="w-20 h-20 rounded-full bg-white border-4 border-white shadow-lg flex items-center justify-center text-3xl font-bold text-indigo-600">
+              <div className="w-20 h-20 rounded-full bg-white border-4 border-white shadow-lg flex items-center justify-center text-3xl font-bold text-accent">
                 {displayName.charAt(0).toUpperCase()}
               </div>
             )}
             <div className="mt-3">
               <h1 className="text-2xl font-bold">{displayName}</h1>
               <a href={`https://x.com/${username}`} target="_blank" rel="noopener noreferrer"
-                className="text-gray-500 font-mono text-sm hover:text-indigo-600">
+                className="text-gray-500 font-mono text-sm hover:text-accent">
                 @{username} ↗
               </a>
               {bio && <p className="mt-3 text-gray-700 text-sm">{bio}</p>}
@@ -972,7 +972,7 @@ function HandleTipForm({ username }: { username: string }) {
         Support @{username} with a USDC tip — held on-chain until they claim.
       </div>
       {available !== null && available > 0n && (
-        <div className="mb-3 text-xs bg-pink-50 border border-pink-200 text-pink-800 rounded-lg p-2">
+        <div className="mb-3 text-xs bg-red-50 border border-red-200 text-red-800 rounded-lg p-2">
           💸 Pending for @{username}: <strong>{Number(formatUnits(available, 18)).toFixed(4)} USDC</strong>
         </div>
       )}
@@ -980,21 +980,21 @@ function HandleTipForm({ username }: { username: string }) {
         {presets.map(p => (
           <button key={p} onClick={() => setAmount(p)}
             className={`py-2 rounded-xl text-sm font-semibold border-2 transition
-              ${amount === p ? 'border-indigo-500 bg-indigo-50 text-indigo-700' : 'border-gray-200'}`}>
+              ${amount === p ? 'border-accent bg-accent/10 text-accent' : 'border-gray-200'}`}>
             ${p}
           </button>
         ))}
       </div>
       <input value={amount} onChange={e => setAmount(e.target.value.replace(/[^0-9.]/g, ''))}
-        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 focus:outline-none mb-3" placeholder="Custom amount" inputMode="decimal" />
+        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-accent focus:outline-none mb-3" placeholder="Custom amount" inputMode="decimal" />
       <textarea value={message} onChange={e => setMessage(e.target.value.slice(0, 280))}
-        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 focus:outline-none resize-none h-20 mb-3" placeholder="Message (optional)" />
+        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-accent focus:outline-none resize-none h-20 mb-3" placeholder="Message (optional)" />
 
       {!address ? (
         <div className="text-center py-3 text-gray-500 text-sm bg-gray-50 rounded-xl">Connect wallet or sign in to tip</div>
       ) : (
         <button onClick={send} disabled={busy || !amount}
-          className="w-full py-3 rounded-xl font-bold text-white bg-arc-gradient disabled:opacity-60">
+          className="w-full py-3 rounded-xl font-bold text-white bg-accent disabled:opacity-60">
           {busy ? 'Sending...' : `Send $${amount} tip`}
         </button>
       )}

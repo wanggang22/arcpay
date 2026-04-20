@@ -6,7 +6,7 @@ import { ForDevelopers } from '@/components/ForDevelopers';
 
 export default function Page() {
   return (
-    <div className="bg-paper text-ink">
+    <div className="bg-paper text-ink overflow-x-hidden">
       <Nav />
       <Hero />
       <HowItWorks />
@@ -178,7 +178,7 @@ function ChromeExtension() {
               rel="noopener noreferrer"
               className="px-5 py-2.5 rounded-full bg-ink text-paper text-sm font-semibold hover:opacity-90"
             >
-              Download v0.2.0
+              Download v0.2.1
             </a>
             <Link
               href="/claim"
@@ -289,7 +289,7 @@ function Comparison() {
       <h2 className="font-display text-4xl md:text-5xl font-semibold mb-12 max-w-xl">
         Why ArcPay.
       </h2>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto max-w-full">
         <table className="w-full min-w-[720px] text-left">
           <thead>
             <tr className="border-b border-hairline text-sm">

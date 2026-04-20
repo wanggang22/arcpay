@@ -8,10 +8,10 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50">
+    <div className="min-h-screen bg-paper">
       <header className="max-w-3xl mx-auto px-6 py-4 flex items-center gap-2">
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded bg-arc-gradient" />
+          <div className="w-6 h-6 rounded bg-accent" />
           <span className="font-bold">ArcPay</span>
         </Link>
       </header>

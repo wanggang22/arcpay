@@ -194,7 +194,7 @@ export default function DemoAgent() {
   const costPer = endpoint ? endpoint.pricePerCall : 0n;
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100 selection:bg-indigo-500/40">
+    <div className="min-h-screen bg-gray-950 text-gray-100 selection:bg-accent/40">
       <AgentHeader />
 
       <main className="max-w-5xl mx-auto px-6 py-10">
@@ -208,12 +208,12 @@ export default function DemoAgent() {
             <div className="md:col-span-3 space-y-5">
               {/* Title */}
               <div>
-                <div className="text-xs uppercase tracking-wider text-indigo-400 font-bold">
+                <div className="text-xs uppercase tracking-wider text-gold font-bold">
                   Mock AI Agent · Translation service
                 </div>
                 <h1 className="text-3xl font-bold mt-1">🤖 Translate EN → ZH</h1>
                 <div className="mt-1 text-sm text-gray-400">
-                  Every call is paid on-chain per <code className="text-indigo-300">x402</code> / ERC-8183.
+                  Every call is paid on-chain per <code className="text-gold">x402</code> / ERC-8183.
                 </div>
               </div>
 
@@ -224,17 +224,17 @@ export default function DemoAgent() {
                   value={text}
                   onChange={(e) => setText(e.target.value.slice(0, 500))}
                   placeholder="Hello, how are you?"
-                  className="mt-2 w-full px-3 py-2.5 rounded-lg bg-gray-950 border border-gray-800 focus:border-indigo-500 focus:outline-none text-sm resize-none h-24 text-gray-100"
+                  className="mt-2 w-full px-3 py-2.5 rounded-lg bg-gray-950 border border-gray-800 focus:border-accent focus:outline-none text-sm resize-none h-24 text-gray-100"
                 />
                 <div className="mt-1 text-[10px] text-gray-500 text-right">{text.length}/500</div>
 
                 <div className="mt-3 flex items-center justify-between gap-3">
                   <div className="text-xs text-gray-400">
-                    Each call = <span className="font-bold text-indigo-300">{formatUnits(costPer, 18)} USDC</span>
+                    Each call = <span className="font-bold text-gold">{formatUnits(costPer, 18)} USDC</span>
                   </div>
                   {address ? (
                     <button onClick={call} disabled={calling || creditsRemaining === 0 || !text.trim()}
-                      className="px-5 py-2.5 rounded-xl bg-indigo-500 hover:bg-indigo-400 disabled:bg-gray-800 disabled:text-gray-600 text-white text-sm font-bold transition">
+                      className="px-5 py-2.5 rounded-xl bg-accent hover:bg-accent/80 disabled:bg-gray-800 disabled:text-gray-600 text-white text-sm font-bold transition">
                       {calling ? 'Signing & calling…' : creditsRemaining === 0 ? 'Buy credits first' : `Call (1 credit)`}
                     </button>
                   ) : (
@@ -325,14 +325,14 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
   return (
     <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
       <div className="text-xs uppercase tracking-wider text-gray-500 font-bold">Endpoint</div>
-      <div className="mt-1 font-mono font-bold text-indigo-300">{endpoint.name}</div>
+      <div className="mt-1 font-mono font-bold text-gold">{endpoint.name}</div>
       <div className="text-[10px] font-mono text-gray-500 truncate mt-1" title={endpoint.id}>
         {endpoint.id.slice(0, 14)}…{endpoint.id.slice(-6)}
       </div>
       <div className="mt-3 pt-3 border-t border-gray-800 space-y-1 text-xs text-gray-400">
         <div className="flex justify-between">
           <span>Creator</span>
-          <Link href={`/${AUTHOR}`} className="font-bold text-indigo-300 hover:text-indigo-200">@{AUTHOR}</Link>
+          <Link href={`/${AUTHOR}`} className="font-bold text-gold hover:text-accent/80">@{AUTHOR}</Link>
         </div>
         <div className="flex justify-between">
           <span>Price per call</span>
@@ -368,9 +368,9 @@ function CreditsCard({
   const balanceNum = Number(formatUnits(balance, 18));
   const canAfford = balance >= total;
   return (
-    <div className="bg-gradient-to-br from-indigo-500/10 to-pink-500/10 border border-indigo-500/30 rounded-2xl p-5">
+    <div className="bg-accent/10 border border-accent/30 rounded-2xl p-5">
       <div className="text-xs uppercase tracking-wider text-gray-400 font-bold">Your credits</div>
-      <div className="mt-1 text-4xl font-bold text-indigo-300">{credits}</div>
+      <div className="mt-1 text-4xl font-bold text-gold">{credits}</div>
       <div className="text-xs text-gray-500">unused callIds on-chain</div>
 
       <div className="mt-5 pt-4 border-t border-gray-800">
@@ -379,7 +379,7 @@ function CreditsCard({
           {[1, 10, 50, 100].map((n) => (
             <button key={n} onClick={() => setQty(n)}
               className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition
-                ${qty === n ? 'bg-indigo-500 text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'}`}>
+                ${qty === n ? 'bg-accent text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'}`}>
               {n}
             </button>
           ))}
@@ -390,7 +390,7 @@ function CreditsCard({
         </div>
         {address ? (
           <button onClick={onBuy} disabled={busy || !canAfford}
-            className="mt-3 w-full py-2.5 rounded-xl font-bold text-white bg-gradient-to-r from-indigo-500 to-pink-500 disabled:opacity-50 hover:opacity-90 transition text-sm">
+            className="mt-3 w-full py-2.5 rounded-xl font-bold text-white bg-accent disabled:opacity-50 hover:opacity-90 transition text-sm">
             {busy ? 'Paying…' : canAfford ? `batchPay(${qty}) — ${totalNum.toFixed(6)} USDC` : 'Not enough USDC'}
           </button>
         ) : (
@@ -398,7 +398,7 @@ function CreditsCard({
         )}
         <div className="mt-2 text-[10px] text-gray-500">
           Balance: {balanceNum.toFixed(4)} USDC ·{' '}
-          <a href="/faucet" target="_blank" rel="noopener noreferrer" className="underline text-indigo-300 hover:text-indigo-200">get faucet USDC</a>
+          <a href="/faucet" target="_blank" rel="noopener noreferrer" className="underline text-gold hover:text-accent/80">get faucet USDC</a>
         </div>
       </div>
     </div>
@@ -412,7 +412,7 @@ function EmptyState() {
       <h2 className="text-2xl font-bold">@{AUTHOR} hasn&apos;t registered an API endpoint yet</h2>
       <p className="mt-3 text-gray-400 text-sm">
         Creator needs to add one at{' '}
-        <a href="https://app.arcpay.finance/api" className="underline text-indigo-400" target="_blank" rel="noopener noreferrer">
+        <a href="https://app.arcpay.finance/api" className="underline text-gold" target="_blank" rel="noopener noreferrer">
           app.arcpay.finance/api
         </a>
       </p>
@@ -423,7 +423,7 @@ function EmptyState() {
 function DevBlock() {
   return (
     <aside className="mt-16 p-6 rounded-2xl bg-gray-900 border border-gray-800">
-      <div className="text-xs uppercase tracking-wider text-indigo-400 font-bold mb-2">For developers · x402 flow</div>
+      <div className="text-xs uppercase tracking-wider text-gold font-bold mb-2">For developers · x402 flow</div>
       <div className="text-sm text-gray-300 leading-relaxed">
         Every call is a <strong>real HTTP 402 payment flow</strong>. No API key, no OAuth — wallet signature IS the credential:
       </div>
@@ -463,7 +463,7 @@ function AgentHeader() {
     <header className="border-b border-gray-800 bg-gray-950 sticky top-0 z-10">
       <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white flex items-center justify-center text-lg shadow-sm shrink-0">
+          <div className="w-9 h-9 rounded-lg bg-accent text-white flex items-center justify-center text-lg shadow-sm shrink-0">
             🤖
           </div>
           <div className="min-w-0 leading-tight">

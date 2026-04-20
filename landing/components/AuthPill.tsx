@@ -96,7 +96,7 @@ function PrivyAuthPill({ theme }: { theme: Theme }) {
           // eslint-disable-next-line @next/next/no-img-element
           <img src={ident.avatar} alt="" className="w-7 h-7 rounded-full object-cover" />
         ) : (
-          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-500 to-pink-500 text-white flex items-center justify-center text-xs font-bold">
+          <div className="w-7 h-7 rounded-full bg-accent text-white flex items-center justify-center text-xs font-bold">
             {sourceEmoji(ident.source) || '✓'}
           </div>
         )}
@@ -134,7 +134,7 @@ function PrivyAuthPill({ theme }: { theme: Theme }) {
                   {short}
                 </div>
                 <WalletBalance address={full as `0x${string}`} muted={dark ? 'text-gray-500' : 'text-gray-500'} />
-                <div className="text-[10px] text-indigo-500 mt-0.5">Click to copy full address</div>
+                <div className="text-[10px] text-accent mt-0.5">Click to copy full address</div>
               </button>
             )}
             <button

@@ -93,7 +93,7 @@ export default async function EmbedSubscribe({
             // eslint-disable-next-line @next/next/no-img-element
             <img src={avatar} alt={displayName} className="w-14 h-14 rounded-full object-cover" />
           ) : (
-            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 to-pink-500 text-white flex items-center justify-center text-2xl font-bold">
+            <div className="w-14 h-14 rounded-full bg-accent text-white flex items-center justify-center text-2xl font-bold">
               {displayName.charAt(0).toUpperCase()}
             </div>
           )}
@@ -110,7 +110,7 @@ export default async function EmbedSubscribe({
         {!exists ? (
           <div className={`mt-4 text-sm ${subtle}`}>
             @{username} hasn&apos;t claimed ArcPay yet.{' '}
-            <a href={`https://arcpay.finance/${username}`} target="_blank" rel="noopener noreferrer" className="text-indigo-500 underline">Claim it →</a>
+            <a href={`https://arcpay.finance/${username}`} target="_blank" rel="noopener noreferrer" className="text-accent underline">Claim it →</a>
           </div>
         ) : plans.length === 0 ? (
           <div className={`mt-4 text-sm ${subtle}`}>
@@ -125,7 +125,7 @@ export default async function EmbedSubscribe({
                   href={`${subscribeUrl}&plan=${p.id}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`block rounded-xl border ${border} p-3 hover:border-indigo-400 transition`}
+                  className={`block rounded-xl border ${border} p-3 hover:border-accent transition`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="min-w-0">
@@ -145,14 +145,14 @@ export default async function EmbedSubscribe({
               href={subscribeUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 block w-full py-2.5 rounded-xl text-white text-center text-sm font-bold bg-gradient-to-r from-indigo-500 via-pink-500 to-yellow-400 hover:opacity-90 transition"
+              className="mt-4 block w-full py-2.5 rounded-xl text-white text-center text-sm font-bold bg-accent hover:opacity-90 transition"
             >
               📅 Subscribe with USDC
             </a>
 
             <div className={`mt-3 text-[10px] text-center ${subtle}`}>
               Powered by{' '}
-              <a href="https://arcpay.finance" target="_blank" rel="noopener noreferrer" className="underline hover:text-indigo-500">
+              <a href="https://arcpay.finance" target="_blank" rel="noopener noreferrer" className="underline hover:text-accent">
                 ArcPay
               </a>{' '}
               · pay-per-second accrual · cancel any time for prorated refund
