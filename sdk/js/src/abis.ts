@@ -120,6 +120,8 @@ export const payPerCallAbi = [
     inputs: [{ type: 'bytes32' }], outputs: [{ type: 'uint256' }] },
   { type: 'function', name: 'payByName', stateMutability: 'payable',
     inputs: [{ type: 'string' }, { type: 'string' }], outputs: [{ type: 'uint256' }] },
+  { type: 'function', name: 'batchPay', stateMutability: 'payable',
+    inputs: [{ type: 'bytes32' }, { type: 'uint256' }], outputs: [{ type: 'uint256' }] },
   { type: 'function', name: 'withdraw', stateMutability: 'nonpayable',
     inputs: [{ type: 'string' }], outputs: [] },
   { type: 'function', name: 'getEndpointByName', stateMutability: 'view',

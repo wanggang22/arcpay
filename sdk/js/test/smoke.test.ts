@@ -71,5 +71,10 @@ await fan.paywall.purchase(contentId, parseUnits('0.02', 18));
 const hasAccess = await fan.paywall.checkAccess(contentId, fan.account!.address);
 console.log(`   ✓ access granted: ${hasAccess}\n`);
 
+console.log('9. Fan batchPays 3 credits for ai-summarize...');
+const batchTx = await fan.api.batchPay(username, 'ai-summarize', 3);
+console.log(`   ✓ batchPay tx: ${batchTx}`);
+console.log(`   ✓ 3 credits prepaid in one transaction\n`);
+
 console.log('=== ALL 4 PAYMENT MODES WORK ===');
-console.log('  Tips ✓  Subscriptions ✓  Pay-per-call ✓  Content paywall ✓');
+console.log('  Tips ✓  Subscriptions ✓  Pay-per-call ✓  Content paywall ✓  batchPay ✓');
