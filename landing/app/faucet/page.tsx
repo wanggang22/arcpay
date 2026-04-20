@@ -48,10 +48,10 @@ export default function FaucetPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50">
+    <div className="min-h-screen bg-paper">
       <header className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded bg-arc-gradient" />
+          <div className="w-6 h-6 rounded bg-accent" />
           <span className="font-bold">ArcPay</span>
         </Link>
         <Link href="/gavin" className="text-sm text-gray-600 hover:text-gray-900">Try the app →</Link>
@@ -69,7 +69,7 @@ export default function FaucetPage() {
             <div>
               <p className="text-sm text-gray-600 mb-3">Email / X / Google / Discord / external wallet — any works.</p>
               <button onClick={signIn}
-                className="px-4 py-2 rounded-xl bg-arc-gradient text-white text-sm font-bold">
+                className="px-4 py-2 rounded-xl bg-accent text-white text-sm font-bold">
                 Sign in
               </button>
             </div>
@@ -94,7 +94,7 @@ export default function FaucetPage() {
                 </button>
               </div>
               <button onClick={copyAndOpen}
-                className="w-full py-3 rounded-xl font-bold text-white bg-arc-gradient">
+                className="w-full py-3 rounded-xl font-bold text-white bg-accent">
                 📋 Copy address &amp; open Circle Faucet ↗
               </button>
               <ol className="mt-4 text-xs text-gray-600 space-y-1 list-decimal list-inside">
@@ -124,7 +124,7 @@ export default function FaucetPage() {
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <Link href="/gavin"
-                  className="text-center py-2.5 rounded-xl bg-arc-gradient text-white text-sm font-bold hover:opacity-90">
+                  className="text-center py-2.5 rounded-xl bg-accent text-white text-sm font-bold hover:opacity-90">
                   💸 Tip @gavin
                 </Link>
                 <Link href="https://app.arcpay.finance"

@@ -101,8 +101,8 @@ export function ArticleGate({
   return (
     <div className="my-10 not-prose">
       <div className="h-32 bg-gradient-to-b from-transparent to-white -mt-32 mb-0" />
-      <div className="relative -mt-16 p-8 rounded-2xl border-2 border-indigo-200 bg-white shadow-xl text-center">
-        <div className="text-xs uppercase tracking-wider text-indigo-600 font-bold">Subscriber-only</div>
+      <div className="relative -mt-16 p-8 rounded-2xl border-2 border-accent/20 bg-white shadow-xl text-center">
+        <div className="text-xs uppercase tracking-wider text-accent font-bold">Subscriber-only</div>
         <h3 className="font-serif text-2xl font-bold mt-2 mb-3">Subscribe to read the rest</h3>
         <p className="text-sm text-gray-600 mb-6 max-w-md mx-auto">
           {previewText || 'Your wallet is your subscription — no account, no password, no cookies.'}
@@ -122,7 +122,7 @@ export function ArticleGate({
           {address
             ? 'Wallet connected — subscribe in the popup, page auto-unlocks in 5 s.'
             : 'Need test USDC? '}
-          {!address && <Link href="/faucet" className="underline text-indigo-600">Grab some at /faucet</Link>}
+          {!address && <Link href="/faucet" className="underline text-accent">Grab some at /faucet</Link>}
         </div>
       </div>
     </div>

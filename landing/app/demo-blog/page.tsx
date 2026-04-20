@@ -82,7 +82,7 @@ export default function DemoBlog() {
         <div className="max-w-3xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
           {/* Brand */}
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-orange-400 to-red-500 text-white flex items-center justify-center text-lg shadow-sm shrink-0">
+            <div className="w-9 h-9 rounded-lg bg-accent text-white flex items-center justify-center text-lg shadow-sm shrink-0">
               📰
             </div>
             <div className="min-w-0 leading-tight">
@@ -120,7 +120,7 @@ export default function DemoBlog() {
             How I tripled my newsletter revenue by switching to USDC subscriptions
           </h1>
           <div className="flex items-center gap-3 text-sm text-gray-600 mb-8">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-pink-500 text-white flex items-center justify-center font-bold">G</div>
+            <div className="w-10 h-10 rounded-full bg-accent text-white flex items-center justify-center font-bold">G</div>
             <div>
               <div className="font-bold text-gray-900">@{AUTHOR}</div>
               <div>Indie creator · April 16, 2026</div>
@@ -174,8 +174,8 @@ export default function DemoBlog() {
         </article>
 
         {/* Developer hint */}
-        <aside className="mt-16 p-6 rounded-2xl bg-gradient-to-br from-indigo-500/5 to-pink-500/5 border border-indigo-100">
-          <div className="text-xs uppercase tracking-wider text-indigo-600 font-bold mb-2">For developers</div>
+        <aside className="mt-16 p-6 rounded-2xl bg-accent/5 border border-accent/10">
+          <div className="text-xs uppercase tracking-wider text-accent font-bold mb-2">For developers</div>
           <div className="text-sm text-gray-700 leading-relaxed">
             This page is a <strong>mock</strong> of any newsletter / SaaS that wants USDC subscriptions. The entire gating logic is 15 lines of client-side code:
           </div>
@@ -217,8 +217,8 @@ function Paywall({ plans, hasAddress }: { plans: Array<{ id: number; name: strin
   return (
     <div className="my-10 not-prose">
       <div className="h-32 bg-gradient-to-b from-transparent to-[#fbf9f5] -mt-32 mb-0" />
-      <div className="relative -mt-16 p-8 rounded-2xl border-2 border-indigo-200 bg-white shadow-xl text-center">
-        <div className="text-xs uppercase tracking-wider text-indigo-600 font-bold">Subscriber-only</div>
+      <div className="relative -mt-16 p-8 rounded-2xl border-2 border-accent/20 bg-white shadow-xl text-center">
+        <div className="text-xs uppercase tracking-wider text-accent font-bold">Subscriber-only</div>
         <h3 className="font-serif text-2xl font-bold mt-2 mb-3">Subscribe to continue reading</h3>
         <p className="text-sm text-gray-600 mb-6 max-w-md mx-auto">
           The rest of this essay is for paid readers. Your wallet becomes your subscription — no account, no password, no cookies.

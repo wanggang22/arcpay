@@ -20,7 +20,7 @@ export default function BlogIndex() {
       <header className="border-b border-gray-200 bg-white">
         <div className="max-w-3xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded bg-arc-gradient" />
+            <div className="w-6 h-6 rounded bg-accent" />
             <span className="font-bold">ArcPay</span>
             <span className="text-xs text-gray-400">/ blog</span>
           </Link>
@@ -34,7 +34,7 @@ export default function BlogIndex() {
 
       <main className="max-w-2xl mx-auto px-6 py-12">
         <div className="mb-10">
-          <div className="text-xs uppercase tracking-wider text-indigo-600 font-bold">Dogfooding ArcPay</div>
+          <div className="text-xs uppercase tracking-wider text-accent font-bold">Dogfooding ArcPay</div>
           <h1 className="font-serif text-4xl font-bold mt-2">gavin&apos;s blog</h1>
           <p className="mt-3 text-gray-600 leading-relaxed">
             Build logs, protocol notes, product thinking. This blog runs on ArcPay — free previews,
@@ -46,7 +46,7 @@ export default function BlogIndex() {
         <div className="space-y-6">
           {posts.map((p) => (
             <article key={p.slug}>
-              <Link href={`/blog/${p.slug}`} className="block p-5 rounded-2xl bg-white border border-gray-200 hover:border-indigo-400 hover:shadow-sm transition">
+              <Link href={`/blog/${p.slug}`} className="block p-5 rounded-2xl bg-white border border-gray-200 hover:border-accent hover:shadow-sm transition">
                 <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
                   <time>{formatDate(p.date)}</time>
                   <span>·</span>
@@ -54,11 +54,11 @@ export default function BlogIndex() {
                   {p.gated && (
                     <>
                       <span>·</span>
-                      <span className="text-indigo-600 font-bold">🔒 Paid</span>
+                      <span className="text-accent font-bold">🔒 Paid</span>
                     </>
                   )}
                 </div>
-                <h2 className="font-serif text-xl font-bold leading-tight hover:text-indigo-700">
+                <h2 className="font-serif text-xl font-bold leading-tight hover:text-accent">
                   {p.title}
                 </h2>
                 <p className="mt-2 text-sm text-gray-600 leading-relaxed">{p.excerpt}</p>

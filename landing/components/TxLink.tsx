@@ -14,7 +14,7 @@ export function TxLink({ tx, label }: { tx: string; label?: string }) {
   }
   return (
     <a href={`${base}/tx/${tx}`} target="_blank" rel="noopener noreferrer"
-      className="font-mono text-xs underline decoration-dotted hover:text-indigo-600"
+      className="font-mono text-xs underline decoration-dotted hover:text-accent"
       title="View on Arcscan (opens in new tab)">
       {label ?? short} ↗
     </a>
@@ -29,7 +29,7 @@ export function AddressLink({ address, label }: { address: string; label?: strin
   }
   return (
     <a href={`${base}/address/${address}`} target="_blank" rel="noopener noreferrer"
-      className="font-mono text-xs underline decoration-dotted hover:text-indigo-600"
+      className="font-mono text-xs underline decoration-dotted hover:text-accent"
       title="View on Arcscan">
       {label ?? short} ↗
     </a>

@@ -48,7 +48,7 @@ export default function BuildPage() {
       </main>
       <footer className="border-t border-gray-200 mt-16 py-10">
         <div className="max-w-5xl mx-auto px-6 text-sm text-gray-500 text-center">
-          Built on Arc Network · USDC native · <Link href="/" className="underline hover:text-indigo-600">ArcPay</Link>
+          Built on Arc Network · USDC native · <Link href="/" className="underline hover:text-accent">ArcPay</Link>
         </div>
       </footer>
     </div>
@@ -60,17 +60,17 @@ function BuildHeader() {
     <header className="border-b border-gray-200 bg-white sticky top-0 z-20 backdrop-blur bg-white/90">
       <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded bg-arc-gradient" />
+          <div className="w-6 h-6 rounded bg-accent" />
           <span className="font-bold">ArcPay</span>
           <span className="text-xs text-gray-400 ml-1">/ build</span>
         </Link>
         <nav className="flex items-center gap-3 text-xs">
-          <Link href="/demo-blog" className="text-gray-600 hover:text-indigo-600">📝 Blog demo</Link>
-          <Link href="/demo-product" className="text-gray-600 hover:text-indigo-600">🛒 Product demo</Link>
-          <Link href="/demo-agent" className="text-gray-600 hover:text-indigo-600">🤖 Agent demo</Link>
-          <Link href="/faucet" className="text-gray-600 hover:text-indigo-600">💧 Faucet</Link>
+          <Link href="/demo-blog" className="text-gray-600 hover:text-accent">📝 Blog demo</Link>
+          <Link href="/demo-product" className="text-gray-600 hover:text-accent">🛒 Product demo</Link>
+          <Link href="/demo-agent" className="text-gray-600 hover:text-accent">🤖 Agent demo</Link>
+          <Link href="/faucet" className="text-gray-600 hover:text-accent">💧 Faucet</Link>
           <a href="https://github.com/wanggang22/arcpay" target="_blank" rel="noopener noreferrer"
-            className="text-gray-600 hover:text-indigo-600">GitHub</a>
+            className="text-gray-600 hover:text-accent">GitHub</a>
           <Link href="/gavin"
             className="px-3 py-1.5 rounded-lg bg-gray-900 text-white font-bold hover:bg-gray-700">
             Try the app
@@ -84,7 +84,7 @@ function BuildHeader() {
 function Hero() {
   return (
     <div className="text-center py-16">
-      <div className="inline-block px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold uppercase tracking-wider mb-5">
+      <div className="inline-block px-3 py-1 rounded-full bg-accent/10 text-accent text-xs font-bold uppercase tracking-wider mb-5">
         For developers
       </div>
       <h1 className="text-5xl font-extrabold tracking-tight">Build on ArcPay</h1>
@@ -118,12 +118,12 @@ function TOC() {
     ['resources', '📦 Resources'],
   ];
   return (
-    <div className="my-10 p-5 rounded-2xl bg-gradient-to-br from-indigo-50 via-white to-pink-50 border border-gray-200">
+    <div className="my-10 p-5 rounded-2xl bg-paper border border-gray-200">
       <div className="text-xs uppercase tracking-wider text-gray-500 font-bold mb-3">Contents</div>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
         {items.map(([id, label]) => (
           <a key={id} href={`#${id}`}
-            className="text-sm text-gray-700 hover:text-indigo-600 px-3 py-1.5 rounded-lg hover:bg-white transition">
+            className="text-sm text-gray-700 hover:text-accent px-3 py-1.5 rounded-lg hover:bg-white transition">
             {label}
           </a>
         ))}
@@ -168,7 +168,7 @@ if (isActive) renderPremiumContent();`;
       <Step num="2" title="Connect">
         <CodeBlock lang="ts">{connect}</CodeBlock>
         <p className="text-sm text-gray-600 mt-2">
-          Get free testnet USDC at <a href="/faucet" className="underline text-indigo-600">arcpay.finance/faucet</a>.
+          Get free testnet USDC at <a href="/faucet" className="underline text-accent">arcpay.finance/faucet</a>.
         </p>
       </Step>
       <Step num="3" title="Send a payment">
@@ -314,7 +314,7 @@ app.use('/api/premium/*', async (req, res, next) => {
         <Scenario title="C. Express API middleware (HTTP 402 on unpaid)" code={expressExample} />
       </div>
       <p className="text-sm text-gray-500 mt-4">
-        Live example: <Link href="/demo-blog" className="underline text-indigo-600">arcpay.finance/demo-blog</Link> (Substack-style paywall)
+        Live example: <Link href="/demo-blog" className="underline text-accent">arcpay.finance/demo-blog</Link> (Substack-style paywall)
       </p>
     </>
   );
@@ -357,7 +357,7 @@ if (hasAccess) revealUrl();`;
         ]}
       />
       <p className="text-sm text-gray-500 mt-4">
-        Live example: <Link href="/demo-product" className="underline text-indigo-600">arcpay.finance/demo-product</Link> (Gumroad-style)
+        Live example: <Link href="/demo-product" className="underline text-accent">arcpay.finance/demo-product</Link> (Gumroad-style)
       </p>
     </>
   );
@@ -397,9 +397,9 @@ app.post('/summarize-paper', async (req, res) => {
       <p className="text-gray-700 leading-relaxed">
         Pay-per-request API billing designed for AI agents. Agent prepays N call credits in one transaction, then authenticates each HTTP call by signing with the same wallet. The server verifies the signature matches the on-chain payer of an unused <code>callId</code>.
       </p>
-      <div className="mt-4 p-4 rounded-xl bg-indigo-50 border border-indigo-200">
-        <div className="text-xs font-bold uppercase tracking-wider text-indigo-700">⭐ x402 + ERC-8183 compliant</div>
-        <div className="text-sm text-indigo-900 mt-1">
+      <div className="mt-4 p-4 rounded-xl bg-accent/5 border border-accent/20">
+        <div className="text-xs font-bold uppercase tracking-wider text-accent">⭐ x402 + ERC-8183 compliant</div>
+        <div className="text-sm text-ink mt-1">
           HTTP 402 when unpaid. No API key management. Two AI agents can buy and sell services without any human-facing auth.
         </div>
       </div>
@@ -415,7 +415,7 @@ app.post('/summarize-paper', async (req, res) => {
         ]}
       />
       <p className="text-sm text-gray-500 mt-4">
-        Live example: <Link href="/demo-agent" className="underline text-indigo-600">arcpay.finance/demo-agent</Link> (x402 translation agent)
+        Live example: <Link href="/demo-agent" className="underline text-accent">arcpay.finance/demo-agent</Link> (x402 translation agent)
       </p>
     </>
   );
@@ -454,7 +454,7 @@ await contract.claimByHandle(handle, recipient, deadline, signature);
       <CodeBlock lang="ts" className="mt-4">{extTipCode}</CodeBlock>
       <CodeBlock lang="ts" className="mt-4">{claimFlow}</CodeBlock>
       <p className="text-sm text-gray-500 mt-4">
-        Install the extension from <a href="https://github.com/wanggang22/arcpay/releases" target="_blank" rel="noopener noreferrer" className="underline text-indigo-600">GitHub releases</a> to try it on x.com today.
+        Install the extension from <a href="https://github.com/wanggang22/arcpay/releases" target="_blank" rel="noopener noreferrer" className="underline text-accent">GitHub releases</a> to try it on x.com today.
       </p>
     </>
   );
@@ -486,7 +486,7 @@ function EmbedDocs() {
       <CodeBlock lang="markdown" title="GitHub README badge" className="mt-4">{badge}</CodeBlock>
       <p className="text-sm text-gray-500 mt-4">
         See them rendered live at{' '}
-        <Link href="/demo-blog" className="underline text-indigo-600">arcpay.finance/demo-blog</Link>.
+        <Link href="/demo-blog" className="underline text-accent">arcpay.finance/demo-blog</Link>.
       </p>
     </>
   );
@@ -507,7 +507,7 @@ function Contracts() {
       <div className="mb-4 text-sm text-gray-700">
         <strong>Network:</strong> Arc Testnet (chainId 5042002) ·{' '}
         <strong>RPC:</strong> <code>https://rpc.testnet.arc.network</code> ·{' '}
-        <strong>Explorer:</strong> <a href="https://testnet.arcscan.app" target="_blank" rel="noopener noreferrer" className="text-indigo-600 underline">testnet.arcscan.app</a>
+        <strong>Explorer:</strong> <a href="https://testnet.arcscan.app" target="_blank" rel="noopener noreferrer" className="text-accent underline">testnet.arcscan.app</a>
       </div>
       <div className="border border-gray-200 rounded-2xl overflow-hidden">
         <table className="w-full text-sm">
@@ -524,7 +524,7 @@ function Contracts() {
                 <td className="px-4 py-3 font-mono text-xs font-bold">{name}</td>
                 <td className="px-4 py-3 font-mono text-xs">
                   <a href={`https://testnet.arcscan.app/address/${addr}`} target="_blank" rel="noopener noreferrer"
-                    className="text-indigo-600 hover:underline">{addr}</a>
+                    className="text-accent hover:underline">{addr}</a>
                 </td>
                 <td className="px-4 py-3 text-xs text-gray-600 hidden md:table-cell">{note}</td>
               </tr>
@@ -551,10 +551,10 @@ function Resources() {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
       {links.map(([name, url, desc]) => (
         <a key={url} href={url} target="_blank" rel="noopener noreferrer"
-          className="block p-4 rounded-2xl border border-gray-200 hover:border-indigo-400 hover:shadow-sm transition">
+          className="block p-4 rounded-2xl border border-gray-200 hover:border-accent hover:shadow-sm transition">
           <div className="font-bold">{name}</div>
           <div className="text-xs text-gray-500 mt-1">{desc}</div>
-          <div className="text-[10px] text-indigo-600 font-mono mt-1 truncate">{url}</div>
+          <div className="text-[10px] text-accent font-mono mt-1 truncate">{url}</div>
         </a>
       ))}
     </div>

@@ -36,7 +36,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
       <header className="border-b border-gray-200 bg-white sticky top-0 z-10">
         <div className="max-w-3xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
           <Link href="/blog" className="flex items-center gap-2 min-w-0">
-            <div className="w-6 h-6 rounded bg-arc-gradient shrink-0" />
+            <div className="w-6 h-6 rounded bg-accent shrink-0" />
             <span className="font-bold truncate">gavin&apos;s blog</span>
           </Link>
           <div className="flex items-center gap-1">
@@ -56,11 +56,11 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
         <article>
           <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">
             {formatDate(post.date)} · {post.readMinutes} min read
-            {post.gated && <> · <span className="text-indigo-600 font-bold">🔒 Paid</span></>}
+            {post.gated && <> · <span className="text-accent font-bold">🔒 Paid</span></>}
           </div>
           <h1 className="font-serif text-4xl font-bold leading-tight mb-4">{post.title}</h1>
           <div className="flex items-center gap-3 text-sm text-gray-600 mb-8">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-pink-500 text-white flex items-center justify-center font-bold">G</div>
+            <div className="w-10 h-10 rounded-full bg-accent text-white flex items-center justify-center font-bold">G</div>
             <div>
               <div className="font-bold text-gray-900">@{post.author}</div>
               <div>Builder of ArcPay · {formatDate(post.date)}</div>

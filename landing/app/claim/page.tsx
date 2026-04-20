@@ -83,10 +83,10 @@ function ClaimInner() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50">
+    <div className="min-h-screen bg-paper">
       <header className="max-w-3xl mx-auto px-6 py-4 flex justify-between items-center">
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded bg-arc-gradient" />
+          <div className="w-6 h-6 rounded bg-accent" />
           <span className="font-bold">ArcPay</span>
         </Link>
         <AuthBar />
@@ -160,7 +160,7 @@ function ClaimInner() {
               </div>
               {available !== null && available > 0n ? (
                 <button onClick={claim} disabled={busy}
-                  className="w-full py-3 rounded-xl bg-arc-gradient text-white font-bold disabled:opacity-60">
+                  className="w-full py-3 rounded-xl bg-accent text-white font-bold disabled:opacity-60">
                   {busy ? 'Claiming…' : `Claim ${Number(formatUnits(available, 18)).toFixed(4)} USDC`}
                 </button>
               ) : (
@@ -228,7 +228,7 @@ function AuthBar() {
     if (!privy.authenticated) {
       return (
         <button onClick={() => privy.login()}
-          className="px-4 py-2 rounded-xl bg-arc-gradient text-white text-sm font-semibold">
+          className="px-4 py-2 rounded-xl bg-accent text-white text-sm font-semibold">
           Sign in
         </button>
       );
@@ -253,7 +253,7 @@ function AuthBar() {
               // eslint-disable-next-line @next/next/no-img-element
               <img src={ident.avatar} alt="" className="w-5 h-5 rounded-full object-cover" />
             ) : (
-              <div className="w-5 h-5 rounded-full bg-gradient-to-br from-indigo-400 to-pink-400 text-white flex items-center justify-center text-[10px] font-bold">{ident.emoji}</div>
+              <div className="w-5 h-5 rounded-full bg-accent text-white flex items-center justify-center text-[10px] font-bold">{ident.emoji}</div>
             )}
             <span className="text-xs font-medium truncate" title={ident.label}>{ident.label}</span>
           </div>
@@ -267,7 +267,7 @@ function AuthBar() {
   if (!isConnected) {
     return (
       <button onClick={() => connectors[0] && connect({ connector: connectors[0] })}
-        className="px-4 py-2 rounded-xl bg-arc-gradient text-white text-sm font-semibold">
+        className="px-4 py-2 rounded-xl bg-accent text-white text-sm font-semibold">
         Connect wallet
       </button>
     );

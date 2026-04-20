@@ -100,10 +100,10 @@ export default function QuickTipPage() {
   const displayName = xProfile?.name || handle;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50 flex flex-col">
+    <div className="min-h-screen bg-paper flex flex-col">
       <main className="flex-1 flex items-center justify-center p-4">
         <div className="w-full max-w-sm bg-white rounded-2xl shadow-xl overflow-hidden">
-          <div className="h-12 bg-gradient-to-r from-indigo-500 via-pink-500 to-yellow-400" />
+          <div className="h-12 bg-accent" />
 
           <div className="p-5 -mt-6">
             <div className="flex items-center gap-3">
@@ -111,14 +111,14 @@ export default function QuickTipPage() {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={xProfile.avatar} className="w-12 h-12 rounded-full border-2 border-white shadow" alt={displayName} />
               ) : (
-                <div className="w-12 h-12 rounded-full border-2 border-white shadow bg-gradient-to-br from-indigo-500 to-pink-500 text-white flex items-center justify-center font-bold text-lg">
+                <div className="w-12 h-12 rounded-full border-2 border-white shadow bg-accent text-white flex items-center justify-center font-bold text-lg">
                   {displayName.charAt(0).toUpperCase()}
                 </div>
               )}
               <div className="min-w-0 flex-1">
                 <div className="font-bold text-sm truncate">{displayName}</div>
                 <a href={`https://x.com/${handle}`} target="_blank" rel="noopener noreferrer"
-                  className="text-xs text-gray-500 font-mono hover:text-indigo-600">@{handle} ↗</a>
+                  className="text-xs text-gray-500 font-mono hover:text-accent">@{handle} ↗</a>
               </div>
             </div>
 
@@ -132,7 +132,7 @@ export default function QuickTipPage() {
               {['0.001', '0.005', '0.01', '0.05'].map((p) => (
                 <button key={p} onClick={() => setAmount(p)}
                   className={`py-1.5 rounded-lg text-xs font-bold border-2 transition
-                    ${amount === p ? 'border-indigo-500 bg-indigo-50 text-indigo-700' : 'border-gray-200 text-gray-600 hover:border-gray-300'}`}>
+                    ${amount === p ? 'border-accent bg-accent/10 text-accent' : 'border-gray-200 text-gray-600 hover:border-gray-300'}`}>
                   ${p}
                 </button>
               ))}
@@ -141,7 +141,7 @@ export default function QuickTipPage() {
             <input
               value={amount}
               onChange={(e) => setAmount(e.target.value.replace(/[^0-9.]/g, ''))}
-              className="mt-2 w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-400 focus:outline-none"
+              className="mt-2 w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-accent focus:outline-none"
               placeholder="Custom amount (USDC)"
               inputMode="decimal"
             />
@@ -149,7 +149,7 @@ export default function QuickTipPage() {
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value.slice(0, 280))}
-              className="mt-2 w-full px-3 py-2 rounded-lg border border-gray-200 text-sm resize-none h-14 focus:border-indigo-400 focus:outline-none"
+              className="mt-2 w-full px-3 py-2 rounded-lg border border-gray-200 text-sm resize-none h-14 focus:border-accent focus:outline-none"
               placeholder="Message (optional)"
             />
 
@@ -161,7 +161,7 @@ export default function QuickTipPage() {
               <button
                 onClick={send}
                 disabled={busy || !amount || tx !== null}
-                className="mt-2 w-full py-2.5 rounded-xl text-white text-sm font-bold bg-gradient-to-r from-indigo-500 via-pink-500 to-yellow-400 disabled:opacity-60 transition"
+                className="mt-2 w-full py-2.5 rounded-xl text-white text-sm font-bold bg-accent disabled:opacity-60 transition"
               >
                 {tx ? '✓ Sent — closing…' : busy ? 'Sending…' : `Send $${amount}`}
               </button>
@@ -235,7 +235,7 @@ function PrivySlot() {
           // eslint-disable-next-line @next/next/no-img-element
           <img src={ident.avatar} alt="" className="w-6 h-6 rounded-full object-cover shrink-0" />
         ) : (
-          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-500 to-pink-500 text-white text-[10px] flex items-center justify-center font-bold shrink-0">
+          <div className="w-6 h-6 rounded-full bg-accent text-white text-[10px] flex items-center justify-center font-bold shrink-0">
             {ident?.emoji || '✓'}
           </div>
         )}

@@ -145,7 +145,7 @@ function EmptyState() {
       <h2 className="text-2xl font-bold">@{AUTHOR} hasn&apos;t listed a product yet</h2>
       <p className="mt-3 text-gray-600 text-sm">
         The creator needs to go to{' '}
-        <a href="https://app.arcpay.finance/content" className="underline text-indigo-600" target="_blank" rel="noopener noreferrer">
+        <a href="https://app.arcpay.finance/content" className="underline text-accent" target="_blank" rel="noopener noreferrer">
           app.arcpay.finance/content
         </a>{' '}
         and add an item first.
@@ -178,12 +178,12 @@ function ProductLayout({
           {meta.title || 'Premium digital download'}
         </h1>
         <div className="mt-3 flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-400 to-red-500 text-white flex items-center justify-center font-bold text-sm">
+          <div className="w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center font-bold text-sm">
             {AUTHOR.charAt(0).toUpperCase()}
           </div>
           <div className="text-sm text-gray-600">
             by{' '}
-            <Link href={`/${AUTHOR}`} className="font-bold text-gray-900 hover:text-indigo-600">@{AUTHOR}</Link>
+            <Link href={`/${AUTHOR}`} className="font-bold text-gray-900 hover:text-accent">@{AUTHOR}</Link>
           </div>
         </div>
 
@@ -223,7 +223,7 @@ function ProductLayout({
                 </div>
                 {meta.url ? (
                   <a href={meta.url} target="_blank" rel="noopener noreferrer"
-                    className="block text-center w-full py-3 rounded-xl bg-gradient-to-r from-indigo-500 via-pink-500 to-yellow-400 text-white font-bold hover:opacity-90">
+                    className="block text-center w-full py-3 rounded-xl bg-accent text-white font-bold hover:opacity-90">
                     🔓 Open content ↗
                   </a>
                 ) : (
@@ -284,7 +284,7 @@ function Cover({ meta }: { meta: Meta }) {
     return <img src={meta.cover} alt={meta.title || 'cover'} className="w-full h-80 object-cover rounded-2xl shadow-sm" />;
   }
   return (
-    <div className="w-full h-80 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-sm">
+    <div className="w-full h-80 rounded-2xl bg-accent flex items-center justify-center shadow-sm">
       <div className="text-8xl">📦</div>
     </div>
   );
@@ -294,8 +294,8 @@ function Cover({ meta }: { meta: Meta }) {
 
 function DevBlock() {
   return (
-    <aside className="mt-20 p-6 rounded-2xl bg-gradient-to-br from-indigo-500/5 to-pink-500/5 border border-indigo-100">
-      <div className="text-xs uppercase tracking-wider text-indigo-600 font-bold mb-2">For developers</div>
+    <aside className="mt-20 p-6 rounded-2xl bg-accent/5 border border-accent/10">
+      <div className="text-xs uppercase tracking-wider text-accent font-bold mb-2">For developers</div>
       <div className="text-sm text-gray-700 leading-relaxed">
         A mock Gumroad-style product page. The whole gating logic is two contract calls:
       </div>
@@ -334,7 +334,7 @@ function ProductHeader() {
     <header className="border-b border-gray-200 bg-white sticky top-0 z-10">
       <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center text-lg shadow-sm shrink-0">
+          <div className="w-9 h-9 rounded-lg bg-accent text-white flex items-center justify-center text-lg shadow-sm shrink-0">
             📦
           </div>
           <div className="min-w-0 leading-tight">
