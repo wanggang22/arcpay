@@ -317,6 +317,26 @@ class PayPerCallClient {
     return hash;
   }
 
+  /**
+   * Prepay `count` API call credits in a single on-chain transaction.
+   * Wraps PayPerCall.sol::batchPay(bytes32 endpointId, uint256 count).
+   * Each credit has a unique callId that can be consumed with a signed off-chain request.
+   */
+  async batchPay(username: string, endpointName: string, count: number | bigint): Promise<Hex> {
+    const { walletClient, account } = this.client._requireWallet();
+    const endpoint = await this.getEndpointByName(username, endpointName);
+    const countBig = typeof count === 'bigint' ? count : BigInt(count);
+    const value = endpoint.pricePerCall * countBig;
+    const hash = await walletClient.writeContract({
+      address: this.client.config.addresses.payPerCall,
+      abi: payPerCallAbi, functionName: 'batchPay',
+      args: [endpoint.id, countBig], value,
+      account, chain: this.client.config.chain,
+    });
+    await this.client.publicClient.waitForTransactionReceipt({ hash });
+    return hash;
+  }
+
   async getEndpointByName(username: string, name: string): Promise<any> {
     return this.client.publicClient.readContract({
       address: this.client.config.addresses.payPerCall,

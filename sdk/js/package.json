@@ -1,6 +1,6 @@
 {
   "name": "@wanggang22/arcpay-sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "ArcPay SDK — USDC payments on Arc Network. Tips, subscriptions, paywalls, and pay-per-call billing. Works for humans and AI agents.",
   "type": "module",
   "main": "dist/index.cjs",
