@@ -62,13 +62,12 @@ const owned = await client.paywall.checkAccess(contentId, wallet);`,
     copy: 'batchPay prepays N credits up-front. SDK auto-signs each call. Server verifies callId on-chain. Perfect for agents billing per inference.',
     href: '/demo-agent',
     cta: 'Watch an agent pay',
-    code: `// Prepay 100 call credits
+    code: `// Prepay 100 call credits in one tx
 await client.api.batchPay('gavin', 'summarize-paper', 100);
 
-// Each call signed off-chain, verified on-chain
-const out = await client.api.call(
-  'gavin', 'summarize-paper', input
-);`,
+// Each call uses one credit:
+//   wallet.signMessage('arcpay-call:' + callId)
+//   POST { callId, signature, endpointId, input }`,
   },
 ];
 

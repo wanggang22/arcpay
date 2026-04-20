@@ -13,8 +13,11 @@ const client = new ArcPayClient({ network: 'arc' });
 // AI agent prepays 100 inference credits in one tx
 await client.api.batchPay('gavin', 'summarize-paper', 100);
 
-// Each subsequent call is signed off-chain, verified on-chain
-const res = await client.api.call('gavin', 'summarize-paper', input);`,
+// Each subsequent call spends one credit:
+//   const sig = await wallet.signMessage('arcpay-call:' + callId);
+//   fetch(endpointUrl, { method: 'POST', body: JSON.stringify({
+//     callId, signature: sig, endpointId, input,
+//   }) });`,
     },
     {
       label: 'Python',
