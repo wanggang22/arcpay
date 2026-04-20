@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ArcPay — Tip on X with USDC",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Tip any X user with USDC on Arc Network. Popup signing stays on the page. Instant settlement, 2% fee, no KYC. Email or wallet login.",
   "homepage_url": "https://arcpay.finance",
   "icons": {

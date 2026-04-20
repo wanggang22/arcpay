@@ -178,7 +178,7 @@ function ChromeExtension() {
               rel="noopener noreferrer"
               className="px-5 py-2.5 rounded-full bg-ink text-paper text-sm font-semibold hover:opacity-90"
             >
-              Download v0.2.0
+              Download v0.2.1
             </a>
             <Link
               href="/claim"
