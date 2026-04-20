@@ -7,8 +7,8 @@ import { Providers } from './providers';
 
 const fraunces = Fraunces({
   subsets: ['latin'],
-  axes: ['opsz'],
   weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
   display: 'swap',
   variable: '--font-fraunces',
 });
