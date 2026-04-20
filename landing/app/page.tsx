@@ -6,7 +6,7 @@ import { ForDevelopers } from '@/components/ForDevelopers';
 
 export default function Page() {
   return (
-    <div className="bg-paper text-ink">
+    <div className="bg-paper text-ink overflow-x-hidden">
       <Nav />
       <Hero />
       <HowItWorks />
@@ -289,7 +289,7 @@ function Comparison() {
       <h2 className="font-display text-4xl md:text-5xl font-semibold mb-12 max-w-xl">
         Why ArcPay.
       </h2>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto max-w-full">
         <table className="w-full min-w-[720px] text-left">
           <thead>
             <tr className="border-b border-hairline text-sm">
