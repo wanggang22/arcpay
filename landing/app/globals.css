@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Font variables are set by next/font + geist in app/layout.tsx via <html className=...>. */
+
+html {
+  font-feature-settings: 'ss01', 'ss02', 'cv11';
+}
+
 body {
-  font-family: ui-sans-serif, system-ui, -apple-system, "Inter", sans-serif;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui;
 }
