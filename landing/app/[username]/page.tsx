@@ -324,6 +324,7 @@ function TipForm({ username }: { username: string }) {
       const hash = await wallet.writeContract({
         address: ADDRESSES.tipJar, abi: tipJarAbi, functionName: 'tip',
         args: [username, message], value: parseUnits(amount, 18),
+        gas: 300000n,
       });
       await pub.waitForTransactionReceipt({ hash });
       setTx(hash); setMessage('');
@@ -477,6 +478,7 @@ function SubscribePanel({ username }: { username: string }) {
       const hash = await wallet.writeContract({
         address: ADDRESSES.subscriptions, abi: subscriptionsAbi, functionName: 'subscribe',
         args: [BigInt(selectedPlan), BigInt(months)], value: total,
+        gas: 400000n,
       });
       await pub.waitForTransactionReceipt({ hash });
       setTx(hash);
@@ -497,6 +499,7 @@ function SubscribePanel({ username }: { username: string }) {
       const hash = await wallet.writeContract({
         address: ADDRESSES.subscriptions, abi: subscriptionsAbi, functionName: 'cancel',
         args: [myActive.subId],
+        gas: 300000n,
       });
       await pub.waitForTransactionReceipt({ hash });
       setTx(hash);
@@ -637,6 +640,7 @@ function ContentList({ username }: { username: string }) {
       const hash = await wallet.writeContract({
         address: ADDRESSES.contentPaywall, abi: contentPaywallAbi, functionName: 'purchase',
         args: [id as `0x${string}`], value: price,
+        gas: 300000n,
       });
       await pub.waitForTransactionReceipt({ hash });
       setAccessMap(prev => ({ ...prev, [id]: true }));
@@ -743,6 +747,7 @@ function ApiList({ username }: { username: string }) {
         address: ADDRESSES.payPerCall, abi: payPerCallAbi,
         functionName: 'batchPay', args: [id as `0x${string}`, BigInt(count)],
         value: price * BigInt(count),
+        gas: 400000n,
       });
       const receipt = await pub.waitForTransactionReceipt({ hash });
       const paidLogs = receipt.logs.filter(l => l.address.toLowerCase() === ADDRESSES.payPerCall.toLowerCase());
@@ -957,6 +962,7 @@ function HandleTipForm({ username }: { username: string }) {
         address: ADDRESSES.tipJarByHandle, abi: tipJarByHandleAbi,
         functionName: 'tipByHandle',
         args: [username, message], value: parseUnits(amount, 18),
+        gas: 350000n,
       });
       await pub.waitForTransactionReceipt({ hash });
       setTx(hash); setMessage('');

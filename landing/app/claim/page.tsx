@@ -74,6 +74,7 @@ function ClaimInner() {
         address: ADDRESSES.tipJarByHandle, abi: tipJarByHandleAbi,
         functionName: 'claimByHandle',
         args: [handle, recipient as `0x${string}`, BigInt(deadline), signature as `0x${string}`],
+        gas: 350000n,
       });
       await pub.waitForTransactionReceipt({ hash });
       setTx(hash);

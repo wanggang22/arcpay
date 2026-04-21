@@ -120,6 +120,7 @@ export default function DemoAgent() {
         address: ADDRESSES.payPerCall, abi: payPerCallAbi,
         functionName: 'batchPay', args: [endpoint.id, BigInt(qty)],
         value: endpoint.pricePerCall * BigInt(qty),
+        gas: 400000n,
       });
       const receipt = await pub.waitForTransactionReceipt({ hash });
       const paidLogs = receipt.logs.filter(

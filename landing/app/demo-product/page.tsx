@@ -106,6 +106,7 @@ export default function DemoProduct() {
         functionName: 'purchase',
         args: [content.id],
         value: content.price,
+        gas: 300000n,
       });
       await pub.waitForTransactionReceipt({ hash });
       setTx(hash);

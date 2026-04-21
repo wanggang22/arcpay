@@ -64,11 +64,13 @@ export default function QuickTipPage() {
         hash = await wallet.writeContract({
           address: ADDRESSES.tipJar, abi: tipJarAbi, functionName: 'tip',
           args: [handle, message], value,
+          gas: 300000n,
         });
       } else {
         hash = await wallet.writeContract({
           address: ADDRESSES.tipJarByHandle, abi: tipJarByHandleAbi, functionName: 'tipByHandle',
           args: [handle, message], value,
+          gas: 350000n,
         });
       }
       await pub.waitForTransactionReceipt({ hash });
