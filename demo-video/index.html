@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Geist+Mono:wght@400..500&family=Geist:wght@400..800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      :root {
+        --paper: #f7f4ee;
+        --ink: #0a0a0f;
+        --accent: #2d4a3e;
+        --gold: #b8a47e;
+        --hairline: rgba(10,10,15,0.10);
+        --muted: rgba(10,10,15,0.60);
+        --paper-on-ink: #f7f4ee;
+      }
+      html, body {
+        margin: 0; width: 1920px; height: 1080px; overflow: hidden;
+        background: var(--paper); color: var(--ink);
+        font-family: 'Geist', ui-sans-serif, system-ui;
+        font-feature-settings: 'ss01','ss02','cv11';
+      }
+      .clip {
+        position: absolute; top: 0; left: 0; width: 1920px; height: 1080px;
+        overflow: hidden;
+        opacity: 0; visibility: hidden;
+      }
+      .clip.dark { background: var(--ink); color: var(--paper-on-ink); }
+
+      .display { font-family: 'Fraunces', ui-serif, Georgia, serif; font-optical-sizing: auto; }
+      .mono { font-family: 'Geist Mono', ui-monospace, Menlo, monospace; }
+      .kicker { font-family: 'Geist Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.16em; font-weight: 500; color: var(--accent); font-size: 22px; }
+      .kicker.gold { color: var(--gold); }
+      .hairline { border: 1px solid var(--hairline); }
+      .accent { color: var(--accent); }
+
+      /* ───────── Beat 1 — Hero (0–4s) ───────── */
+      .b1 { padding: 120px 140px; }
+      .b1-wrap { display: grid; grid-template-columns: 7fr 5fr; gap: 80px; align-items: center; height: 100%; }
+      .b1 h1 {
+        font-family: 'Geist', system-ui;
+        font-weight: 800; font-size: 168px; line-height: 0.95; letter-spacing: -0.03em;
+        color: var(--ink);
+      }
+      .b1 .one-url {
+        font-family: 'Fraunces', serif;
+        font-style: italic; font-weight: 500;
+        color: var(--accent); display: block;
+      }
+      .b1 .copyline {
+        margin-top: 64px; display: inline-flex; align-items: center; gap: 10px;
+        padding: 14px 22px; border-radius: 10px; border: 1px solid var(--hairline);
+        background: rgba(10,10,15,0.04);
+        font-family: 'Geist Mono', monospace; font-size: 26px; color: var(--ink);
+      }
+      .b1 .copyline .pfx { color: rgba(10,10,15,0.4); }
+      .b1 svg.convergence { width: 100%; height: auto; }
+      .b1 svg.convergence path { stroke-dasharray: 1000; stroke-dashoffset: 1000; }
+      .b1 .center-pill { opacity: 0; }
+
+      /* ───────── Beat 2 — Positioning (4–10s) ───────── */
+      .b2 { padding: 120px 140px; }
+      .b2-wrap { display: grid; grid-template-columns: 6fr 6fr; gap: 80px; align-items: center; height: 100%; }
+      .b2 .h2 {
+        font-family: 'Fraunces', serif;
+        font-weight: 600; font-size: 96px; line-height: 1.05; letter-spacing: -0.02em;
+        color: var(--ink);
+      }
+      .b2 .h2 em { font-style: italic; color: var(--accent); }
+      .b2 .sublabel { margin-top: 24px; font-size: 22px; color: var(--accent); font-family: 'Geist Mono', monospace; text-transform: uppercase; letter-spacing: 0.16em; }
+
+      .compare { font-family: 'Geist Mono', monospace; font-size: 26px; }
+      .compare table { width: 100%; border-collapse: collapse; }
+      .compare th, .compare td { padding: 18px 20px; text-align: right; border-bottom: 1px solid var(--hairline); }
+      .compare th:first-child, .compare td:first-child { text-align: left; color: var(--muted); font-family: 'Geist'; }
+      .compare .arc-col { color: var(--ink); font-weight: 600; border-left: 2px solid var(--accent); padding-left: 22px; }
+      .compare .other { color: var(--muted); }
+
+      /* ───────── Beat 3-5 — Modes (split layout) ───────── */
+      .mode { padding: 120px 140px; }
+      .mode-wrap { display: grid; grid-template-columns: 7fr 5fr; gap: 80px; align-items: center; height: 100%; }
+      .mode .desc { color: var(--muted); font-size: 30px; line-height: 1.45; max-width: 720px; margin-top: 24px; }
+      .mode .h2 {
+        font-family: 'Fraunces', serif;
+        font-weight: 600; font-size: 92px; line-height: 1.05; letter-spacing: -0.02em;
+        color: var(--ink); margin-top: 18px;
+      }
+
+      /* Tweet card (b3) */
+      .tweet-card { background: white; border: 1px solid var(--hairline); border-radius: 24px; padding: 28px; max-width: 580px; }
+      .tweet-card .meta { display: flex; align-items: center; gap: 14px; }
+      .tweet-card .avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--ink); }
+      .tweet-card .name { color: #0f1419; font-weight: 600; font-size: 22px; }
+      .tweet-card .handle { color: #536471; font-weight: 400; font-size: 18px; }
+      .tweet-card .body { color: #0f1419; font-size: 22px; line-height: 1.5; margin-top: 16px; }
+      .tweet-card .actions { display: flex; align-items: center; gap: 36px; margin-top: 24px; color: #536471; font-size: 20px; }
+      .tweet-card .tip-chip { margin-left: auto; padding: 8px 18px; border: 1.5px solid var(--accent); border-radius: 999px; color: var(--accent); font-weight: 600; font-size: 18px; }
+
+      /* Code block */
+      .code { background: var(--ink); color: var(--paper-on-ink); border-radius: 18px; padding: 28px; font-family: 'Geist Mono', monospace; font-size: 24px; line-height: 1.55; max-width: 720px; }
+      .code .gold { color: var(--gold); font-weight: 500; }
+      .code .muted { color: rgba(247,244,238,0.5); }
+
+      /* Subscriber dashboard fragment (b4) */
+      .dash { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 580px; }
+      .dash .card { padding: 28px; border: 1px solid var(--hairline); border-radius: 18px; background: white; }
+      .dash .label { font-family: 'Geist Mono', monospace; font-size: 18px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; }
+      .dash .num { font-family: 'Fraunces', serif; font-weight: 500; font-size: 88px; color: var(--ink); margin-top: 8px; line-height: 1; }
+      .dash .num em { font-style: italic; color: var(--accent); }
+
+      /* Article fragment (b5) */
+      .article { background: white; border: 1px solid var(--hairline); border-radius: 18px; padding: 32px; max-width: 580px; }
+      .article .visible { color: #0f1419; font-size: 22px; line-height: 1.55; margin-bottom: 20px; }
+      .article .blur { height: 80px; background: linear-gradient(180deg, rgba(15,20,25,0.15) 0%, rgba(247,244,238,0) 100%); margin-bottom: 24px; }
+      .article .unlock { display: inline-block; padding: 14px 28px; border: 1.5px solid var(--accent); color: var(--accent); border-radius: 999px; font-weight: 600; font-size: 20px; }
+      .article .receipt { display: none; color: var(--accent); font-family: 'Geist Mono', monospace; font-size: 24px; font-weight: 600; }
+
+      /* ───────── Beat 6 — Pay-per-call (DARK) ───────── */
+      .b6 { padding: 120px 140px; }
+      .b6-wrap { display: grid; grid-template-columns: 5fr 7fr; gap: 80px; align-items: center; height: 100%; }
+      .b6 .h2 {
+        font-family: 'Fraunces', serif;
+        font-weight: 600; font-size: 84px; line-height: 1.05; letter-spacing: -0.02em;
+        color: var(--paper-on-ink);
+      }
+      .b6 .desc { color: rgba(247,244,238,0.7); font-size: 28px; line-height: 1.45; margin-top: 24px; max-width: 600px; }
+      .b6 .pill {
+        display: inline-flex; align-items: center; gap: 10px; padding: 10px 18px;
+        border-radius: 999px; border: 1px solid var(--gold); color: var(--gold);
+        font-family: 'Geist Mono', monospace; font-size: 20px; margin-top: 24px;
+      }
+      .b6 .terminal {
+        background: rgba(247,244,238,0.04); border: 1px solid rgba(247,244,238,0.12);
+        border-radius: 18px; padding: 36px; font-family: 'Geist Mono', monospace; font-size: 22px;
+        color: var(--paper-on-ink); line-height: 1.65; max-width: 920px;
+        position: relative;
+      }
+      .b6 .terminal .gold-bold { color: var(--gold); font-weight: 600; }
+      .b6 .terminal .muted { color: rgba(247,244,238,0.5); }
+      .b6 .terminal .green { color: #5fc587; }
+      .b6 .terminal .ok { color: var(--gold); }
+
+      /* ───────── Beat 7 — Stats triptych ───────── */
+      .b7 { padding: 200px 140px; }
+      .b7-wrap { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; height: 100%; align-items: center; }
+      .b7 .col { text-align: center; padding: 0 40px; border-right: 1px solid var(--hairline); }
+      .b7 .col:last-child { border-right: none; }
+      .b7 .num {
+        font-family: 'Fraunces', serif; font-style: italic; font-weight: 500;
+        font-size: 240px; color: var(--accent); line-height: 1;
+      }
+      .b7 .cap { margin-top: 24px; font-family: 'Geist Mono', monospace; font-size: 22px;
+        color: var(--muted); text-transform: uppercase; letter-spacing: 0.16em; }
+
+      /* ───────── Beat 8 — CTA ───────── */
+      .b8 { padding: 0; }
+      .b8-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 40px; }
+      .b8 .url-pill {
+        padding: 36px 56px; border-radius: 999px; background: rgba(45,74,62,0.06);
+        border: 1.5px solid var(--accent);
+        font-family: 'Geist Mono', monospace; font-size: 64px; color: var(--ink);
+      }
+      .b8 .url-pill em {
+        font-family: 'Fraunces', serif; font-style: italic; font-weight: 500;
+        color: var(--accent);
+      }
+      .b8 .copyline { padding: 18px 28px; border-radius: 10px; border: 1px solid var(--hairline);
+        background: rgba(10,10,15,0.04);
+        font-family: 'Geist Mono', monospace; font-size: 28px; color: var(--ink); display: inline-flex; gap: 14px; align-items: center; }
+      .b8 .copyline .pfx { color: rgba(10,10,15,0.4); }
+      .b8 .footnote { font-family: 'Geist Mono', monospace; font-size: 20px; color: var(--muted); margin-top: 16px; }
+
+      /* Universal: top wordmark (visible from B2 onward except dark beat) */
+      .wordmark { position: absolute; top: 56px; left: 140px; display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 26px; color: var(--ink); z-index: 5; }
+      .wordmark .bolt { color: var(--accent); font-size: 28px; }
+      .wordmark.on-dark { color: var(--paper-on-ink); }
+      .wordmark.on-dark .bolt { color: var(--gold); }
+    </style>
+  </head>
+  <body>
+    <div data-composition-id="arcpay-demo" data-width="1920" data-height="1080" data-start="0" data-duration="50" id="arcpay-root">
+    <!-- ─────────── BEAT 1: HERO (0–4s) ─────────── -->
+    <div class="clip b1" data-start="0" data-duration="4" data-track-index="0">
+      <div class="b1-wrap">
+        <div>
+          <h1 data-anim="head1">Four ways to get paid.</h1>
+          <h1 data-anim="head2"><span class="one-url">One URL.</span></h1>
+          <div class="copyline" data-anim="copyline">
+            <span class="pfx">$</span><span data-anim="cli-text"></span>
+          </div>
+        </div>
+        <div>
+          <svg class="convergence" viewBox="0 0 520 520" aria-hidden="true">
+            <!-- Source pills -->
+            <g transform="translate(80,60)">
+              <rect x="-40" y="-16" width="80" height="32" rx="16" fill="#f7f4ee" stroke="#0a0a0f" stroke-opacity="0.18" stroke-width="1" />
+              <text x="0" y="5" text-anchor="middle" font-family="Geist Mono, monospace" font-size="13" fill="#0a0a0f">tweet</text>
+            </g>
+            <g transform="translate(440,60)">
+              <rect x="-46" y="-16" width="92" height="32" rx="16" fill="#f7f4ee" stroke="#0a0a0f" stroke-opacity="0.18" stroke-width="1" />
+              <text x="0" y="5" text-anchor="middle" font-family="Geist Mono, monospace" font-size="13" fill="#0a0a0f">/article</text>
+            </g>
+            <g transform="translate(80,460)">
+              <rect x="-32" y="-16" width="64" height="32" rx="16" fill="#f7f4ee" stroke="#0a0a0f" stroke-opacity="0.18" stroke-width="1" />
+              <text x="0" y="5" text-anchor="middle" font-family="Geist Mono, monospace" font-size="13" fill="#0a0a0f">curl</text>
+            </g>
+            <g transform="translate(440,460)">
+              <rect x="-50" y="-16" width="100" height="32" rx="16" fill="#f7f4ee" stroke="#0a0a0f" stroke-opacity="0.18" stroke-width="1" />
+              <text x="0" y="5" text-anchor="middle" font-family="Geist Mono, monospace" font-size="13" fill="#0a0a0f">agent.py</text>
+            </g>
+            <!-- Bezier paths -->
+            <path data-anim="b1-path" d="M 80 76 C 160 180, 220 220, 260 252" fill="none" stroke="#0a0a0f" stroke-opacity="0.22" stroke-width="1.5" />
+            <path data-anim="b1-path" d="M 440 76 C 360 180, 300 220, 260 252" fill="none" stroke="#0a0a0f" stroke-opacity="0.22" stroke-width="1.5" />
+            <path data-anim="b1-path" d="M 80 444 C 160 340, 220 300, 260 268" fill="none" stroke="#0a0a0f" stroke-opacity="0.22" stroke-width="1.5" />
+            <path data-anim="b1-path" d="M 440 444 C 360 340, 300 300, 260 268" fill="none" stroke="#0a0a0f" stroke-opacity="0.22" stroke-width="1.5" />
+            <!-- Center pill -->
+            <g class="center-pill" transform="translate(260,260)">
+              <rect x="-150" y="-26" width="300" height="52" rx="26" fill="#2d4a3e" fill-opacity="0.06" stroke="#2d4a3e" stroke-width="1.5" />
+              <text x="-8" y="6" text-anchor="end" font-family="Geist Mono, monospace" font-size="17" fill="#0a0a0f">arcpay.finance/</text>
+              <text x="-4" y="6" text-anchor="start" font-family="Fraunces, serif" font-style="italic" font-size="19" fill="#2d4a3e">@gavin</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────── BEAT 2: POSITIONING (4–10s) ─────────── -->
+    <div class="clip b2" data-start="4" data-duration="6" data-track-index="0">
+      <div class="wordmark"><span class="bolt">⚡</span>ArcPay</div>
+      <div class="b2-wrap">
+        <div>
+          <div class="kicker">For humans and AI agents</div>
+          <h2 class="h2" data-anim="b2-headline">The <em>Stripe</em> of USDC on Arc.</h2>
+        </div>
+        <div class="compare">
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th class="arc-col" style="text-align: left;">ArcPay</th>
+                <th class="other">Stripe</th>
+                <th class="other">Patreon</th>
+                <th class="other">PayPal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Fee</td><td class="arc-col">2%</td><td class="other">2.9% + $0.30</td><td class="other">8–12%</td><td class="other">3.5% + $0.49</td></tr>
+              <tr><td>Settlement</td><td class="arc-col">0.5s</td><td class="other">2–7 days</td><td class="other">monthly</td><td class="other">3–5 days</td></tr>
+              <tr><td>Setup</td><td class="arc-col">email</td><td class="other">KYC + docs</td><td class="other">Stripe req.</td><td class="other">bank acct</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────── BEAT 3: TIPS (10–17s) ─────────── -->
+    <div class="clip mode" data-start="10" data-duration="7" data-track-index="0">
+      <div class="wordmark"><span class="bolt">⚡</span>ArcPay</div>
+      <div class="mode-wrap">
+        <div>
+          <div class="kicker">01 / Tips · One-time USDC</div>
+          <h2 class="h2">Send a tip with a message.</h2>
+          <p class="desc">Every tweet, article, or profile becomes a tip target. Recipient claims via email or wallet.</p>
+        </div>
+        <div>
+          <div class="tweet-card">
+            <div class="meta">
+              <div class="avatar"></div>
+              <div>
+                <div class="name">Gavin <span class="handle">@gavin</span></div>
+                <div class="handle" style="font-size: 14px;">2h · mock tweet</div>
+              </div>
+            </div>
+            <div class="body">ArcPay is live — 4 USDC payment modes on Arc. Tips, subs, paywalls, pay-per-call for AI agents.</div>
+            <div class="actions">
+              <span>💬 24</span><span>🔁 80</span><span>❤ 412</span>
+              <span class="tip-chip" data-anim="b3-chip">⚡ Tip</span>
+            </div>
+          </div>
+          <div class="code" style="margin-top: 28px;">
+            <span class="muted">// Real SDK call</span><br />
+            await client.tips.send({<br />
+            &nbsp;&nbsp;username: <span class="gold">'gavin'</span>,<br />
+            &nbsp;&nbsp;amount: <span class="gold">'0.005'</span>,<br />
+            &nbsp;&nbsp;message: <span class="gold">'great post!'</span>,<br />
+            });
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────── BEAT 4: SUBSCRIPTIONS (17–24s) ─────────── -->
+    <div class="clip mode" data-start="17" data-duration="7" data-track-index="0">
+      <div class="wordmark"><span class="bolt">⚡</span>ArcPay</div>
+      <div class="mode-wrap">
+        <div>
+          <div class="kicker">02 / Subscriptions · Monthly USDC</div>
+          <h2 class="h2">Recurring income in one tx.</h2>
+          <p class="desc">Per-second accrual. Cancel refunds the unused portion on-chain. 2% protocol fee versus Patreon's 10%.</p>
+        </div>
+        <div>
+          <div class="dash">
+            <div class="card">
+              <div class="label">Subscribers</div>
+              <div class="num" data-anim="b4-subs">142</div>
+            </div>
+            <div class="card">
+              <div class="label">MRR</div>
+              <div class="num" data-anim="b4-mrr">$<em>284</em></div>
+            </div>
+          </div>
+          <div class="code" style="margin-top: 28px;">
+            <span class="muted">// 3 months upfront</span><br />
+            await client.subs.subscribe(planId, <span class="gold">3</span>);<br />
+            <br />
+            <span class="muted">// paid-until unlocks the paywall</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────── BEAT 5: CONTENT PAYWALL (24–31s) ─────────── -->
+    <div class="clip mode" data-start="24" data-duration="7" data-track-index="0">
+      <div class="wordmark"><span class="bolt">⚡</span>ArcPay</div>
+      <div class="mode-wrap">
+        <div>
+          <div class="kicker">03 / Content Paywall · Pay once, own forever</div>
+          <h2 class="h2">Gate articles, videos, files.</h2>
+          <p class="desc">Buyer pays once in USDC, access is an on-chain receipt. Works across devices. Works forever.</p>
+        </div>
+        <div>
+          <div class="article">
+            <div class="visible">"How I tripled my newsletter revenue by switching to USDC subscriptions" — when I moved my newsletter off Substack to an on-chain subscription, three things happened…</div>
+            <div class="blur"></div>
+            <div data-anim="b5-unlock-wrap">
+              <span class="unlock">Unlock for 0.02 USDC</span>
+            </div>
+            <div class="receipt" data-anim="b5-receipt">✓ owned · checkAccess → true</div>
+          </div>
+          <div class="code" style="margin-top: 28px;">
+            await client.paywall.purchase(contentId, price);<br />
+            <span class="muted">// Anywhere, anytime:</span><br />
+            const owned = await client.paywall.checkAccess(contentId, wallet);
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────── BEAT 6: PAY-PER-CALL (DARK) (31–41s) ─────────── -->
+    <div class="clip b6 dark" data-start="31" data-duration="10" data-track-index="0">
+      <div class="wordmark on-dark"><span class="bolt">⚡</span>ArcPay</div>
+      <div class="b6-wrap">
+        <div>
+          <div class="kicker gold">04 / Pay-per-call · For AI agents</div>
+          <h2 class="h2">Autonomous payments, down to the inference call.</h2>
+          <p class="desc">Prepay credits in one transaction. Sign each call off-chain. Server verifies on-chain. No human in loop required.</p>
+          <span class="pill">x402 · ERC-8183</span>
+        </div>
+        <div>
+          <div class="terminal">
+            <span class="muted">$ </span>await client.api.<span class="gold-bold" data-anim="b6-batch">batchPay</span>(<span class="ok">'gavin'</span>, <span class="ok">'summarize-paper'</span>, <span class="ok">100</span>);<br />
+            <span class="green">→ tx 0x8f3a… confirmed 0.4s · 100 credits prepaid</span><br />
+            <br />
+            <span class="muted">$ </span>const sig = await wallet.signMessage(<span class="ok">'arcpay-call:'</span> + callId);<br />
+            <span class="muted">$ </span>fetch(<span class="ok">'/api/demo-translate'</span>, &#123; method: <span class="ok">'POST'</span>, body: <span class="ok">{...}</span> &#125;);<br />
+            <span class="green">→ 200 OK</span><br />
+            &nbsp;&nbsp;&#123;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;ok: <span class="ok">true</span>,<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;message: <span class="ok">'x402 verified · credit consumed'</span>,<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;translation: <span class="ok">'Hello'</span>,<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;callId: <span class="ok">'12'</span><br />
+            &nbsp;&nbsp;&#125;
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────── BEAT 7: STATS TRIPTYCH (41–46s) ─────────── -->
+    <div class="clip b7" data-start="41" data-duration="5" data-track-index="0">
+      <div class="wordmark"><span class="bolt">⚡</span>ArcPay</div>
+      <div class="b7-wrap">
+        <div class="col">
+          <div class="num" data-anim="b7-fee">2%</div>
+          <div class="cap">Protocol fee</div>
+        </div>
+        <div class="col">
+          <div class="num" data-anim="b7-set">0.5s</div>
+          <div class="cap">Settlement on Arc</div>
+        </div>
+        <div class="col">
+          <div class="num" data-anim="b7-gas">$0</div>
+          <div class="cap">Separate gas token</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────── BEAT 8: CTA (46–50s) ─────────── -->
+    <div class="clip b8" data-start="46" data-duration="4" data-track-index="0">
+      <div class="wordmark"><span class="bolt">⚡</span>ArcPay</div>
+      <div class="b8-wrap">
+        <div class="url-pill">arcpay.finance/<em data-anim="b8-handle">@you</em></div>
+        <div class="copyline"><span class="pfx">$</span><span data-anim="b8-cli">npm create arc-app</span></div>
+        <div class="footnote">MIT · no KYC · self-custodial</div>
+      </div>
+    </div>
+
+    </div>
+    <!-- Optional voice-over track (CEO generates via `npx hyperframes tts SCRIPT.md`) -->
+    <audio id="vo" preload="auto">
+      <source src="narration.wav" type="audio/wav" />
+      <source src="narration.mp3" type="audio/mpeg" />
+    </audio>
+
+    <script>
+      // ── Timeline registration (HyperFrames convention) ──
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["arcpay-demo"] = tl;
+
+      // Scope every selector under the composition root so other compositions
+      // (when this is bundled or nested) are unaffected.
+      const SCOPE = '[data-composition-id="arcpay-demo"] ';
+      const s = (sel) => SCOPE + sel;
+
+      // Helper: type a string into an element character-by-character on the GSAP timeline
+      function typeOn(target, text, atTime, perChar = 0.03) {
+        const el = document.querySelector(target);
+        if (!el) return;
+        for (let i = 0; i <= text.length; i++) {
+          tl.set(el, { textContent: text.slice(0, i) }, atTime + i * perChar);
+        }
+      }
+
+      // Helper: count up integer 0 → final on the timeline
+      function countUp(target, finalNum, atTime, dur = 1.2, prefix = '', suffix = '') {
+        const el = document.querySelector(target);
+        if (!el) return;
+        const obj = { v: 0 };
+        tl.to(obj, {
+          v: finalNum, duration: dur, ease: 'power2.out',
+          onUpdate: () => { el.textContent = prefix + Math.round(obj.v) + suffix; },
+        }, atTime);
+      }
+
+      // ── Beat 1 (0–4s) ──
+      tl.fromTo(s('[data-anim="head1"]'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 0.0);
+      tl.fromTo(s('[data-anim="head2"]'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 0.3);
+      tl.to(s('[data-anim="b1-path"]'), { strokeDashoffset: 0, duration: 1.2, ease: 'power2.out', stagger: 0.08 }, 0.4);
+      tl.to(s('.b1 .center-pill'), { opacity: 1, duration: 0.4 }, 1.2);
+      tl.fromTo(s('.b1 .copyline'), { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.3 }, 1.8);
+      typeOn(s('[data-anim="cli-text"]'), 'npm create arc-app', 2.0, 0.04);
+
+      // ── Beat 2 (4–10s) ──
+      tl.fromTo(s('.b2 .h2'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 4.0);
+      tl.fromTo(s('.b2 .compare'), { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.5 }, 4.3);
+
+      // ── Beat 3 (10–17s) ──
+      tl.fromTo(s('.clip[data-start="10"] .tweet-card'), { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.5 }, 10.2);
+      tl.to(s('[data-anim="b3-chip"]'), { scale: 1.08, duration: 0.2, yoyo: true, repeat: 1 }, 13.0);
+      tl.fromTo(s('.clip[data-start="10"] .code'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4 }, 13.5);
+
+      // ── Beat 4 (17–24s) ──
+      tl.fromTo(s('.dash .card'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.15 }, 17.2);
+      countUp(s('[data-anim="b4-subs"]'), 142, 19.0, 1.2);
+      countUp(s('[data-anim="b4-mrr"] em'), 284, 19.0, 1.2);
+      tl.fromTo(s('.clip[data-start="17"] .code'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4 }, 20.5);
+
+      // ── Beat 5 (24–31s) ──
+      tl.fromTo(s('.article'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5 }, 24.2);
+      tl.to(s('[data-anim="b5-unlock-wrap"]'), { scale: 1.05, duration: 0.2, yoyo: true, repeat: 1 }, 27.0);
+      tl.to(s('[data-anim="b5-unlock-wrap"]'), { opacity: 0, duration: 0.3 }, 28.0);
+      tl.set(s('[data-anim="b5-receipt"]'), { display: 'block', opacity: 0 }, 28.3);
+      tl.to(s('[data-anim="b5-receipt"]'), { opacity: 1, duration: 0.3 }, 28.3);
+      tl.fromTo(s('.clip[data-start="24"] .code'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4 }, 28.6);
+
+      // ── Beat 6 (31–41s) — the hero beat ──
+      tl.fromTo(s('.b6 .h2'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6 }, 31.2);
+      tl.fromTo(s('.b6 .desc'), { opacity: 0 }, { opacity: 1, duration: 0.4 }, 31.7);
+      tl.fromTo(s('.b6 .pill'), { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.4 }, 32.0);
+      tl.fromTo(s('.b6 .terminal'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5 }, 32.4);
+      tl.fromTo(s('[data-anim="b6-batch"]'), { textShadow: '0 0 0 transparent' }, { textShadow: '0 0 14px rgba(184,164,126,0.6)', duration: 0.4 }, 35.0);
+      tl.to(s('[data-anim="b6-batch"]'), { textShadow: '0 0 0 transparent', duration: 0.4 }, 35.6);
+
+      // ── Beat 7 (41–46s) — stats triptych ──
+      tl.fromTo(s('.b7 .col'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.15 }, 41.2);
+
+      // ── Beat 8 (46–50s) — CTA ──
+      tl.fromTo(s('.b8 .url-pill'), { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.4 }, 46.1);
+      typeOn(s('[data-anim="b8-handle"]'), '@you', 46.7, 0.08);
+      tl.fromTo(s('.b8 .copyline'), { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4 }, 47.5);
+      tl.fromTo(s('.b8 .footnote'), { opacity: 0 }, { opacity: 1, duration: 0.4 }, 48.2);
+
+      // ── Clip visibility (HyperFrames convention) ──
+      const clips = Array.from(document.querySelectorAll(SCOPE + '.clip'));
+      clips.forEach((el) => {
+        const start = parseFloat(el.dataset.start) || 0;
+        const duration = parseFloat(el.dataset.duration) || 0;
+        const end = start + duration;
+        // Cross-fade in/out at boundaries
+        tl.set(el, { visibility: 'visible', opacity: 0 }, start);
+        tl.to(el, { opacity: 1, duration: 0.3, ease: 'power1.out' }, start);
+        tl.to(el, { opacity: 0, duration: 0.3, ease: 'power1.in' }, end - 0.3);
+        tl.set(el, { visibility: 'hidden' }, end);
+      });
+
+      // ── Audio sync ──
+      const vo = document.getElementById('vo');
+      tl.eventCallback('onStart', () => { try { vo.currentTime = 0; vo.play().catch(() => {}); } catch (e) {} });
+      tl.eventCallback('onComplete', () => { try { vo.pause(); } catch (e) {} });
+    </script>
+  </body>
+</html>

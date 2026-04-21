@@ -1,0 +1,13 @@
+ArcPay — USDC payments for humans and AI agents, on Arc.
+
+Four payment modes, one URL.
+
+Mode one, tip. BuyMeACoffee on-chain. Our Chrome extension puts a tip button on every tweet.
+
+Mode two, subscriptions. Like Substack, but creators keep ninety-eight percent. Per-second accrual, cancel anytime for a prorated refund.
+
+Mode three, content paywall. Gumroad with on-chain receipts. Pay once, own forever — even if the store disappears.
+
+Mode four, pay-per-call. A.I. agents prepay a hundred calls in one transaction. Wallet signature is the API key. x402, ERC-8183.
+
+ArcPay finance. Open source on GitHub. SDK live on npm. Built on Arc testnet.
