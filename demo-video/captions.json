@@ -1,0 +1,102 @@
+[
+  {
+    "t": "Four ways to get paid.",
+    "s": 0,
+    "e": 1.02
+  },
+  {
+    "t": "One URL.",
+    "s": 1.42,
+    "e": 2.12
+  },
+  {
+    "t": "The Stripe of USDC on Arc",
+    "s": 3.16,
+    "e": 4.96
+  },
+  {
+    "t": "For humans and AI agents.",
+    "s": 4.96,
+    "e": 6.64
+  },
+  {
+    "t": "Mode one. Tips.",
+    "s": 6.64,
+    "e": 7.6
+  },
+  {
+    "t": "Every tweet gets a tip button.",
+    "s": 7.6,
+    "e": 9.12
+  },
+  {
+    "t": "Chrome extension injects it next to reply and retweet.",
+    "s": 9.12,
+    "e": 11.64
+  },
+  {
+    "t": "Mode two. Subscriptions.",
+    "s": 12.16,
+    "e": 13.06
+  },
+  {
+    "t": "Like Substack, but creators keep 98%.",
+    "s": 13.24,
+    "e": 15.8
+  },
+  {
+    "t": "Per-second accrual, prorated refunds.",
+    "s": 15.8,
+    "e": 17.2
+  },
+  {
+    "t": "Mode three. Content paywall.",
+    "s": 17.2,
+    "e": 18.12
+  },
+  {
+    "t": "Gumroad with an on-chain receipt.",
+    "s": 18.12,
+    "e": 20.6
+  },
+  {
+    "t": "Pay once, own forever.",
+    "s": 20.8,
+    "e": 22.18
+  },
+  {
+    "t": "Mode four. Pay-per-call.",
+    "s": 22.62,
+    "e": 23.46
+  },
+  {
+    "t": "Prepay 100 inference credits in one transaction.",
+    "s": 23.46,
+    "e": 25.8
+  },
+  {
+    "t": "Every call after that is a wallet signature.",
+    "s": 25.8,
+    "e": 29.74
+  },
+  {
+    "t": "x402, ERC-8183.",
+    "s": 29.74,
+    "e": 30.88
+  },
+  {
+    "t": "2% protocol fee.",
+    "s": 30.88,
+    "e": 31.62
+  },
+  {
+    "t": "0.5s settlement. Native USDC gas.",
+    "s": 31.62,
+    "e": 36.92
+  },
+  {
+    "t": "Start building. npm create arc-app.",
+    "s": 36.92,
+    "e": 39.44
+  }
+]

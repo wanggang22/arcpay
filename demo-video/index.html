@@ -185,9 +185,9 @@
     </style>
   </head>
   <body>
-    <div data-composition-id="arcpay-demo" data-width="1920" data-height="1080" data-start="0" data-duration="50" id="arcpay-root">
+    <div data-composition-id="arcpay-demo" data-width="1920" data-height="1080" data-start="0" data-duration="44" id="arcpay-root">
     <!-- ─────────── BEAT 1: HERO (0–4s) ─────────── -->
-    <div class="clip b1" data-start="0" data-duration="4" data-track-index="0">
+    <div class="clip b1" data-start="0" data-duration="3.16" data-track-index="0">
       <div class="b1-wrap">
         <div>
           <h1 data-anim="head1">Four ways to get paid.</h1>
@@ -232,7 +232,7 @@
     </div>
 
     <!-- ─────────── BEAT 2: POSITIONING (4–10s) ─────────── -->
-    <div class="clip b2" data-start="4" data-duration="6" data-track-index="0">
+    <div class="clip b2" data-start="3.16" data-duration="3.46" data-track-index="0">
       <div class="wordmark"><span class="bolt">⚡</span>ArcPay</div>
       <div class="b2-wrap">
         <div>
@@ -261,7 +261,7 @@
     </div>
 
     <!-- ─────────── BEAT 3: TIPS (10–17s) ─────────── -->
-    <div class="clip mode" data-start="10" data-duration="7" data-track-index="0">
+    <div class="clip mode" data-start="6.64" data-duration="5.52" data-track-index="0">
       <div class="wordmark"><span class="bolt">⚡</span>ArcPay</div>
       <div class="mode-wrap">
         <div>
@@ -297,7 +297,7 @@
     </div>
 
     <!-- ─────────── BEAT 4: SUBSCRIPTIONS (17–24s) ─────────── -->
-    <div class="clip mode" data-start="17" data-duration="7" data-track-index="0">
+    <div class="clip mode" data-start="12.16" data-duration="5.04" data-track-index="0">
       <div class="wordmark"><span class="bolt">⚡</span>ArcPay</div>
       <div class="mode-wrap">
         <div>
@@ -327,7 +327,7 @@
     </div>
 
     <!-- ─────────── BEAT 5: CONTENT PAYWALL (24–31s) ─────────── -->
-    <div class="clip mode" data-start="24" data-duration="7" data-track-index="0">
+    <div class="clip mode" data-start="17.2" data-duration="5.42" data-track-index="0">
       <div class="wordmark"><span class="bolt">⚡</span>ArcPay</div>
       <div class="mode-wrap">
         <div>
@@ -354,7 +354,7 @@
     </div>
 
     <!-- ─────────── BEAT 6: PAY-PER-CALL (DARK) (31–41s) ─────────── -->
-    <div class="clip b6 dark" data-start="31" data-duration="10" data-track-index="0">
+    <div class="clip b6 dark" data-start="22.62" data-duration="8.25" data-track-index="0">
       <div class="wordmark on-dark"><span class="bolt">⚡</span>ArcPay</div>
       <div class="b6-wrap">
         <div>
@@ -383,7 +383,7 @@
     </div>
 
     <!-- ─────────── BEAT 7: STATS TRIPTYCH (41–46s) ─────────── -->
-    <div class="clip b7" data-start="41" data-duration="5" data-track-index="0">
+    <div class="clip b7" data-start="30.88" data-duration="6.04" data-track-index="0">
       <div class="wordmark"><span class="bolt">⚡</span>ArcPay</div>
       <div class="b7-wrap">
         <div class="col">
@@ -402,7 +402,7 @@
     </div>
 
     <!-- ─────────── BEAT 8: CTA (46–50s) ─────────── -->
-    <div class="clip b8" data-start="46" data-duration="4" data-track-index="0">
+    <div class="clip b8" data-start="36.92" data-duration="7.08" data-track-index="0">
       <div class="wordmark"><span class="bolt">⚡</span>ArcPay</div>
       <div class="b8-wrap">
         <div class="url-pill">arcpay.finance/<em data-anim="b8-handle">@you</em></div>
@@ -412,7 +412,7 @@
     </div>
 
       <!-- Voice-over (full-track audio, hyperframes mixes into final MP4) -->
-      <audio id="vo" data-start="0" data-duration="50" data-track-index="1" src="narration.wav"></audio>
+      <audio id="vo" data-start="0" data-duration="44" data-track-index="1" src="narration.wav"></audio>
 
       <!-- Captions overlay: word groups synced to transcript.json. Timeline injected by script below. -->
       <div id="captions" style="position:absolute; bottom:80px; left:0; width:1920px; text-align:center; z-index:10;"></div>
@@ -457,45 +457,45 @@
       tl.fromTo(s('.b1 .copyline'), { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.3 }, 1.8);
       typeOn(s('[data-anim="cli-text"]'), 'npm create arc-app', 2.0, 0.04);
 
-      // ── Beat 2 (4–10s) ──
-      tl.fromTo(s('.b2 .h2'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 4.0);
-      tl.fromTo(s('.b2 .compare'), { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.5 }, 4.3);
+      // ── Beat 2 (3.16–6.64s) ──
+      tl.fromTo(s('.b2 .h2'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 3.16);
+      tl.fromTo(s('.b2 .compare'), { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.5 }, 3.46);
 
-      // ── Beat 3 (10–17s) ──
-      tl.fromTo(s('.clip[data-start="10"] .tweet-card'), { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.5 }, 10.2);
-      tl.to(s('[data-anim="b3-chip"]'), { scale: 1.08, duration: 0.2, yoyo: true, repeat: 1 }, 13.0);
-      tl.fromTo(s('.clip[data-start="10"] .code'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4 }, 13.5);
+      // ── Beat 3 (6.64–12.16s) ──
+      tl.fromTo(s('.clip[data-start="6.64"] .tweet-card'), { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.5 }, 6.84);
+      tl.to(s('[data-anim="b3-chip"]'), { scale: 1.08, duration: 0.2, yoyo: true, repeat: 1 }, 9.6);
+      tl.fromTo(s('.clip[data-start="6.64"] .code'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4 }, 10.1);
 
-      // ── Beat 4 (17–24s) ──
-      tl.fromTo(s('.dash .card'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.15 }, 17.2);
-      countUp(s('[data-anim="b4-subs"]'), 142, 19.0, 1.2);
-      countUp(s('[data-anim="b4-mrr"] em'), 284, 19.0, 1.2);
-      tl.fromTo(s('.clip[data-start="17"] .code'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4 }, 20.5);
+      // ── Beat 4 (12.16–17.2s) ──
+      tl.fromTo(s('.dash .card'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.15 }, 12.36);
+      countUp(s('[data-anim="b4-subs"]'), 142, 14.16, 1.2);
+      countUp(s('[data-anim="b4-mrr"] em'), 284, 14.16, 1.2);
+      tl.fromTo(s('.clip[data-start="12.16"] .code'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4 }, 15.66);
 
-      // ── Beat 5 (24–31s) ──
-      tl.fromTo(s('.article'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5 }, 24.2);
-      tl.to(s('[data-anim="b5-unlock-wrap"]'), { scale: 1.05, duration: 0.2, yoyo: true, repeat: 1 }, 27.0);
-      tl.to(s('[data-anim="b5-unlock-wrap"]'), { opacity: 0, duration: 0.3 }, 28.0);
-      tl.set(s('[data-anim="b5-receipt"]'), { display: 'block', opacity: 0 }, 28.3);
-      tl.to(s('[data-anim="b5-receipt"]'), { opacity: 1, duration: 0.3 }, 28.3);
-      tl.fromTo(s('.clip[data-start="24"] .code'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4 }, 28.6);
+      // ── Beat 5 (17.2–22.62s) ──
+      tl.fromTo(s('.article'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5 }, 17.4);
+      tl.to(s('[data-anim="b5-unlock-wrap"]'), { scale: 1.05, duration: 0.2, yoyo: true, repeat: 1 }, 20.2);
+      tl.to(s('[data-anim="b5-unlock-wrap"]'), { opacity: 0, duration: 0.3 }, 21.2);
+      tl.set(s('[data-anim="b5-receipt"]'), { display: 'block', opacity: 0 }, 21.5);
+      tl.to(s('[data-anim="b5-receipt"]'), { opacity: 1, duration: 0.3 }, 21.5);
+      tl.fromTo(s('.clip[data-start="17.2"] .code'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4 }, 21.8);
 
-      // ── Beat 6 (31–41s) — the hero beat ──
-      tl.fromTo(s('.b6 .h2'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6 }, 31.2);
-      tl.fromTo(s('.b6 .desc'), { opacity: 0 }, { opacity: 1, duration: 0.4 }, 31.7);
-      tl.fromTo(s('.b6 .pill'), { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.4 }, 32.0);
-      tl.fromTo(s('.b6 .terminal'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5 }, 32.4);
-      tl.fromTo(s('[data-anim="b6-batch"]'), { textShadow: '0 0 0 transparent' }, { textShadow: '0 0 14px rgba(184,164,126,0.6)', duration: 0.4 }, 35.0);
-      tl.to(s('[data-anim="b6-batch"]'), { textShadow: '0 0 0 transparent', duration: 0.4 }, 35.6);
+      // ── Beat 6 (22.62–30.88s) — the hero beat ──
+      tl.fromTo(s('.b6 .h2'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6 }, 22.82);
+      tl.fromTo(s('.b6 .desc'), { opacity: 0 }, { opacity: 1, duration: 0.4 }, 23.32);
+      tl.fromTo(s('.b6 .pill'), { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.4 }, 23.62);
+      tl.fromTo(s('.b6 .terminal'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5 }, 24.02);
+      tl.fromTo(s('[data-anim="b6-batch"]'), { textShadow: '0 0 0 transparent' }, { textShadow: '0 0 14px rgba(184,164,126,0.6)', duration: 0.4 }, 25.5);
+      tl.to(s('[data-anim="b6-batch"]'), { textShadow: '0 0 0 transparent', duration: 0.4 }, 26.1);
 
-      // ── Beat 7 (41–46s) — stats triptych ──
-      tl.fromTo(s('.b7 .col'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.15 }, 41.2);
+      // ── Beat 7 (30.88–36.92s) — stats triptych ──
+      tl.fromTo(s('.b7 .col'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.15 }, 31.08);
 
-      // ── Beat 8 (46–50s) — CTA ──
-      tl.fromTo(s('.b8 .url-pill'), { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.4 }, 46.1);
-      typeOn(s('[data-anim="b8-handle"]'), '@you', 46.7, 0.08);
-      tl.fromTo(s('.b8 .copyline'), { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4 }, 47.5);
-      tl.fromTo(s('.b8 .footnote'), { opacity: 0 }, { opacity: 1, duration: 0.4 }, 48.2);
+      // ── Beat 8 (36.92–44s) — CTA ──
+      tl.fromTo(s('.b8 .url-pill'), { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.4 }, 37.02);
+      typeOn(s('[data-anim="b8-handle"]'), '@you', 37.62, 0.08);
+      tl.fromTo(s('.b8 .copyline'), { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4 }, 38.42);
+      tl.fromTo(s('.b8 .footnote'), { opacity: 0 }, { opacity: 1, duration: 0.4 }, 39.12);
 
       // ── Clip visibility (HyperFrames convention) ──
       const clips = Array.from(document.querySelectorAll(SCOPE + '.clip'));
@@ -510,29 +510,28 @@
         tl.set(el, { visibility: 'hidden' }, end);
       });
 
-      // ── Captions overlay (deterministic, hand-timed from SCRIPT.md) ──
-      // Each entry: { text, start, end } in seconds. Bottom-of-frame, single line at a time.
+      // ── Captions overlay (aligned to whisper word-level timestamps via build-captions.mjs) ──
       const CAPTIONS = [
-        { t: 'Four ways to get paid.',                        s: 0.2,  e: 2.0 },
-        { t: 'One URL.',                                       s: 2.0,  e: 4.0 },
-        { t: 'The Stripe of USDC on Arc',                      s: 4.0,  e: 6.5 },
-        { t: 'for humans and AI agents',                       s: 6.5,  e: 9.5 },
-        { t: 'Mode one. Tips.',                                s: 10.2, e: 12.0 },
-        { t: 'Every tweet gets a tip button',                  s: 12.0, e: 14.5 },
-        { t: 'Chrome extension injects it',                    s: 14.5, e: 16.8 },
-        { t: 'Mode two. Subscriptions.',                       s: 17.2, e: 19.0 },
-        { t: 'Creators keep 98%',                              s: 19.0, e: 21.0 },
-        { t: 'Per-second accrual, prorated refunds',           s: 21.0, e: 23.8 },
-        { t: 'Mode three. Content paywall.',                   s: 24.2, e: 26.0 },
-        { t: 'Gumroad with on-chain receipt',                  s: 26.0, e: 28.0 },
-        { t: 'Pay once, own forever',                          s: 28.0, e: 30.8 },
-        { t: 'Mode four. Pay-per-call.',                       s: 31.2, e: 33.0 },
-        { t: 'Prepay 100 inference credits in one tx',         s: 33.0, e: 36.0 },
-        { t: 'Every call is a wallet signature',               s: 36.0, e: 38.5 },
-        { t: 'x402 · ERC-8183',                                s: 38.5, e: 40.8 },
-        { t: '2% protocol fee · 0.5s settlement',              s: 41.2, e: 43.5 },
-        { t: 'Native USDC gas',                                s: 43.5, e: 45.8 },
-        { t: 'Start building. npm create arc-app.',            s: 46.2, e: 49.8 },
+        { t: 'Four ways to get paid.',                                  s: 0.0,   e: 1.02 },
+        { t: 'One URL.',                                                 s: 1.42,  e: 2.12 },
+        { t: 'The Stripe of USDC on Arc',                                s: 3.16,  e: 4.96 },
+        { t: 'For humans and AI agents.',                                s: 4.96,  e: 6.64 },
+        { t: 'Mode one. Tips.',                                          s: 6.64,  e: 7.6 },
+        { t: 'Every tweet gets a tip button.',                           s: 7.6,   e: 9.12 },
+        { t: 'Chrome extension injects it next to reply and retweet.',   s: 9.12,  e: 11.64 },
+        { t: 'Mode two. Subscriptions.',                                 s: 12.16, e: 13.06 },
+        { t: 'Like Substack, but creators keep 98%.',                    s: 13.24, e: 15.8 },
+        { t: 'Per-second accrual, prorated refunds.',                    s: 15.8,  e: 17.2 },
+        { t: 'Mode three. Content paywall.',                             s: 17.2,  e: 18.12 },
+        { t: 'Gumroad with an on-chain receipt.',                        s: 18.12, e: 20.6 },
+        { t: 'Pay once, own forever.',                                   s: 20.8,  e: 22.18 },
+        { t: 'Mode four. Pay-per-call.',                                 s: 22.62, e: 23.46 },
+        { t: 'Prepay 100 inference credits in one transaction.',         s: 23.46, e: 25.8 },
+        { t: 'Every call after that is a wallet signature.',             s: 25.8,  e: 29.74 },
+        { t: 'x402, ERC-8183.',                                          s: 29.74, e: 30.88 },
+        { t: '2% protocol fee.',                                         s: 30.88, e: 31.62 },
+        { t: '0.5s settlement. Native USDC gas.',                        s: 31.62, e: 36.92 },
+        { t: 'Start building. npm create arc-app.',                      s: 36.92, e: 39.44 },
       ];
 
       const captionsHost = document.querySelector(SCOPE + '#captions');
