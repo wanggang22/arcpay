@@ -8,7 +8,7 @@ export function ForDevelopers() {
       code: `$ pnpm add @wanggang22/arcpay-sdk
 
 import { ArcPayClient } from '@wanggang22/arcpay-sdk';
-const client = new ArcPayClient({ network: 'arc' });
+const client = new ArcPayClient({ network: 'testnet' });
 
 // AI agent prepays 100 inference credits in one tx
 await client.api.batchPay('gavin', 'summarize-paper', 100);
@@ -21,10 +21,10 @@ await client.api.batchPay('gavin', 'summarize-paper', 100);
     },
     {
       label: 'Python',
-      code: `$ pip install arcpay
+      code: `$ pip install git+https://github.com/wanggang22/arcpay.git#subdirectory=sdk/python
 
 from arcpay import ArcPayClient
-client = ArcPayClient(network='arc')
+client = ArcPayClient(network='testnet')
 
 client.tips.send(
     username='gavin',
@@ -58,9 +58,9 @@ $ curl -X POST https://arcpay.finance/api/demo-translate \\
       </div>
       <CodeTabs tabs={tabs} />
       <div className="flex flex-wrap gap-3 mt-8 font-mono text-xs text-ink/60">
-        <span className="px-3 py-1.5 rounded-md border border-hairline">create-arcpay v0.1.0</span>
+        <span className="px-3 py-1.5 rounded-md border border-hairline">create-arcpay v0.1.2</span>
         <span className="px-3 py-1.5 rounded-md border border-hairline">@wanggang22/arcpay-sdk v0.1.1</span>
-        <span className="px-3 py-1.5 rounded-md border border-hairline">python arcpay 0.1.0</span>
+        <span className="px-3 py-1.5 rounded-md border border-hairline">python arcpay · git</span>
         <a
           href="https://github.com/wanggang22/arcpay"
           target="_blank"

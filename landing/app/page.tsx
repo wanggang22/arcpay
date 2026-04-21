@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Convergence } from '@/components/Convergence';
 import { CopyLine } from '@/components/CopyLine';
 import { FourModes } from '@/components/FourModes';
+import { BuildOn } from '@/components/BuildOn';
 import { ForDevelopers } from '@/components/ForDevelopers';
 
 export default function Page() {
@@ -11,6 +12,7 @@ export default function Page() {
       <Hero />
       <HowItWorks />
       <FourModes />
+      <BuildOn />
       <ForDevelopers />
       <ChromeExtension />
       <ForAgents />
@@ -69,7 +71,7 @@ function Hero() {
             </span>
           </h1>
           <p className="text-lg md:text-xl text-ink/70 mt-6 max-w-[52ch] leading-relaxed">
-            The Stripe of USDC on Arc. 2% fee, 0.5s settlement, native USDC gas — for humans and AI agents. Sign in with email or wallet.
+            The Stripe of USDC on Arc. 2% fee, 0.5s settlement, native USDC gas — for creators, teams, and AI agents. Email or wallet to start.
           </p>
           <div className="flex flex-wrap gap-3 mt-8 items-center">
             <Link
@@ -92,9 +94,6 @@ function Hero() {
             >
               Watch 52s demo ↗
             </a>
-          </div>
-          <div className="mt-5">
-            <CopyLine text="npm create arcpay" />
           </div>
         </div>
         <div className="md:col-span-5">

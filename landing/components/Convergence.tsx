@@ -33,11 +33,9 @@ export function Convergence() {
 
       <g transform="translate(260,260)">
         <rect x="-150" y="-26" width="300" height="52" rx="26" fill="#2d4a3e" fillOpacity="0.06" stroke="#2d4a3e" strokeWidth="1.5" />
-        <text x="-8" y="6" textAnchor="end" fontFamily="var(--font-geist-mono)" fontSize="17" fill="#0a0a0f" letterSpacing="-0.01em">
-          arcpay.finance/
-        </text>
-        <text x="-4" y="6" textAnchor="start" fontFamily="var(--font-fraunces)" fontStyle="italic" fontSize="19" fill="#2d4a3e">
-          @gavin
+        <text x="0" y="6" textAnchor="middle" fill="#0a0a0f">
+          <tspan fontFamily="var(--font-geist-mono)" fontSize="17" letterSpacing="-0.01em">arcpay.finance/</tspan>
+          <tspan fontFamily="var(--font-fraunces)" fontStyle="italic" fontSize="19" fill="#2d4a3e">@gavin</tspan>
         </text>
       </g>
     </svg>

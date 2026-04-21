@@ -14,6 +14,10 @@ export default function BuildPage() {
           <Quickstart />
         </Section>
 
+        <Section id="templates" title="📦 Templates" kicker="5 production-ready starters — clone, brand, ship">
+          <Templates />
+        </Section>
+
         <Section id="tip" title="💸 Tips" kicker="Fire-and-forget one-time payments — BuyMeACoffee replacement">
           <TipsDocs />
         </Section>
@@ -108,6 +112,7 @@ function Hero() {
 function TOC() {
   const items = [
     ['quickstart', '⚡ Quickstart'],
+    ['templates', '📦 Templates'],
     ['tip', '💸 Tips'],
     ['subscribe', '📅 Subscriptions'],
     ['content', '🔒 Content paywall'],
@@ -557,6 +562,123 @@ function Resources() {
           <div className="text-[10px] text-accent font-mono mt-1 truncate">{url}</div>
         </a>
       ))}
+    </div>
+  );
+}
+
+function Templates() {
+  const install = `# Interactive — pick a template + network
+npx create-arcpay@latest my-app
+
+# Then:
+cd my-app
+npm install
+npm run dev`;
+
+  const tpls: Array<{
+    slug: string;
+    emoji: string;
+    name: string;
+    useCase: string;
+    who: string;
+    stack: string;
+  }> = [
+    {
+      slug: 'creator-tip',
+      emoji: '💸',
+      name: 'Creator Tip Page',
+      useCase: 'BuyMeACoffee-style page with preset USDC amounts + optional message. Wallet connect + on-chain transfer + "Thanks!" receipt.',
+      who: 'Bloggers, open-source maintainers, newsletter authors.',
+      stack: 'Next.js 14 · RainbowKit · wagmi · Tailwind',
+    },
+    {
+      slug: 'creator-subscribe',
+      emoji: '📅',
+      name: 'Subscription Platform',
+      useCase: 'Substack / Patreon alternative. Plan picker (1/3/6/12 months), real-time total, isActive() check to unlock members-only content.',
+      who: 'Publishers, membership sites, course creators switching from Patreon.',
+      stack: 'Next.js 14 · RainbowKit · wagmi · Tailwind',
+    },
+    {
+      slug: 'content-paywall',
+      emoji: '🔒',
+      name: 'Content Paywall',
+      useCase: 'Pay-once, own-forever article/video gate. Preview + unlock button + on-chain access check. Content is an on-chain receipt, not a DB row.',
+      who: 'Premium content, research reports, course creators.',
+      stack: 'Next.js 14 · RainbowKit · wagmi · Tailwind',
+    },
+    {
+      slug: 'paywall-api',
+      emoji: '⚡',
+      name: 'Paid API (x402)',
+      useCase: 'Express server with x402 middleware. Register endpoint on-chain, clients prepay via batchPay(), server verifies callId + signature per request.',
+      who: 'AI inference providers, data APIs, SaaS selling API credits.',
+      stack: 'Node.js · Express · dotenv',
+    },
+    {
+      slug: 'agent-pay',
+      emoji: '🤖',
+      name: 'Agent Payment Gateway',
+      useCase: 'Autonomous agent script. Reads endpoint pricing on-chain, prepays N call credits, signs each request, handles failures. No human-in-loop.',
+      who: 'AI agent builders, autonomous bots, agent-to-agent marketplaces.',
+      stack: 'Node.js (ESM) · viem · dotenv',
+    },
+  ];
+
+  return (
+    <div>
+      <p className="text-gray-700 leading-relaxed">
+        Scaffold a complete, working ArcPay app in 30 seconds. Each template is MIT-licensed, self-hostable, and uses the same{' '}
+        <code className="px-1.5 py-0.5 bg-gray-100 rounded text-xs">@wanggang22/arcpay-sdk</code>{' '}
+        you get from <a href="#quickstart" className="text-accent underline">Quickstart</a>. The CLI scaffolds the surrounding app; the SDK does the on-chain calls.
+      </p>
+
+      <div className="mt-6">
+        <CodeBlock lang="bash">{install}</CodeBlock>
+      </div>
+
+      <div className="mt-8 grid md:grid-cols-2 gap-4">
+        {tpls.map((t) => (
+          <div
+            key={t.slug}
+            className="p-5 rounded-2xl border border-gray-200 hover:border-accent hover:shadow-sm transition"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <div className="font-bold text-lg">
+                  <span className="mr-2">{t.emoji}</span>
+                  {t.name}
+                </div>
+                <div className="mt-0.5 text-[11px] font-mono text-gray-400">{t.slug}</div>
+              </div>
+              <a
+                href={`https://github.com/wanggang22/arcpay/tree/main/cli/templates/${t.slug}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shrink-0 text-xs text-accent underline hover:no-underline"
+              >
+                View on GitHub →
+              </a>
+            </div>
+            <p className="mt-3 text-sm text-gray-700 leading-relaxed">{t.useCase}</p>
+            <div className="mt-4 text-xs">
+              <div className="text-gray-500">
+                <span className="font-semibold text-gray-700">Built for: </span>
+                {t.who}
+              </div>
+              <div className="mt-1 text-gray-500">
+                <span className="font-semibold text-gray-700">Stack: </span>
+                {t.stack}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <p className="mt-6 text-xs text-gray-500">
+        <strong className="text-gray-700">CLI vs SDK, one rule of thumb:</strong>{' '}
+        Greenfield project → use the CLI (get a scaffold). Existing project → use the SDK (one <code>npm install</code>, drop into your current codebase).
+      </p>
     </div>
   );
 }

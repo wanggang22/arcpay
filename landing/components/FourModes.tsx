@@ -22,7 +22,7 @@ const MODES: Mode[] = [
     href: '/gavin',
     cta: 'See a creator page',
     code: `import { ArcPayClient } from '@wanggang22/arcpay-sdk';
-const client = new ArcPayClient({ network: 'arc' });
+const client = new ArcPayClient({ network: 'testnet' });
 
 await client.tips.send({
   username: 'gavin',

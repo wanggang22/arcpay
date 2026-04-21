@@ -15,7 +15,7 @@ const fraunces = Fraunces({
 
 export const metadata: Metadata = {
   title: 'ArcPay — USDC payments on Arc',
-  description: 'Tips, subscriptions, paywalls, and pay-per-call billing on Arc Network. The Stripe of USDC.',
+  description: 'Tips, subscriptions, paywalls, and pay-per-call billing on Arc Network. USDC payments for creators, teams, and AI agents.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
