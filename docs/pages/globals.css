@@ -1,0 +1,47 @@
+/* Align ArcPay docs to the landing aesthetic: warm ivory, forest green,
+   Fraunces display for H1/H2, Geist Sans body, Geist Mono for code. */
+
+:root {
+  --nx-colors-primary-600: 45, 74, 62; /* #2d4a3e accent */
+}
+
+html,
+body {
+  font-family: 'Geist', ui-sans-serif, system-ui, sans-serif;
+}
+
+html[class~='light'] body {
+  background-color: #f7f4ee;
+  color: #0a0a0f;
+}
+
+html[class~='light'] nav[class*='nx-'] {
+  background-color: rgba(247, 244, 238, 0.85) !important;
+  backdrop-filter: saturate(180%) blur(8px);
+}
+
+.nx-prose h1,
+.nx-prose h2,
+article h1,
+article h2 {
+  font-family: 'Fraunces', ui-serif, Georgia, serif !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.015em;
+}
+
+.nx-prose code,
+code,
+pre {
+  font-family: 'Geist Mono', ui-monospace, Menlo, monospace !important;
+}
+
+html[class~='light'] .nx-prose code:not(pre code) {
+  background-color: rgba(45, 74, 62, 0.08);
+  color: #0a0a0f;
+  padding: 0 0.3em;
+  border-radius: 4px;
+}
+
+html[class~='light'] a:not([class*='nx-btn']):hover {
+  color: #2d4a3e !important;
+}

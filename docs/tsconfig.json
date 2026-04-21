@@ -15,6 +15,7 @@
     "jsx": "preserve",
     "allowJs": true,
     "skipLibCheck": true,
+    "types": [],
     "noEmit": true,
     "paths": {
       "@/*": [

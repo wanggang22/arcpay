@@ -36,9 +36,9 @@ npm run dev  # :4002
 ```
 
 Visit:
-- [http://localhost:4000](http://localhost:4000) — marketing landing
-- [http://localhost:4000/yourname](http://localhost:4000/yourname) — public payment page
-- [http://localhost:4001](http://localhost:4001) — creator dashboard
+- [https://arcpay.finance](https://arcpay.finance) — marketing landing
+- [https://arcpay.finance/yourname](https://arcpay.finance/yourname) — public payment page
+- [https://app.arcpay.finance](https://app.arcpay.finance) — creator dashboard
 - [http://localhost:4002](http://localhost:4002) — these docs
 
 ## Integrating into your own site
@@ -46,20 +46,20 @@ Visit:
 ### Minimal: a single tip button
 
 ```html
-<script src="https://unpkg.com/@arcpay/sdk/dist/browser.js"></script>
+<script src="https://unpkg.com/@wanggang22/arcpay-sdk/dist/browser.js"></script>
 <button onclick="arcpay.tip('alice', '0.005')">Tip me $0.005</button>
 ```
 
 ### Embedded iframe (coming v0.2)
 
 ```html
-<iframe src="https://arcpay.io/embed/alice?mode=tip&amount=0.005"></iframe>
+<iframe src="https://arcpay.finance/embed/alice?mode=tip&amount=0.005"></iframe>
 ```
 
 ### Full control with SDK
 
 ```typescript
-import { ArcPayClient } from '@arcpay/sdk';
+import { ArcPayClient } from '@wanggang22/arcpay-sdk';
 
 const client = new ArcPayClient({
   network: 'testnet',
@@ -97,4 +97,4 @@ If you run your own deployment, you control the fee recipient.
 1. **Deploy your own contracts** if you need different fee structures or need to be the protocol operator
 2. **Use the SDK's `customConfig`** to point to your addresses
 3. **Get on Arc mainnet** (coming 2026) — contracts deploy identically
-4. **Set up a custom domain** (arcpay.io, your.domain) with Vercel
+4. **Set up a custom domain** (arcpay.finance, your.domain) with Vercel

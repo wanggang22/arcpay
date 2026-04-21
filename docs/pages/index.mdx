@@ -1,48 +1,47 @@
 # ArcPay
 
-**USDC payments on Arc Network.** Tips, subscriptions, paywalls, and pay-per-call billing. Built for creators, developers, and AI agents.
+**Four ways to get paid. One URL.**
 
-## What ArcPay is
+The Stripe of USDC on Arc — for humans and AI agents. `arcpay.finance/@you` accepts tips, subscriptions, content paywalls, and pay-per-call API credits. 2% protocol fee, 0.5s settlement, native USDC gas.
 
-ArcPay is the **Stripe of USDC on Arc**. A unified protocol for every USDC payment pattern:
+---
 
-- 💸 **Tips** — one-time support with messages
-- 📅 **Subscriptions** — recurring monthly/yearly plans
-- 🔒 **Content Paywall** — per-item unlock access
-- ⚡ **Pay-per-call** — x402-compatible API billing
+## The four primitives
 
-All four share one `UsernameRegistry` — creators claim `@yourhandle` once, use it everywhere.
+- **Tips** — one-time USDC with a message. Chrome extension injects a ⚡ Tip button into every tweet on X.
+- **Subscriptions** — monthly/yearly with per-second accrual and auto-prorated refund on cancel. 2% fee vs Patreon 10%.
+- **Content paywall** — gate articles, videos, courses with USDC. Buyer pays once, access is an on-chain receipt.
+- **Pay-per-call** — x402-compatible metered billing. `batchPay` prepays N inference credits in one on-chain transaction. SDK auto-signs each request. Server verifies `callId` on-chain.
+
+All four share one `UsernameRegistry` — creators claim a handle once, use it everywhere.
 
 ## Why Arc
 
 | | Existing stablecoin chains | Arc |
 |-|--------------------------|-----|
-| Gas token | Separate (ETH/SOL/MATIC) | **USDC native** |
-| Finality | 13 seconds to 12 minutes | **~0.5 seconds** |
-| Cost per tx | $0.01 - $5+ | **~$0.0001** |
+| Gas token | Separate (ETH / SOL / MATIC) | **USDC native** |
+| Finality | 13 s – 12 min | **~0.5 s** |
+| Cost per tx | $0.01 – $5+ | **~$0.0001** |
 | Regulatory | Varies | **Circle-backed, institutional-ready** |
 
-## Get started in 30 seconds
+## Install
 
 ```bash
-npx create-arc-app my-tip-page
+npm install @wanggang22/arcpay-sdk
+# or
+pip install arcpay
 ```
 
-Or install the SDK directly:
-
-```bash
-npm install @arcpay/sdk
-```
+## Send your first tip
 
 ```typescript
-import { ArcPayClient } from '@arcpay/sdk';
+import { ArcPayClient } from '@wanggang22/arcpay-sdk';
 
 const client = new ArcPayClient({
-  network: 'testnet',
+  network: 'arc',
   privateKey: process.env.PRIVATE_KEY,
 });
 
-// Send a tip to @alice
 await client.tips.send({
   username: 'alice',
   amount: '0.005',
@@ -50,23 +49,43 @@ await client.tips.send({
 });
 ```
 
-That's it. Real USDC moves on-chain. No Stripe setup, no KYC paperwork, no $0.30 minimum.
+Real USDC moves on-chain. No Stripe setup, no KYC, no `$0.30` minimum per transaction.
+
+## Prepay N API calls (AI agents)
+
+```typescript
+// One on-chain tx prepays 100 credits
+await client.api.batchPay('alice', 'summarize-paper', 100);
+
+// Each call consumes one credit:
+//   const sig = await wallet.signMessage('arcpay-call:' + callId);
+//   fetch(endpointUrl, { body: JSON.stringify({ callId, signature: sig, endpointId, input }) });
+```
+
+Server verifies callId + signature on-chain, consumes one credit, returns the response.
 
 ## Fee model
 
-**2% per transaction** (vs Stripe 2.9% + $0.30, Patreon 8-12%).
+**2% per transaction** (vs Stripe 2.9% + $0.30, Patreon 8–12%, Gumroad 10%). Protocol fee is capped at 10% and currently set to 2% for all modules.
 
-The protocol fee is capped at 10% and currently set to 2% for all modules.
+## Scaffold a project
 
-## What's next
+```bash
+npx create-arc-app my-app
+```
 
-- Read the [Quick Start](/quickstart) to ship your first payment flow in 5 minutes
-- Explore [Concepts](/concepts/overview) to understand the 4 payment modes
-- Check [SDK Reference](/sdk/client) for the full API
-- Browse [Templates](/templates/overview) for working starter projects
+Pick from 5 templates: creator tip page · subscription platform · content paywall · paid API (x402) · agent payment gateway.
+
+## Next
+
+- Read the [Quick Start](/quickstart) — ship your first payment flow in five minutes.
+- Explore [Concepts](/concepts) — the four modes and the registry.
+- Browse [SDK Reference](/sdk) — every export, every method.
+- See [Templates](/templates) — working starter projects.
 
 ## Links
 
+- **Live**: [arcpay.finance](https://arcpay.finance) · [app.arcpay.finance](https://app.arcpay.finance)
 - **GitHub**: [github.com/wanggang22/arcpay](https://github.com/wanggang22/arcpay)
-- **Dashboard**: [arcpay.io/dashboard](http://localhost:4001)
-- **Landing**: [arcpay.io](http://localhost:4000)
+- **npm**: [`@wanggang22/arcpay-sdk`](https://www.npmjs.com/package/@wanggang22/arcpay-sdk)
+- **Chrome extension**: [releases](https://github.com/wanggang22/arcpay/releases)
