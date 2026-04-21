@@ -1,52 +1,30 @@
 'use client';
-import { PrivyProvider } from '@privy-io/react-auth';
-import { WagmiProvider as PrivyWagmiProvider, createConfig as createPrivyConfig } from '@privy-io/wagmi';
-import { WagmiProvider, createConfig, http } from 'wagmi';
-import { injected } from 'wagmi/connectors';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { CHAIN } from '@/lib/config';
-import { useState } from 'react';
+import dynamic from 'next/dynamic';
+import { usePathname } from 'next/navigation';
 
-const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID || '';
-const HAS_PRIVY = PRIVY_APP_ID.length >= 20 && !PRIVY_APP_ID.includes('demo') && !PRIVY_APP_ID.includes('replace');
+// Lazy-load the wallet/auth stack only on pages that actually need it.
+// The marketing pages (/, /privacy, /blog, /blog/[slug]) never touch Privy,
+// wagmi, or react-query — so they don't need ~200 KB of wallet JS in the
+// initial bundle.
+const AuthProviders = dynamic(() => import('./providers-auth'), {
+  ssr: false,
+  loading: () => null,
+});
+
+// Pages that do NOT use any wallet / auth hooks. Keep this list tight —
+// adding a page that actually needs auth will throw `useConfig must be
+// used within WagmiProvider` at build time on that page.
+const MARKETING_ROUTES = new Set(['/', '/privacy', '/blog']);
+
+function isMarketingPath(pathname: string | null): boolean {
+  if (!pathname) return true;
+  return MARKETING_ROUTES.has(pathname);
+}
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const [qc] = useState(() => new QueryClient());
-
-  if (HAS_PRIVY) {
-    const wagmiConfig = createPrivyConfig({
-      chains: [CHAIN] as any,
-      transports: { [CHAIN.id]: http() },
-    });
-    return (
-      <PrivyProvider
-        appId={PRIVY_APP_ID}
-        config={{
-          loginMethods: ['email', 'google', 'twitter', 'wallet'],
-          appearance: { theme: 'light', accentColor: '#5b5bd6' },
-          embeddedWallets: { ethereum: { createOnLogin: 'users-without-wallets' } },
-          defaultChain: CHAIN as any,
-          supportedChains: [CHAIN] as any,
-        }}>
-        <QueryClientProvider client={qc}>
-          <PrivyWagmiProvider config={wagmiConfig}>
-            {children}
-          </PrivyWagmiProvider>
-        </QueryClientProvider>
-      </PrivyProvider>
-    );
+  const pathname = usePathname();
+  if (isMarketingPath(pathname)) {
+    return <>{children}</>;
   }
-
-  const fallbackConfig = createConfig({
-    chains: [CHAIN] as any,
-    transports: { [CHAIN.id]: http() },
-    connectors: [injected()],
-  });
-  return (
-    <QueryClientProvider client={qc}>
-      <WagmiProvider config={fallbackConfig}>
-        {children}
-      </WagmiProvider>
-    </QueryClientProvider>
-  );
+  return <AuthProviders>{children}</AuthProviders>;
 }
