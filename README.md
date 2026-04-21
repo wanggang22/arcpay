@@ -1,22 +1,22 @@
 # ArcPay
 
-**USDC payments, programmable like the internet.**
+**Four ways to get paid. One URL.**
 
-🌐 **Live**: [arcpay.finance](https://arcpay.finance) · [app.arcpay.finance](https://app.arcpay.finance) · [docs.arcpay.finance](https://docs.arcpay.finance)
+The Stripe of USDC on Arc — for humans and AI agents. `arcpay.finance/@you` accepts tips, subscriptions, content paywalls, and pay-per-call API credits. 2% protocol fee. 0.5s settlement. No KYC. Native USDC gas.
 
-Tips, subscriptions, paywalls, and pay-per-call billing on Arc Network. 2% fee. No Stripe account required. Native USDC gas — no separate gas token to manage.
+**Live**: [arcpay.finance](https://arcpay.finance) · [app.arcpay.finance](https://app.arcpay.finance) · [docs.arcpay.finance](https://docs.arcpay.finance)
+**npm**: [`@wanggang22/arcpay-sdk@0.1.1`](https://www.npmjs.com/package/@wanggang22/arcpay-sdk) · [`pip install arcpay`](https://pypi.org/project/arcpay/)
 
 ---
 
 ## What it is
 
-ArcPay is a **payments primitive** for Arc Network that serves:
+ArcPay is a payments primitive on Arc Network with four audiences in one URL:
 
-- **Developers** — SDK, CLI, templates to build payment features in 5 minutes
-- **Creators** — hosted service to accept USDC tips, subscriptions, paywalls
-- **Anyone with a payment link** — `arcpay.finance/yourname` works globally
-
-Think of it as **the Stripe of USDC on Arc**.
+- **Developers** — SDK, CLI, templates to integrate in minutes
+- **Creators** — hosted service to receive USDC with email or wallet login
+- **X / social users** — Chrome extension injects a ⚡ Tip button into every tweet
+- **AI agents** — `batchPay` prepays N inference credits in one on-chain transaction; each call is signed off-chain and verified on-chain (x402 / ERC-8183)
 
 ## Why Arc
 
@@ -48,7 +48,7 @@ ArcPay is a **protocol** with multiple ways to surface it to end users:
 |---|---|---|
 | **arcpay.finance/@handle** | Everyone | Share your URL anywhere |
 | **Embed widget** | Bloggers, Substack, Notion, README owners | iframe / JS / SVG badge |
-| **Chrome extension** | Anyone on X (Twitter) | Injects 💸 Tip button under every tweet |
+| **Chrome extension** | Anyone on X (Twitter) | Injects ⚡ Tip button under every tweet |
 | **Creator dashboard** | Registered creators | Manage plans/content/endpoints, withdraw |
 | **Python/TS SDK** | Developers, AI agents | Programmatic integration |
 | **CLI `create-arc-app`** | Devs starting a new app | Scaffold a working template |
@@ -204,9 +204,9 @@ Every creator can paste these snippets on their own surfaces:
 [![Tip on ArcPay](https://arcpay.finance/badge/YOUR_NAME.svg)](https://arcpay.finance/YOUR_NAME)
 ```
 
-## 🐦 Chrome extension — Tip anyone on X
+## Chrome extension — Tip anyone on X
 
-Install the extension and every tweet gets a 💸 **Tip** button next to reply/retweet. Clicking opens `arcpay.finance/@handle` in a new tab for the viewer to complete the tip with email or wallet login.
+Install the extension and every tweet gets a ⚡ **Tip** button next to reply/retweet. Clicking opens `arcpay.finance/@handle` in a new tab for the viewer to complete the tip with email or wallet login. Icon and palette match the landing — deep forest green base + ivory bolt.
 
 **Install (dev mode)**:
 1. Open `chrome://extensions` → toggle Developer mode
@@ -300,33 +300,31 @@ All 4 modules share a common `UsernameRegistry` — creators register once, ever
 ### v0.3 ✅ (hackathon — Agentic Economy on Arc)
 - [x] `PayPerCall.batchPay()` — prepay N API call credits in 1 tx (AI-agent friendly)
 - [x] `TipJarByHandle` — tip any X handle, pending on-chain claim via OAuth
-- [x] Chrome extension — 💸 Tip button injected into every tweet on x.com
+- [x] Chrome extension v0.2.1 — ⚡ Tip button injected into every tweet on x.com (Chrome Web Store submitted, under review)
 - [x] Embed widgets — iframe, JS SDK (auto/button), SVG badge
 - [x] OG preview cards + X profile auto-fetch (Bearer Token)
 - [x] `/claim` flow with EIP-191 attestation (backend-signed, on-chain verified)
 
-### v1.0 roadmap
-- [ ] Mainnet deployment
+### v0.4 — post-hackathon polish
+- [ ] Chrome Web Store submission clears review (v0.2.1 ready)
+- [ ] `app.arcpay.finance` dashboard aligned to new palette
+- [ ] `docs.arcpay.finance` Nextra theme aligned
 - [ ] Subscription upgrade/downgrade flows
 - [ ] Handle-based Subscribe + Content (not just Tip)
-- [ ] Publish extension to Chrome Web Store
-- [ ] MCP server for AI agents to discover + pay endpoints
-- [ ] Recurring agent-to-agent payments (streaming, conditional)
 - [ ] Hosted backend (email signup + Circle Wallets)
 - [ ] Webhook support
 
-### v0.3
+### v1.0 — mainnet
+- [ ] Audit (security review on 6 contracts)
+- [ ] Mainnet deployment
+- [ ] MCP server for AI agents to discover + pay endpoints
+- [ ] Recurring agent-to-agent payments (streaming, conditional)
 - [ ] Creator NFT gating
 - [ ] Multi-currency (EURC)
 - [ ] Cross-chain USDC via CCTP
-- [ ] Yield integration (when USYC / Aave / Ondo on Arc)
-- [ ] AI agent wallet flows
-- [ ] Subscription lock-in (token-gated tiers)
-
-### v1.0
+- [ ] Yield integration (USYC / Aave / Ondo on Arc)
 - [ ] Multi-sig / DAO support
 - [ ] Mobile app
-- [ ] Audit + production launch on Arc mainnet
 
 ## Alignment with Arc Network
 
@@ -356,8 +354,10 @@ MIT — do whatever you want, no warranty.
 
 ## Built by
 
-Solo founder on Arc. Grown from [ArcRouter](../arcrouter) (AI API marketplace pivot) to the broader ArcPay vision. Claude Code-assisted development. ~1 day to MVP including deployment + SDK + dashboard.
+Solo founder on Arc. Built during the Circle Arc hackathon (2026-04). 6 contracts, 2 SDKs, 1 CLI, 1 Chrome extension, 3 live subdomains, Lighthouse Perf 89 / BP 100 on landing. AI-pair-programmed with Claude Code.
+
+Landing design: [`landing/specs/2026-04-21-landing-redesign.md`](./landing/specs/2026-04-21-landing-redesign.md) · implementation plan: [`landing/plans/2026-04-21-landing-redesign.md`](./landing/plans/2026-04-21-landing-redesign.md)
 
 ---
 
-*Arc Testnet live. Mainnet coming 2026. Build the future of USDC payments with us.*
+*Arc Testnet live. Mainnet coming 2026.*
