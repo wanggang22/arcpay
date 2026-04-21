@@ -414,8 +414,8 @@
       <!-- Voice-over (full-track audio, hyperframes mixes into final MP4) -->
       <audio id="vo" data-start="0" data-duration="44" data-track-index="1" src="narration.wav"></audio>
 
-      <!-- Captions overlay: word groups synced to transcript.json. Timeline injected by script below. -->
-      <div id="captions" style="position:absolute; bottom:80px; left:0; width:1920px; text-align:center; z-index:10;"></div>
+      <!-- Captions intentionally removed — uploaded as separate .srt to YouTube for accurate brand spelling. -->
+
     </div>
 
     <script>
@@ -510,63 +510,8 @@
         tl.set(el, { visibility: 'hidden' }, end);
       });
 
-      // ── Captions overlay (aligned to whisper word-level timestamps via build-captions.mjs) ──
-      const CAPTIONS = [
-        { t: 'Four ways to get paid.',                                  s: 0.0,   e: 1.02 },
-        { t: 'One URL.',                                                 s: 1.42,  e: 2.12 },
-        { t: 'The Stripe of USDC on Arc',                                s: 3.16,  e: 4.96 },
-        { t: 'For humans and AI agents.',                                s: 4.96,  e: 6.64 },
-        { t: 'Mode one. Tips.',                                          s: 6.64,  e: 7.6 },
-        { t: 'Every tweet gets a tip button.',                           s: 7.6,   e: 9.12 },
-        { t: 'Chrome extension injects it next to reply and retweet.',   s: 9.12,  e: 11.64 },
-        { t: 'Mode two. Subscriptions.',                                 s: 12.16, e: 13.06 },
-        { t: 'Like Substack, but creators keep 98%.',                    s: 13.24, e: 15.8 },
-        { t: 'Per-second accrual, prorated refunds.',                    s: 15.8,  e: 17.2 },
-        { t: 'Mode three. Content paywall.',                             s: 17.2,  e: 18.12 },
-        { t: 'Gumroad with an on-chain receipt.',                        s: 18.12, e: 20.6 },
-        { t: 'Pay once, own forever.',                                   s: 20.8,  e: 22.18 },
-        { t: 'Mode four. Pay-per-call.',                                 s: 22.62, e: 23.46 },
-        { t: 'Prepay 100 inference credits in one transaction.',         s: 23.46, e: 25.8 },
-        { t: 'Every call after that is a wallet signature.',             s: 25.8,  e: 29.74 },
-        { t: 'x402, ERC-8183.',                                          s: 29.74, e: 30.88 },
-        { t: '2% protocol fee.',                                         s: 30.88, e: 31.62 },
-        { t: '0.5s settlement. Native USDC gas.',                        s: 31.62, e: 36.92 },
-        { t: 'Start building. npm create arc-app.',                      s: 36.92, e: 39.44 },
-      ];
-
-      const captionsHost = document.querySelector(SCOPE + '#captions');
-      if (captionsHost) {
-        CAPTIONS.forEach((c, i) => {
-          const el = document.createElement('div');
-          el.id = 'cap-' + i;
-          el.textContent = c.t;
-          el.style.cssText = [
-            'position: absolute',
-            'left: 50%',
-            'transform: translateX(-50%)',
-            'opacity: 0',
-            'visibility: hidden',
-            "font-family: 'Geist Mono', ui-monospace, monospace",
-            'font-size: 30px',
-            'font-weight: 500',
-            'color: #f7f4ee',
-            'background: rgba(10,10,15,0.78)',
-            'padding: 14px 26px',
-            'border-radius: 999px',
-            'border: 1px solid rgba(247,244,238,0.12)',
-            'white-space: nowrap',
-            'letter-spacing: 0.01em',
-          ].join(';');
-          captionsHost.appendChild(el);
-
-          // Lift duration slightly so caption ends with VO phrase, not abruptly
-          const sel = SCOPE + '#cap-' + i;
-          tl.set(sel, { visibility: 'visible' }, c.s);
-          tl.fromTo(sel, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.18 }, c.s);
-          tl.to(sel, { opacity: 0, duration: 0.18 }, c.e - 0.18);
-          tl.set(sel, { visibility: 'hidden' }, c.e);
-        });
-      }
+      // Captions intentionally removed from the composition. Upload narration.srt
+      // to YouTube alongside the video for correct brand-word spelling.
     </script>
   </body>
 </html>

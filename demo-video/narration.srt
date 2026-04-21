@@ -1,0 +1,79 @@
+1
+00:00:00,000 --> 00:00:01,020
+Four ways to get paid.
+
+2
+00:00:01,420 --> 00:00:02,120
+One URL.
+
+3
+00:00:03,160 --> 00:00:04,960
+The Stripe of USDC on Arc
+
+4
+00:00:04,960 --> 00:00:06,640
+For humans and AI agents.
+
+5
+00:00:06,640 --> 00:00:07,600
+Mode one. Tips.
+
+6
+00:00:07,600 --> 00:00:09,120
+Every tweet gets a tip button.
+
+7
+00:00:09,120 --> 00:00:11,640
+Chrome extension injects it next to reply and retweet.
+
+8
+00:00:12,160 --> 00:00:13,060
+Mode two. Subscriptions.
+
+9
+00:00:13,240 --> 00:00:15,800
+Like Substack, but creators keep 98%.
+
+10
+00:00:15,800 --> 00:00:17,200
+Per-second accrual, prorated refunds.
+
+11
+00:00:17,200 --> 00:00:18,120
+Mode three. Content paywall.
+
+12
+00:00:18,120 --> 00:00:20,600
+Gumroad with an on-chain receipt.
+
+13
+00:00:20,800 --> 00:00:22,180
+Pay once, own forever.
+
+14
+00:00:22,620 --> 00:00:23,460
+Mode four. Pay-per-call.
+
+15
+00:00:23,460 --> 00:00:25,800
+Prepay 100 inference credits in one transaction.
+
+16
+00:00:25,800 --> 00:00:29,740
+Every call after that is a wallet signature.
+
+17
+00:00:29,740 --> 00:00:30,880
+x402, ERC-8183.
+
+18
+00:00:30,880 --> 00:00:31,620
+2% protocol fee.
+
+19
+00:00:31,620 --> 00:00:36,920
+0.5s settlement. Native USDC gas.
+
+20
+00:00:36,920 --> 00:00:39,440
+Start building. npm create arc-app.
