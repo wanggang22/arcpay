@@ -2,11 +2,11 @@
 
 **Four ways to get paid. One URL.**
 
-The Stripe of USDC on Arc — for humans and AI agents. `arcpay.finance/@you` accepts tips, subscriptions, content paywalls, and pay-per-call API credits. 2% protocol fee. 0.5s settlement. No KYC. Native USDC gas.
+USDC payments on Arc for creators, teams, and AI agents. `arcpay.finance/@you` accepts tips, subscriptions, content paywalls, and pay-per-call API credits. 2% protocol fee. 0.5s settlement. No KYC. Native USDC gas.
 
 **Live**: [arcpay.finance](https://arcpay.finance) · [app.arcpay.finance](https://app.arcpay.finance) · [docs.arcpay.finance](https://docs.arcpay.finance)
 **Demo video (52s)**: [youtu.be/Q2ibOfdSrWA](https://youtu.be/Q2ibOfdSrWA)
-**npm**: [`@wanggang22/arcpay-sdk@0.1.1`](https://www.npmjs.com/package/@wanggang22/arcpay-sdk) · [`pip install arcpay`](https://pypi.org/project/arcpay/)
+**npm**: [`@wanggang22/arcpay-sdk@0.1.1`](https://www.npmjs.com/package/@wanggang22/arcpay-sdk) · [`create-arcpay@0.1.2`](https://www.npmjs.com/package/create-arcpay) · Python: `pip install git+https://github.com/wanggang22/arcpay.git#subdirectory=sdk/python`
 
 ---
 
