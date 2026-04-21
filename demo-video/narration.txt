@@ -1,13 +1,16 @@
-ArcPay — USDC payments for humans and AI agents, on Arc.
+Four ways to get paid.
+One URL.
 
-Four payment modes, one URL.
+Arc Pay is the Stripe of U S D C on Arc — for humans and A I agents.
 
-Mode one, tip. BuyMeACoffee on-chain. Our Chrome extension puts a tip button on every tweet.
+Mode one. Tips. Every tweet gets a tip button. Our Chrome extension injects it right next to reply and retweet.
 
-Mode two, subscriptions. Like Substack, but creators keep ninety-eight percent. Per-second accrual, cancel anytime for a prorated refund.
+Mode two. Subscriptions. Like Substack, but creators keep ninety eight percent. Per-second accrual, cancel any time for a prorated refund.
 
-Mode three, content paywall. Gumroad with on-chain receipts. Pay once, own forever — even if the store disappears.
+Mode three. Content paywall. Gumroad with an on-chain receipt. Pay once, own forever — even if the store disappears.
 
-Mode four, pay-per-call. A.I. agents prepay a hundred calls in one transaction. Wallet signature is the API key. x402, ERC-8183.
+Mode four. Pay-per-call. An agent prepays one hundred inference credits in a single transaction. Every call after that is a wallet signature. x four zero two, E R C eight one eight three.
 
-ArcPay finance. Open source on GitHub. SDK live on npm. Built on Arc testnet.
+Two percent protocol fee. Zero point five second settlement. Native U S D C gas.
+
+Start building. N P M create arc-app.
