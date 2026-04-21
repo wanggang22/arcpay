@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": { "start": "node src/agent.mjs" },
   "dependencies": {
-    "@arcpay/sdk": "^0.1.0",
+    "@wanggang22/arcpay-sdk": "^0.1.1",
     "dotenv": "^16.3.1"
   }
 }

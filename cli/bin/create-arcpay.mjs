@@ -74,7 +74,7 @@ async function main() {
   console.log(kleur.dim('  npm install'));
   console.log(kleur.dim('  # Edit .env with your private key'));
   console.log(kleur.dim('  npm run dev\n'));
-  console.log(kleur.dim(`Docs: https://docs.arcpay.io/templates/${answers.template}\n`));
+  console.log(kleur.dim(`Docs: https://arcpay.finance/build\n`));
 }
 
 function copyDir(src, dest, vars) {

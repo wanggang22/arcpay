@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi';
 import { formatUnits, parseUnits } from 'viem';
-import { NETWORKS, tipJarAbi } from '@arcpay/sdk';
+import { NETWORKS, tipJarAbi } from '@wanggang22/arcpay-sdk';
 
 const username = process.env.NEXT_PUBLIC_CREATOR_USERNAME || 'alice';
 const displayName = process.env.NEXT_PUBLIC_CREATOR_DISPLAY_NAME || username;

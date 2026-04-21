@@ -1,6 +1,6 @@
 # {{projectName}}
 
-A "Buy me a coffee" style tip page on Arc Network, built with [ArcPay](https://arcpay.io).
+A "Buy me a coffee" style tip page on Arc Network, built with [ArcPay](https://arcpay.finance).
 
 ## Quick start
 
@@ -19,10 +19,7 @@ Edit `.env.local`:
 - `NEXT_PUBLIC_CREATOR_USERNAME` — your ArcPay registered username
 - `NEXT_PUBLIC_NETWORK` — `local` or `testnet`
 
-Don't have a username yet? Register:
-```bash
-npx arcpay register myname
-```
+Don't have a username yet? Claim one at [arcpay.finance](https://arcpay.finance/dashboard).
 
 ## Deploy
 
@@ -30,7 +27,7 @@ npx arcpay register myname
 npx vercel
 ```
 
-Share your link: `https://{{projectName}}.vercel.app` or `https://arcpay.io/tip/yourname`.
+Share your link: `https://{{projectName}}.vercel.app` or `https://arcpay.finance/@yourname`.
 
 ## Fee
 
@@ -38,4 +35,4 @@ ArcPay takes 2% of each tip as protocol fee. 98% goes directly to your wallet on
 
 ## Network: {{network}}
 
-See [docs.arcpay.io/templates/creator-tip](https://docs.arcpay.io/templates/creator-tip) for customization.
+See [arcpay.finance/build](https://arcpay.finance/build) for customization docs.

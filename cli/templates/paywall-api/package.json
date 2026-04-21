@@ -7,7 +7,7 @@
     "start": "node src/server.mjs"
   },
   "dependencies": {
-    "@arcpay/sdk": "^0.1.0",
+    "@wanggang22/arcpay-sdk": "^0.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",

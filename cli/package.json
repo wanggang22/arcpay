@@ -1,6 +1,6 @@
 {
   "name": "create-arcpay",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Scaffold ArcPay apps instantly — tips, subscriptions, paywalls, pay-per-call on Arc Network",
   "type": "module",
   "bin": {

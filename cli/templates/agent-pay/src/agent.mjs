@@ -1,6 +1,6 @@
 // Example autonomous agent that pays for API calls on Arc
 import dotenv from 'dotenv';
-import { ArcPayClient, formatUnits } from '@arcpay/sdk';
+import { ArcPayClient, formatUnits } from '@wanggang22/arcpay-sdk';
 dotenv.config();
 
 const client = new ArcPayClient({

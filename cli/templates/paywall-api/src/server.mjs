@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { ArcPayClient } from '@arcpay/sdk';
+import { ArcPayClient } from '@wanggang22/arcpay-sdk';
 dotenv.config();
 
 const NETWORK = process.env.ARCPAY_NETWORK || 'local';
