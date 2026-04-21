@@ -84,6 +84,14 @@ function Hero() {
             >
               Claim your handle
             </Link>
+            <a
+              href="https://youtu.be/Q2ibOfdSrWA"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-medium text-ink/70 hover:text-ink transition underline underline-offset-4 decoration-ink/30"
+            >
+              Watch 52s demo ↗
+            </a>
           </div>
           <div className="mt-5">
             <CopyLine text="npm create arc-app" />
