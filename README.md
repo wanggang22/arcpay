@@ -52,7 +52,7 @@ ArcPay is a **protocol** with multiple ways to surface it to end users:
 | **Chrome extension** | Anyone on X (Twitter) | Injects ⚡ Tip button under every tweet |
 | **Creator dashboard** | Registered creators | Manage plans/content/endpoints, withdraw |
 | **Python/TS SDK** | Developers, AI agents | Programmatic integration |
-| **CLI `create-arc-app`** | Devs starting a new app | Scaffold a working template |
+| **CLI `create-arcpay`** | Devs starting a new app | Scaffold a working template |
 
 ## Quick start
 
@@ -103,7 +103,7 @@ await client.paywall.purchase(contentId, price);
 ### Scaffold a project
 
 ```bash
-npx create-arc-app my-app
+npx create-arcpay my-app
 ```
 
 Pick from 5 templates:
@@ -156,7 +156,7 @@ arcpay/
 ├── sdk/
 │   ├── js/                          # @wanggang22/arcpay-sdk (TypeScript)
 │   └── python/                      # arcpay-sdk (Python, for AI agents)
-├── cli/                             # create-arc-app CLI + 5 templates
+├── cli/                             # create-arcpay CLI + 5 templates
 ├── landing/                         # arcpay.finance — public site + OAuth + /claim
 │   └── app/
 │       ├── [username]/              # creator page (4 tabs)

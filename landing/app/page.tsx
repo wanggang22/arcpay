@@ -94,7 +94,7 @@ function Hero() {
             </a>
           </div>
           <div className="mt-5">
-            <CopyLine text="npm create arc-app" />
+            <CopyLine text="npm create arcpay" />
           </div>
         </div>
         <div className="md:col-span-5">
@@ -338,7 +338,7 @@ function GetStarted() {
         Start shipping.
       </h2>
       <div className="mt-8 inline-flex">
-        <CopyLine text="npm create arc-app@latest" />
+        <CopyLine text="npm create arcpay@latest" />
       </div>
       <div className="mt-6 flex flex-wrap gap-6 justify-center text-sm font-semibold">
         <Link href="/faucet" className="text-accent hover:underline underline-offset-4">

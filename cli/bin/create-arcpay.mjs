@@ -17,7 +17,7 @@ const TEMPLATES = [
 ];
 
 async function main() {
-  console.log(kleur.bold().cyan('\n⚡ create-arc-app\n'));
+  console.log(kleur.bold().cyan('\n⚡ create-arcpay\n'));
   console.log(kleur.dim('  Scaffold an ArcPay app on Arc Network in seconds\n'));
 
   const nameArg = process.argv[2];

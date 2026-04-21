@@ -1,13 +1,19 @@
 {
-  "name": "create-arc-app",
+  "name": "create-arcpay",
   "version": "0.1.0",
-  "description": "Scaffold ArcPay apps instantly — tips, subscriptions, paywalls, pay-per-call on Arc",
+  "description": "Scaffold ArcPay apps instantly — tips, subscriptions, paywalls, pay-per-call on Arc Network",
   "type": "module",
   "bin": {
-    "create-arc-app": "bin/create-arc-app.mjs"
+    "create-arcpay": "bin/create-arcpay.mjs"
   },
   "files": ["bin", "templates"],
-  "keywords": ["arc", "arcpay", "circle", "usdc", "scaffold", "starter"],
+  "keywords": ["arc", "arcpay", "circle", "usdc", "scaffold", "starter", "nanopayments"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wanggang22/arcpay.git",
+    "directory": "cli"
+  },
+  "homepage": "https://arcpay.finance",
   "license": "MIT",
   "dependencies": {
     "kleur": "^4.1.5",

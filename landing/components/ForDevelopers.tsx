@@ -58,7 +58,7 @@ $ curl -X POST https://arcpay.finance/api/demo-translate \\
       </div>
       <CodeTabs tabs={tabs} />
       <div className="flex flex-wrap gap-3 mt-8 font-mono text-xs text-ink/60">
-        <span className="px-3 py-1.5 rounded-md border border-hairline">create-arc-app v0.1.0</span>
+        <span className="px-3 py-1.5 rounded-md border border-hairline">create-arcpay v0.1.0</span>
         <span className="px-3 py-1.5 rounded-md border border-hairline">@wanggang22/arcpay-sdk v0.1.1</span>
         <span className="px-3 py-1.5 rounded-md border border-hairline">python arcpay 0.1.0</span>
         <a
