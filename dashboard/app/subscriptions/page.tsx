@@ -80,7 +80,7 @@ export default function SubsPage() {
             </button>
           )}
           <button onClick={() => setShowCreate(!showCreate)}
-            className="px-4 py-2 rounded-xl bg-arc-gradient text-white font-semibold">
+            className="px-4 py-2 rounded-xl bg-accent text-white font-semibold">
             + New plan
           </button>
         </div>
@@ -164,7 +164,7 @@ function PlanRow({ plan }: { plan: any }) {
           {err && <div className="text-red-500 text-xs">{err}</div>}
           <div className="flex gap-2">
             <button onClick={save} disabled={busy}
-              className="px-4 py-1.5 rounded-lg bg-arc-gradient text-white text-sm font-bold disabled:opacity-60">
+              className="px-4 py-1.5 rounded-lg bg-accent text-white text-sm font-bold disabled:opacity-60">
               {busy ? 'Saving…' : 'Save'}
             </button>
             <button onClick={() => setEditing(false)} className="px-4 py-1.5 rounded-lg border border-border text-sm">
@@ -227,7 +227,7 @@ function CreatePlanForm({ username, onDone }: { username: string; onDone: () => 
         {err && <div className="text-red-500 text-sm">{err}</div>}
         <div className="flex gap-2">
           <button onClick={submit} disabled={!name || busy}
-            className="flex-1 py-3 rounded-xl bg-arc-gradient text-white font-bold disabled:opacity-50">
+            className="flex-1 py-3 rounded-xl bg-accent text-white font-bold disabled:opacity-50">
             {busy ? 'Creating...' : 'Create plan'}
           </button>
           <button onClick={onDone} className="px-4 py-3 rounded-xl border border-border">Cancel</button>

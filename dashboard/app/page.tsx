@@ -134,7 +134,7 @@ export default function Page() {
             </div>
 
             {/* Share link */}
-            <div className="mt-8 p-6 bg-arc-gradient rounded-3xl text-white">
+            <div className="mt-8 p-6 bg-accent rounded-3xl text-white">
               <div className="text-sm opacity-80">Your public payment link</div>
               <div className="text-2xl font-mono mt-1">arcpay.finance/{username}</div>
               <div className="text-sm opacity-80 mt-3">

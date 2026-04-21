@@ -39,7 +39,7 @@ export function RegisterModal({ onRegistered }: { onRegistered: (u: string) => v
     <div className="max-w-xl mx-auto">
       {/* Hero */}
       <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-arc-gradient text-white text-3xl mb-4">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent text-white text-3xl mb-4">
           🚀
         </div>
         <h2 className="text-3xl font-bold tracking-tight">Claim your ArcPay handle</h2>
@@ -124,7 +124,7 @@ export function RegisterModal({ onRegistered }: { onRegistered: (u: string) => v
           <button
             onClick={submit}
             disabled={!valid || busy}
-            className="w-full py-3.5 rounded-xl font-bold text-white bg-arc-gradient disabled:opacity-40 hover:opacity-90 transition text-base">
+            className="w-full py-3.5 rounded-xl font-bold text-white bg-accent disabled:opacity-40 hover:opacity-90 transition text-base">
             {busy
               ? 'Claiming on-chain…'
               : valid

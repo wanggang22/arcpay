@@ -321,7 +321,7 @@ function ActivityRow({ item, usernameMap }: { item: Activity; usernameMap: Recor
   const time = new Date(item.timestamp * 1000).toLocaleString();
   const icon = { tip: '💸', subscribe: '📅', content: '🔒', api: '⚡' }[item.kind];
   const color = {
-    tip: 'bg-pink-500/10 text-pink-600',
+    tip: 'bg-accent/10 text-accent',
     subscribe: 'bg-blue-500/10 text-blue-600',
     content: 'bg-purple-500/10 text-purple-600',
     api: 'bg-amber-500/10 text-amber-600',

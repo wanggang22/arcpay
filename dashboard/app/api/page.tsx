@@ -76,7 +76,7 @@ export default function APIPage() {
             </button>
           )}
           <button onClick={() => setShowCreate(!showCreate)}
-            className="px-4 py-2 rounded-xl bg-arc-gradient text-white font-semibold">
+            className="px-4 py-2 rounded-xl bg-accent text-white font-semibold">
             + New endpoint
           </button>
         </div>
@@ -95,7 +95,7 @@ export default function APIPage() {
         </div>
       )}
 
-      <div className="mt-8 bg-arc-gradient text-white p-6 rounded-3xl">
+      <div className="mt-8 bg-accent text-white p-6 rounded-3xl">
         <div className="font-bold">Share with your API clients</div>
         <p className="text-xs opacity-80 mt-1">
           Copy this snippet to your API docs so developers and AI agents can integrate billing.
@@ -162,7 +162,7 @@ function CreateEndpointForm({ username, onDone }: { username: string; onDone: ()
         {err && <div className="text-red-500 text-sm">{err}</div>}
         <div className="flex gap-2">
           <button onClick={submit} disabled={!name || busy}
-            className="flex-1 py-3 rounded-xl bg-arc-gradient text-white font-bold disabled:opacity-50">
+            className="flex-1 py-3 rounded-xl bg-accent text-white font-bold disabled:opacity-50">
             {busy ? 'Registering...' : 'Register'}
           </button>
           <button onClick={onDone} className="px-4 py-3 rounded-xl border border-border">Cancel</button>
@@ -233,7 +233,7 @@ function EndpointRow({ endpoint, username }: { endpoint: any; username: string }
           {err && <div className="text-red-500 text-xs">{err}</div>}
           <div className="flex gap-2">
             <button onClick={save} disabled={busy}
-              className="px-4 py-1.5 rounded-lg bg-arc-gradient text-white text-sm font-bold disabled:opacity-60">
+              className="px-4 py-1.5 rounded-lg bg-accent text-white text-sm font-bold disabled:opacity-60">
               {busy ? 'Saving…' : 'Save'}
             </button>
             <button onClick={() => setEditing(false)} className="px-4 py-1.5 rounded-lg border border-border text-sm">

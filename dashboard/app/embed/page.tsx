@@ -177,7 +177,7 @@ if (await isSubscriber(visitor.wallet, MY_PLAN_ID)) {
           code={subscribeGating}
         />
 
-        <div className="mt-10 p-5 bg-arc-gradient text-white rounded-3xl">
+        <div className="mt-10 p-5 bg-accent text-white rounded-3xl">
           <div className="font-bold">Why embed?</div>
           <ul className="mt-2 text-sm space-y-1 list-disc list-inside opacity-90">
             <li>Instant USDC settlement to your wallet (sub-second on Arc)</li>

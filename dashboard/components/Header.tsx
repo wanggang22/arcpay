@@ -13,7 +13,7 @@ export function Header() {
     <header className="border-b border-border bg-panel">
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-arc-gradient" />
+          <div className="w-8 h-8 rounded-lg bg-accent" />
           <span className="font-bold text-lg">ArcPay</span>
           <span className="text-xs text-muted ml-2">Dashboard</span>
         </Link>
@@ -94,7 +94,7 @@ function IdentityBadge({ ident }: { ident: SocialIdent }) {
         // eslint-disable-next-line @next/next/no-img-element
         <img src={ident.avatar} alt="" className="w-5 h-5 rounded-full object-cover" />
       ) : (
-        <div className="w-5 h-5 rounded-full bg-arc-gradient text-white flex items-center justify-center text-[10px] font-bold">{sourceEmoji(ident.source)}</div>
+        <div className="w-5 h-5 rounded-full bg-accent text-white flex items-center justify-center text-[10px] font-bold">{sourceEmoji(ident.source)}</div>
       )}
       <span className="text-xs font-medium truncate" title={ident.label}>{ident.label}</span>
     </div>
@@ -108,7 +108,7 @@ function PrivyAuthButton() {
 
   if (!ready) return <button className="px-4 py-2 rounded-xl bg-gray-100 text-sm font-semibold opacity-50">Loading...</button>;
   if (!authenticated) return (
-    <button onClick={() => login()} className="px-4 py-2 rounded-xl bg-arc-gradient text-white text-sm font-semibold hover:opacity-90">
+    <button onClick={() => login()} className="px-4 py-2 rounded-xl bg-accent text-white text-sm font-semibold hover:opacity-90">
       Sign in
     </button>
   );
@@ -133,7 +133,7 @@ function WagmiAuthButton() {
 
   if (!isConnected) return (
     <button onClick={() => connectors[0] && connect({ connector: connectors[0] })}
-      className="px-4 py-2 rounded-xl bg-arc-gradient text-white text-sm font-semibold hover:opacity-90">
+      className="px-4 py-2 rounded-xl bg-accent text-white text-sm font-semibold hover:opacity-90">
       Connect wallet
     </button>
   );

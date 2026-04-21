@@ -63,7 +63,7 @@ export default function TipsPage() {
         </div>
       </div>
 
-      <div className="bg-arc-gradient text-white p-6 rounded-3xl mb-8">
+      <div className="bg-accent text-white p-6 rounded-3xl mb-8">
         <div className="text-sm opacity-80">Share your tip link</div>
         <div className="text-xl font-mono mt-1 flex items-center gap-3">
           <span>{NETWORK === 'testnet' ? 'arcpay.finance' : 'localhost:4000'}/{username}</span>
@@ -87,7 +87,7 @@ export default function TipsPage() {
         <div className="space-y-2">
           {tips.map(t => (
             <div key={t.id.toString()} className="bg-panel border border-border rounded-2xl p-4 flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-arc-gradient flex items-center justify-center text-white font-bold">
+              <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-white font-bold">
                 {t.from.slice(2, 3).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
