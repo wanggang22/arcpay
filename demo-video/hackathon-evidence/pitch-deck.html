@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>ArcPay — Pitch Deck</title>
+<style>
+  @page { size: 1920px 1080px; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; font-family: -apple-system, 'Segoe UI', 'Geist', Inter, sans-serif; color: #0b0b0f; background: #f7f4ee; }
+  .slide {
+    width: 1920px; height: 1080px; padding: 96px 120px; page-break-after: always;
+    display: flex; flex-direction: column; justify-content: center; position: relative;
+    background: #f7f4ee;
+  }
+  .slide:last-child { page-break-after: auto; }
+  .kicker { text-transform: uppercase; letter-spacing: 0.18em; font-size: 22px; color: #2d4a3e; font-weight: 700; margin-bottom: 36px; }
+  h1 { font-size: 128px; line-height: 1; margin: 0 0 36px; letter-spacing: -0.03em; font-weight: 900; color: #0b0b0f; font-family: 'Fraunces', Georgia, serif; }
+  h1 em { font-style: italic; color: #2d4a3e; font-weight: 400; }
+  h2 { font-size: 88px; line-height: 1.05; margin: 0 0 32px; letter-spacing: -0.02em; font-weight: 800; color: #0b0b0f; font-family: 'Fraunces', Georgia, serif; }
+  h3 { font-size: 48px; margin: 0 0 28px; font-weight: 700; letter-spacing: -0.01em; }
+  p, li { font-size: 32px; line-height: 1.45; margin: 0 0 20px; color: #1a1a22; }
+  .big { font-size: 48px; line-height: 1.4; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: start; }
+  .mode { border-left: 6px solid #2d4a3e; padding-left: 28px; }
+  .mode h4 { font-size: 32px; margin: 0 0 8px; }
+  .mode p { font-size: 24px; margin: 0; color: #3a3a44; line-height: 1.4; }
+  .emoji { font-size: 48px; margin-right: 16px; }
+  table { border-collapse: collapse; font-size: 28px; margin-top: 16px; }
+  th, td { padding: 12px 24px; text-align: left; border-bottom: 1px solid #d3cdbf; }
+  th { font-weight: 700; color: #2d4a3e; text-transform: uppercase; letter-spacing: 0.08em; font-size: 20px; }
+  td.num { font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 700; }
+  .check { color: #2d4a3e; font-weight: 700; }
+  .warn { color: #b8a47e; }
+  .fail { color: #a03a2a; }
+  .footer { position: absolute; bottom: 48px; left: 120px; right: 120px; display: flex; justify-content: space-between; font-size: 20px; color: #6a6a72; }
+  .url { font-family: 'JetBrains Mono', ui-monospace, monospace; background: #0b0b0f; color: #f7f4ee; padding: 8px 20px; border-radius: 999px; font-size: 28px; display: inline-block; }
+  .stat { display: inline-block; margin-right: 56px; }
+  .stat .n { font-size: 96px; font-weight: 900; letter-spacing: -0.03em; color: #0b0b0f; display: block; line-height: 1; }
+  .stat .l { font-size: 22px; color: #6a6a72; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 8px; display: block; }
+  code { font-family: 'JetBrains Mono', ui-monospace, monospace; background: #0b0b0f; color: #f7f4ee; padding: 4px 12px; border-radius: 6px; font-size: 0.85em; }
+</style>
+</head>
+<body>
+
+<!-- 1 · Title -->
+<section class="slide">
+  <div class="kicker">lablab.ai · Agentic Economy on Arc · 2026-04-21</div>
+  <h1>Four ways to get paid.<br/><em>One URL.</em></h1>
+  <p class="big">ArcPay is the Stripe of USDC on Arc Network — for humans and AI agents.</p>
+  <div class="footer"><span class="url">arcpay.finance</span><span>@wangligang21</span></div>
+</section>
+
+<!-- 2 · Problem -->
+<section class="slide">
+  <div class="kicker">The problem</div>
+  <h2>Nanopayments are impossible today.</h2>
+  <div class="two-col">
+    <div>
+      <h3>Creators lose 8–12%</h3>
+      <p>Stripe 2.9% + $0.30. Patreon 8–12%. Multi-day holds. KYC + biz docs.</p>
+    </div>
+    <div>
+      <h3>AI agents can't use those rails</h3>
+      <p>Credit cards need humans. ACH is days. API-key buckets don't settle.</p>
+    </div>
+    <div>
+      <h3>Traditional gas kills tiny invoices</h3>
+      <p>Ethereum L1: $0.50–$5/tx. An agent making $0.001 calls buries revenue in gas.</p>
+    </div>
+    <div>
+      <h3>No unified primitive</h3>
+      <p>Tips, subs, paywalls, API billing each need their own stack + their own login.</p>
+    </div>
+  </div>
+  <div class="footer"><span>Slide 2 / 8</span><span>arcpay.finance</span></div>
+</section>
+
+<!-- 3 · Solution -->
+<section class="slide">
+  <div class="kicker">The solution</div>
+  <h2>One URL. Four payment modes.</h2>
+  <p class="big"><span class="url">arcpay.finance/@you</span> accepts:</p>
+  <div class="two-col" style="margin-top: 48px;">
+    <div class="mode">
+      <h4><span class="emoji">💸</span>Tips</h4>
+      <p>One-time USDC with a message. Chrome extension injects a ⚡ Tip button into every tweet. Tips for unregistered handles are held on-chain, claimable via X OAuth.</p>
+    </div>
+    <div class="mode">
+      <h4><span class="emoji">📅</span>Subscriptions</h4>
+      <p>Monthly/yearly USDC. Per-second accrual. Auto-prorated refund on cancel. 2% vs Patreon's 10%.</p>
+    </div>
+    <div class="mode">
+      <h4><span class="emoji">🔒</span>Content Paywall</h4>
+      <p>Gate articles, videos, courses. Pay once, on-chain receipt forever — works even if the host disappears.</p>
+    </div>
+    <div class="mode">
+      <h4><span class="emoji">⚡</span>Pay-per-call</h4>
+      <p>x402 / ERC-8183 ready. <code>batchPay(endpoint, N)</code> prepays N inference credits in one tx. Built for AI agents.</p>
+    </div>
+  </div>
+  <div class="footer"><span>Slide 3 / 8</span><span>arcpay.finance</span></div>
+</section>
+
+<!-- 4 · Why Arc -->
+<section class="slide">
+  <div class="kicker">Why Arc</div>
+  <h2>The only chain where <em>nanopayments clear.</em></h2>
+  <div style="margin-top: 36px;">
+    <div class="stat"><span class="n">2%</span><span class="l">protocol fee</span></div>
+    <div class="stat"><span class="n">0.5s</span><span class="l">finality</span></div>
+    <div class="stat"><span class="n">$0</span><span class="l">gas token</span></div>
+  </div>
+  <div style="margin-top: 64px;">
+    <p class="big"><strong>Native USDC gas</strong> — no two-token juggle. Fees are denominated in the same unit you charge in.</p>
+    <p class="big"><strong>Sub-second settlement</strong> — no off-chain custody pool, no reconciliation delay.</p>
+    <p class="big"><strong>Dollar-denominated fees</strong> — agents can model their margin at dev time, not runtime.</p>
+  </div>
+  <div class="footer"><span>Slide 4 / 8</span><span>arcpay.finance</span></div>
+</section>
+
+<!-- 5 · Pay-per-call magic -->
+<section class="slide">
+  <div class="kicker">The batchPay trick</div>
+  <h2>1 transaction → 10 discrete $0.001 calls.</h2>
+  <pre style="background:#0b0b0f;color:#f7f4ee;padding:40px;border-radius:24px;font-size:30px;line-height:1.5;font-family:'JetBrains Mono',ui-monospace,monospace;"><span style="color:#b8a47e">// Agent prepays 10 inference credits — one on-chain tx, ~$0.01 total</span>
+<span style="color:#7dd3fc">await</span> arcpay.api.batchPay(<span style="color:#fde68a">'alice'</span>, <span style="color:#fde68a">'ai-fe'</span>, <span style="color:#fde68a">10</span>);
+
+<span style="color:#b8a47e">// Each subsequent call is just a wallet signature, verified on-chain</span>
+<span style="color:#7dd3fc">await</span> arcpay.api.call(<span style="color:#fde68a">'alice'</span>, <span style="color:#fde68a">'ai-fe'</span>, prompt);</pre>
+  <p class="big" style="margin-top:48px;">
+    Our contract shows <strong>6 on-chain txs → 60 logical calls</strong>. The Arcscan page carries a "<strong>Logs 50+</strong>" badge on 6 transactions. That compression is the economic unlock.
+  </p>
+  <div class="footer"><span>Slide 5 / 8</span><span>arcpay.finance · PayPerCall 0x3a39…2def</span></div>
+</section>
+
+<!-- 6 · Hackathon requirements -->
+<section class="slide">
+  <div class="kicker">Hackathon requirements · met</div>
+  <h2>The three hard rules.</h2>
+  <table>
+    <tr><th>Rule</th><th>Threshold</th><th>ArcPay</th><th>Proof</th></tr>
+    <tr>
+      <td>Per-action pricing</td>
+      <td>≤ $0.01</td>
+      <td class="num check">$0.001 USDC/call</td>
+      <td>PayPerCall.getEndpoint() on-chain</td>
+    </tr>
+    <tr>
+      <td>On-chain tx count</td>
+      <td>≥ 50 demo txs</td>
+      <td class="num check">54 txs · 5 contracts · 4 modes</td>
+      <td>testnet.arcscan.app</td>
+    </tr>
+    <tr>
+      <td>Margin rationale</td>
+      <td>Why gas fails elsewhere</td>
+      <td class="check">See next slide</td>
+      <td>Quantitative comparison</td>
+    </tr>
+  </table>
+  <p class="big" style="margin-top:48px;">
+    Evidence pack: <code>github.com/wanggang22/arcpay/demo-video/hackathon-evidence</code>
+  </p>
+  <div class="footer"><span>Slide 6 / 8</span><span>arcpay.finance</span></div>
+</section>
+
+<!-- 7 · Margin math -->
+<section class="slide">
+  <div class="kicker">The margin math</div>
+  <h2>Only Arc keeps more than it burns.</h2>
+  <p class="big">An AI agent making 1,000 inference calls/day at $0.001 each earns $1.00. Gas on each chain:</p>
+  <table>
+    <tr><th>Chain</th><th>Gas / tx</th><th>Daily gas (1,000 calls)</th><th>% of $1.00 revenue</th></tr>
+    <tr><td>Ethereum L1</td><td class="num">$0.50 – $5</td><td class="num fail">$500 – $5,000</td><td class="fail">~50,000% — impossible</td></tr>
+    <tr><td>Base / Arbitrum</td><td class="num">$0.001 – $0.05</td><td class="num warn">$1 – $50</td><td class="warn">100% – 5,000%</td></tr>
+    <tr><td><strong>Arc</strong></td><td class="num check">~$0.0001</td><td class="num check">~$0.10</td><td class="check">10% — in the money</td></tr>
+  </table>
+  <p class="big" style="margin-top:48px;">
+    Compress further with <code>batchPay(N=10)</code>: one tx → ten credits → <strong>gas falls to ~1% of revenue.</strong>
+  </p>
+  <div class="footer"><span>Slide 7 / 8</span><span>arcpay.finance</span></div>
+</section>
+
+<!-- 8 · Shipped -->
+<section class="slide">
+  <div class="kicker">Shipped in 3 days · solo · Claude Code</div>
+  <h2>Every layer, production-grade.</h2>
+  <div class="two-col">
+    <div>
+      <h3>Contracts (Foundry)</h3>
+      <p>Hub · Registry · TipJar · TipJarByHandle · Subscriptions · ContentPaywall · PayPerCall. 6 contracts, deployed to Arc testnet (chainId 5042002).</p>
+    </div>
+    <div>
+      <h3>Developer rails</h3>
+      <p><code>@wanggang22/arcpay-sdk</code> on npm. <code>arcpay</code> on PyPI. <code>npx create-arc-app</code> CLI scaffold. Nextra docs at docs.arcpay.finance.</p>
+    </div>
+    <div>
+      <h3>User surfaces</h3>
+      <p>arcpay.finance landing (Next.js). app.arcpay.finance creator dashboard. Chrome extension v0.2.0 in Web Store review. x402 agent demo server.</p>
+    </div>
+    <div>
+      <h3>Live links</h3>
+      <p>
+        🌐 <code>arcpay.finance</code><br/>
+        🎥 <code>youtu.be/Q2ibOfdSrWA</code><br/>
+        💻 <code>github.com/wanggang22/arcpay</code><br/>
+        📦 <code>npm i @wanggang22/arcpay-sdk</code>
+      </p>
+    </div>
+  </div>
+  <div class="footer"><span>Slide 8 / 8</span><span>MIT · solo · April 2026</span></div>
+</section>
+
+</body>
+</html>
