@@ -1,0 +1,18 @@
+{
+  "name": "obol",
+  "private": true,
+  "type": "module",
+  "description": "Obol — agent-to-agent service market settling nanopayments on Arc via ArcPay (Lepton Agents Hackathon)",
+  "scripts": {
+    "test": "node --import tsx --test test/**/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "viem": "^2.21.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}
