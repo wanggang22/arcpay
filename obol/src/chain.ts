@@ -13,7 +13,7 @@ export type NetworkName = "testnet" | "local";
 type Deployments = {
   networks: Record<
     string,
-    { name: string; chainId: number; rpc: string; addresses: Record<string, `0x${string}`> }
+    { name: string; chainId: number; rpc: string; explorer?: string; addresses: Record<string, `0x${string}`> }
   >;
 };
 
