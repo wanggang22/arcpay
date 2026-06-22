@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page { size: A4; margin: 18mm 18mm; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Helvetica, Arial, sans-serif; color: #16201b; font-size: 11.2pt; line-height: 1.5; margin: 0; }
+  h1 { font-size: 21pt; line-height: 1.15; margin: 0 0 2pt; letter-spacing: -0.01em; color: #14201a; }
+  .sub { font-size: 12pt; color: #2d4a3e; font-weight: 600; margin: 0 0 14pt; }
+  h2 { font-size: 13pt; color: #2d4a3e; margin: 20pt 0 6pt; padding-bottom: 3pt; border-bottom: 1px solid rgba(20,32,26,0.14); }
+  p { margin: 0 0 8pt; }
+  em { color: #2d4a3e; font-style: italic; }
+  strong { color: #14201a; }
+  table.meta { width: 100%; border-collapse: collapse; margin: 0 0 6pt; }
+  table.meta td { padding: 5pt 8pt; border: 1px solid rgba(20,32,26,0.14); vertical-align: top; font-size: 10.5pt; }
+  table.meta td.k { width: 33%; font-weight: 600; background: rgba(45,74,62,0.05); }
+  code, pre { font-family: "Consolas", monospace; }
+  pre { background: #f4f2ec; border: 1px solid rgba(20,32,26,0.12); border-radius: 4px; padding: 9pt 11pt; font-size: 8.4pt; line-height: 1.35; white-space: pre; margin: 6pt 0 9pt; }
+  code { font-size: 9.4pt; background: rgba(45,74,62,0.07); padding: 0.5pt 3pt; border-radius: 3px; }
+  pre code { background: none; padding: 0; font-size: inherit; }
+  ol, ul { margin: 4pt 0 9pt; padding-left: 18pt; }
+  li { margin: 0 0 4pt; }
+  .tx { font-family: "Consolas", monospace; font-size: 8.2pt; color: #4a5a52; word-break: break-all; }
+  .small { font-size: 9.5pt; color: #4a5a52; }
+</style>
+</head>
+<body>
+  <h1>Letta — Autonomous Invoice-Factoring Agent on Arc</h1>
+  <div class="sub">Ignyte Stablecoins Commerce Stack Challenge · Track 2 — SME Trade Finance &amp; Working Capital</div>
+
+  <table class="meta">
+    <tr><td class="k">Project Title</td><td>Letta — an autonomous invoice-factoring agent on Arc, settled in USDC</td></tr>
+    <tr><td class="k">Track</td><td>Track 2 — SME Trade Finance &amp; Working Capital (invoice factoring with repayment waterfalls)</td></tr>
+    <tr><td class="k">Circle Account Email</td><td>wangligang16161616@gmail.com</td></tr>
+    <tr><td class="k">GitHub Repository</td><td>https://github.com/wanggang22/arcpay/tree/letta</td></tr>
+    <tr><td class="k">Video Demo</td><td>(88s HyperFrames walkthrough — link to be added on upload)</td></tr>
+  </table>
+
+  <h2>Problem</h2>
+  <p>SMEs die on cash flow. They ship goods, issue an invoice with 30–90 day terms, then wait months for money they need <em>now</em> to make payroll and buy materials. Factoring fixes this — a financier advances cash against the invoice and collects from the buyer later — but underwriting (should we advance? how much? at what discount?) is slow, manual, and closed to small suppliers. There is no rail to do it programmatically in stablecoins.</p>
+
+  <h2>Description</h2>
+  <p>Letta is an AI agent that is a <strong>credit committee with money at stake</strong>. It reads the buyer's <strong>real on-chain payment history on Arc</strong>, prices an advance (advance % + discount rate) with a written reasoning memo, disburses USDC to the supplier now, and runs a <strong>3-way repayment waterfall</strong> as the buyer pays — recovering the factor's advance + fee first, surplus to the supplier. Partial and late payments are first-class: the agent <strong>re-assesses exposure live</strong> on every repayment.</p>
+  <p>The autonomy is genuine because the decision is a judgment with real money at risk, not "approve a document I wrote" — the failure mode that makes most agentic-finance demos read as theater. Built on Arc: native-USDC settlement, sub-second finality. It reuses ArcPay's PayPerCall <code>Paid</code> events as the buyer's unfakeable credit signal, and Obol's decide→pay→verify agent loop, repointed from "which service to buy" to "should I advance against this invoice and at what price."</p>
+
+  <h2>Products Used (Circle / Arc)</h2>
+  <ul>
+    <li><strong>USDC</strong> — native gas, every payout is <code>pay{value}</code>; no ERC-20 approval dance.</li>
+    <li><strong>Arc smart contracts</strong> — <code>FactoringPool.sol</code> deployed on Arc testnet; the buyer's credit signal is on-chain <code>Paid</code> receipts from ArcPay's PayPerCall.</li>
+    <li><strong>Arc sub-second finality</strong> — fund, partial, and settle all clear in under half a second.</li>
+    <li><strong>Anthropic Claude</strong> — the underwriter.</li>
+    <li class="small">Roadmap: Circle Wallets (agent custody), Circle Gateway + CCTP (cross-chain advance capital), USYC (idle-float yield as the factor's funding source).</li>
+  </ul>
+
+  <h2>Working MVP</h2>
+  <pre><code>cd letta &amp;&amp; npm install
+npm test                 # 14 unit tests (features, underwriting, waterfall math)
+npm run typecheck
+npx tsx scripts/live.ts  # REAL end-to-end on Arc testnet</code></pre>
+  <p>Contract: <code>FactoringPool.sol</code> (forge, 18 tests). Agent: <code>history.ts</code> (credit features from on-chain Paid events), <code>underwrite.ts</code> (Claude prices advance% + discount + memo, deterministic fallback), <code>pool.ts</code> / <code>orchestrator.ts</code> (fund + live exposure re-assessment).</p>
+
+  <h2>Architecture</h2>
+  <pre>  invoice (JSON) + buyer address
+            |
+  +---------v---------------------------+
+  |   UNDERWRITING AGENT (Claude)       |  &lt;- reuses Obol's decide-&gt;pay-&gt;verify loop
+  |   read on-chain history -&gt; score    |
+  |   risk -&gt; price advance% + discount  |
+  |   -&gt; memo -&gt; re-underwrite on partial |
+  +---+-----------------------+---------+
+ reads | Paid history   fund / | repay / waterfall
+       v                       v
+ +-------------+      +----------------------+
+ | Arc Paid    |      |  FactoringPool.sol    |  (deployed,
+ | history     |      |  Arc testnet          |   Arc testnet)
+ | (PayPerCall)|      |  push+escrow payouts  |
+ +-------------+      +----------------------+</pre>
+  <p class="small">Push-with-escrow-fallback payouts: a griefing recipient can never brick the waterfall or strand the factor's recovery (a 5-lens adversarial security review found + fixed a real push-payment DoS and an overpayment leak before deploy).</p>
+
+  <h2>Traction — verified live on Arc testnet, in-window</h2>
+  <p>Claude underwrote a thin-file buyer and the contract settled the full waterfall with real test-USDC:</p>
+  <ol>
+    <li><strong>Underwrite [Claude]:</strong> advance 70% (700,000 wei), discount 4.5% (fee 45,000 wei). Memo: <em>"Only 3 prior payments — a very thin file — with 0.67 counterparty concentration; 210 wei of history vs a 1,000,000 wei invoice is a size mismatch; recent activity encouraging but sparse history justifies a moderate advance."</em></li>
+    <li><strong>Fund:</strong> <span class="tx">tx 0xbbf25219d092b43dfa6223971e714eba31fc06d6fdc2dfe4df72d7c3727771c4</span> — supplier +700,000 wei.</li>
+    <li><strong>Partial (40%):</strong> <span class="tx">tx 0xebb83f06084df34aed7e7a65bd7b6e92d3d64bbf3ca18a570e98798eb38aa6b1</span> — all to factor; agent re-rated exposure 745k → 345k.</li>
+    <li><strong>Late remainder + settle:</strong> <span class="tx">tx 0x764240eaf5aff49af0d5d525d19e7585e63029f7c7591f0bca8e77c98793c9d2</span> — factor whole at 745k, supplier surplus 255k, settled.</li>
+  </ol>
+  <p>Outcome: collected 1,000,000 · factor recovered 745,000 (profit = fee 45,000) · supplier 955,000 (= face − fee). Pool: <span class="tx">https://testnet.arcscan.app/address/0xcE939A8048b8BF5bE9DfE639d4C65227A99901F5</span></p>
+
+  <h2>Documentation</h2>
+  <p>In the repo (<code>letta/</code> on the <code>letta</code> branch): <code>SUBMISSION.md</code>, <code>README.md</code> (run instructions), <code>docs/superpowers/specs/2026-06-23-letta-factoring-agent-design.md</code> (design), <code>evidence/run.json</code> (live-run evidence), <code>dashboard/index.html</code> (visual), <code>contracts/src/FactoringPool.sol</code> + tests. MIT licensed.</p>
+
+  <h2>Product Feedback (Circle / Arc)</h2>
+  <p><strong>What worked:</strong> Arc's native-USDC gas made the contract trivial — payouts are just <code>pay{value}</code>, no token approvals. Sub-second finality made fund → partial → settle feel instantaneous, which is what sells an agentic finance demo. Reusing on-chain <code>Paid</code> events as a credit signal is a clean, unfakeable data source no off-chain underwriter has.</p>
+  <p><strong>Where to improve:</strong> (1) the testnet RPC caps <code>eth_getLogs</code> to a 10k-block range with no pagination cursor — reading an address's full history needs manual chunking; a richer logs/indexer endpoint would help agents that reason over history. (2) Native-USDC-as-gas with 18-decimal wei is elegant but surprising (USDC is usually 6-decimal) — a docs note on the decimals model would prevent confusion. (3) More worked "agentic finance on Arc" examples (escrow, factoring, payroll) would shortcut a lot of first-principles contract work.</p>
+</body>
+</html>
