@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Letta — autonomous invoice factoring on Arc</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --paper:#f7f4ee; --ink:#0a0a0f; --forest:#2d4a3e; --gold:#9a7d3f;
+    --muted:rgba(10,10,15,0.6); --hair:rgba(10,10,15,0.12); --card:#fffdf8;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--paper); color:var(--ink); font-family:"Geist","Segoe UI",Helvetica,Arial,sans-serif; line-height:1.5; -webkit-font-smoothing:antialiased; }
+  .mono { font-family:"Geist Mono",ui-monospace,"Cascadia Code","Consolas",monospace; }
+  .disp { font-family:"Fraunces",Georgia,serif; }
+  .ital { font-family:"Fraunces",Georgia,serif; font-style:italic; color:var(--forest); }
+  .wrap { max-width:1080px; margin:0 auto; padding:64px 28px 96px; }
+
+  header .kick { font-family:"Geist Mono",monospace; text-transform:uppercase; letter-spacing:.22em; font-size:12px; color:var(--forest); }
+  header h1 { font-family:"Fraunces",serif; font-weight:600; font-size:clamp(40px,7vw,76px); line-height:.98; letter-spacing:-.02em; margin:14px 0 10px; }
+  header p { font-size:clamp(17px,2.4vw,21px); color:var(--muted); max-width:62ch; }
+  header .live { display:inline-flex; align-items:center; gap:8px; margin-top:18px; font-family:"Geist Mono",monospace; font-size:13px; color:var(--forest); border:1px solid var(--forest); border-radius:999px; padding:7px 14px; }
+  .dot { width:8px; height:8px; border-radius:50%; background:var(--forest); }
+
+  .grid { display:grid; grid-template-columns:1.1fr 1fr; gap:22px; margin-top:46px; }
+  @media (max-width:760px){ .grid{ grid-template-columns:1fr; } }
+  .card { background:var(--card); border:1px solid var(--hair); border-radius:14px; padding:26px 28px; }
+  .card h2 { font-family:"Geist Mono",monospace; text-transform:uppercase; letter-spacing:.16em; font-size:12px; color:var(--forest); margin-bottom:18px; }
+
+  .kv { display:flex; justify-content:space-between; gap:16px; padding:9px 0; border-bottom:1px dashed var(--hair); font-size:15px; }
+  .kv:last-child{ border-bottom:0; }
+  .kv .k { color:var(--muted); }
+  .kv .v { font-family:"Geist Mono",monospace; text-align:right; }
+
+  .decision { display:flex; gap:34px; margin:6px 0 20px; }
+  .decision .num { font-family:"Fraunces",serif; font-weight:600; font-size:54px; color:var(--forest); line-height:1; }
+  .decision .lbl { font-family:"Geist Mono",monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin-top:6px; }
+  .memo { font-size:15.5px; line-height:1.62; border-left:3px solid var(--forest); padding:4px 0 4px 18px; color:var(--ink); }
+  .badge { display:inline-block; font-family:"Geist Mono",monospace; font-size:11px; color:var(--forest); border:1px solid var(--forest); border-radius:6px; padding:2px 8px; margin-bottom:14px; }
+
+  .flow { margin-top:46px; }
+  .flow h2 { font-family:"Fraunces",serif; font-weight:600; font-size:30px; margin-bottom:22px; }
+  .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+  @media (max-width:760px){ .steps{ grid-template-columns:1fr; } }
+  .step { background:var(--card); border:1px solid var(--hair); border-radius:14px; padding:22px; position:relative; }
+  .step .n { font-family:"Fraunces",serif; font-size:38px; font-weight:300; color:var(--gold); line-height:1; }
+  .step h3 { font-family:"Geist Mono",monospace; font-size:13px; text-transform:uppercase; letter-spacing:.08em; margin:10px 0 12px; color:var(--forest); }
+  .step .amt { font-family:"Geist Mono",monospace; font-size:14px; }
+  .step .amt b { color:var(--forest); }
+  .step a { display:inline-block; margin-top:14px; font-family:"Geist Mono",monospace; font-size:12px; color:var(--gold); text-decoration:none; border-bottom:1px solid var(--gold); }
+  .step a:hover{ color:var(--forest); border-color:var(--forest); }
+
+  .waterfall { margin-top:18px; display:flex; height:30px; border-radius:7px; overflow:hidden; border:1px solid var(--hair); }
+  .waterfall .seg { display:flex; align-items:center; justify-content:center; font-family:"Geist Mono",monospace; font-size:11px; color:#fff; }
+  .seg.factor{ background:var(--forest); }
+  .seg.supplier{ background:var(--gold); }
+
+  footer { margin-top:54px; padding-top:24px; border-top:1px solid var(--hair); font-family:"Geist Mono",monospace; font-size:12.5px; color:var(--muted); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  footer a{ color:var(--forest); text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kick">Ignyte · Stablecoins Commerce Stack · Track 2</div>
+    <h1>Letta — credit committee<br>that <span class="ital">never sleeps.</span></h1>
+    <p>An autonomous invoice-factoring agent on Arc. It reads a buyer's real on-chain payment history, prices an advance with money at stake, disburses USDC to the supplier now, and runs the repayment waterfall — re-assessing exposure live on every payment.</p>
+    <span class="live"><span class="dot"></span> Verified live on Arc testnet · real USDC</span>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <h2>The invoice</h2>
+      <div class="kv"><span class="k">Face value</span><span class="v">1,000,000 wei <span style="color:var(--muted)">($100k)</span></span></div>
+      <div class="kv"><span class="k">Terms</span><span class="v">net-60</span></div>
+      <div class="kv"><span class="k">Buyer (on Arc)</span><span class="v">0x63A1…D07</span></div>
+      <div class="kv"><span class="k">Supplier</span><span class="v">0xd8B1…4f97</span></div>
+      <div class="kv"><span class="k">Buyer credit signal</span><span class="v">3 prior payments · 210 wei · 2 counterparties</span></div>
+      <div class="kv"><span class="k">Recency</span><span class="v">7 blocks since last</span></div>
+    </div>
+
+    <div class="card">
+      <h2>Underwriting decision — Claude</h2>
+      <span class="badge">priced with money at stake</span>
+      <div class="decision">
+        <div><div class="num">70%</div><div class="lbl">advance</div></div>
+        <div><div class="num">4.5%</div><div class="lbl">discount</div></div>
+      </div>
+      <div class="memo">“Only 3 prior payments — a very thin on-chain file — with high counterparty concentration (0.67). Historical volume (210 wei) is tiny vs the 1,000,000-wei invoice, a significant size mismatch. Recent activity is encouraging (7 blocks), but the sparse history and concentration risk justify a moderate advance and elevated discount.”</div>
+    </div>
+  </div>
+
+  <section class="flow">
+    <h2>The waterfall, <span class="ital">settled on-chain.</span></h2>
+    <div class="steps">
+      <div class="step">
+        <div class="n">01</div>
+        <h3>Fund</h3>
+        <div class="amt">advance <b>700,000 wei</b> → supplier, now</div>
+        <a href="https://testnet.arcscan.app/tx/0xbbf25219d092b43dfa6223971e714eba31fc06d6fdc2dfe4df72d7c3727771c4" target="_blank">arcscan ↗</a>
+      </div>
+      <div class="step">
+        <div class="n">02</div>
+        <h3>Partial pay · re-assess</h3>
+        <div class="amt">buyer pays <b>400,000</b> → all to factor</div>
+        <div class="amt" style="color:var(--muted);margin-top:6px">exposure re-rated 745k → 345k</div>
+        <a href="https://testnet.arcscan.app/tx/0xebb83f06084df34aed7e7a65bd7b6e92d3d64bbf3ca18a570e98798eb38aa6b1" target="_blank">arcscan ↗</a>
+      </div>
+      <div class="step">
+        <div class="n">03</div>
+        <h3>Late remainder · settle</h3>
+        <div class="amt">buyer pays <b>600,000</b> → factor whole + surplus</div>
+        <a href="https://testnet.arcscan.app/tx/0x764240eaf5aff49af0d5d525d19e7585e63029f7c7591f0bca8e77c98793c9d2" target="_blank">arcscan ↗</a>
+      </div>
+    </div>
+
+    <div class="waterfall">
+      <div class="seg factor" style="width:74.5%">factor recovers 745,000 (advance + fee)</div>
+      <div class="seg supplier" style="width:25.5%">supplier surplus 255,000</div>
+    </div>
+    <div class="kv" style="margin-top:14px;border:0"><span class="k">Outcome</span><span class="v">collected 1,000,000 · supplier net 955,000 (face − fee) · factor profit = fee 45,000</span></div>
+  </section>
+
+  <footer>
+    <span>FactoringPool <a href="https://testnet.arcscan.app/address/0xcE939A8048b8BF5bE9DfE639d4C65227A99901F5" target="_blank">0xcE93…01F5</a> · 18 forge tests · 14 unit tests · adversarial security pass</span>
+    <span><a href="https://github.com/wanggang22/arcpay/tree/letta" target="_blank">github.com/wanggang22/arcpay · letta</a></span>
+  </footer>
+</div>
+</body>
+</html>
