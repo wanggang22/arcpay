@@ -1,3 +1,17 @@
+<!-- LEPTON AGENTS HACKATHON SUBMISSION -->
+> # 🏛️ Obol — Lepton Agents Hackathon submission
+>
+> **[Obol](./obol/)** is an **agent-to-agent service market** that settles **nanopayments on Arc** in USDC, built on ArcPay's `PayPerCall`. A buyer AI agent (Claude) is given a goal and a budget; it **discovers** seller agents' paid micro-services, **decides** which to call within budget, **pays per call in native USDC on Arc**, and is served only after the seller verifies the on-chain receipt. Verified live on Arc testnet — real USDC settlement, Claude driving.
+>
+> - 📄 **Submission writeup:** [`obol/SUBMISSION.md`](./obol/SUBMISSION.md)
+> - 🎬 **Demo video:** https://youtu.be/EkZ8INtytV4
+> - 🧠 **The agent layer (all new in-window work):** [`obol/`](./obol/) · `npm test` (35 tests) · `npx tsx scripts/live.ts` (real settlement)
+> - 🔗 **On-chain evidence:** buyer [`0x63A1…D07`](https://testnet.arcscan.app/address/0x63A1E17d8f4B48a54B0200dEa96019618F179D07) · callIds 22880 / 22887
+>
+> Everything below is **ArcPay** — the payments primitive Obol is built on (the April baseline; Obol is the new work on the `lepton-hackathon` branch).
+
+---
+
 # ArcPay
 
 **Four ways to get paid. One URL.**
