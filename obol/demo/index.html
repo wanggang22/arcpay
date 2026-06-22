@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      @font-face {
+        font-family: "Fraunces"; font-style: normal; font-weight: 100 900;
+        font-display: block; src: url("capture/assets/fonts/fraunces.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Fraunces"; font-style: italic; font-weight: 100 900;
+        font-display: block; src: url("capture/assets/fonts/fraunces-italic.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Geist"; font-style: normal; font-weight: 100 900;
+        font-display: block; src: url("capture/assets/fonts/geist.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Geist Mono"; font-style: normal; font-weight: 100 900;
+        font-display: block; src: url("capture/assets/fonts/geist-mono.woff2") format("woff2");
+      }
+      :root {
+        --paper: #f7f4ee;
+        --ink: #0a0a0f;
+        --forest: #2d4a3e;
+        --gold: #9a7d3f;        /* darkened gold for AA contrast on paper */
+        --muted: rgba(10, 10, 15, 0.62);
+        --hairline: rgba(10, 10, 15, 0.12);
+      }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden;
+        background: var(--paper); color: var(--ink);
+        font-family: "Geist", "Inter", sans-serif;
+      }
+      .mono { font-family: "Geist Mono", monospace; }
+      .ital { font-family: "Fraunces", serif; font-style: italic; color: var(--forest); }
+
+      .scene { position: absolute; inset: 0; opacity: 0; }
+      .scene-content {
+        width: 100%; height: 100%; padding: 130px 170px;
+        display: flex; flex-direction: column; justify-content: center;
+        gap: 26px; box-sizing: border-box;
+      }
+      .kicker {
+        font-family: "Geist Mono", monospace; text-transform: uppercase;
+        letter-spacing: 0.22em; font-size: 22px; color: var(--forest);
+      }
+      .h1 { font-family: "Fraunces", serif; font-weight: 600; font-size: 150px; line-height: 0.95; letter-spacing: -0.03em; }
+      .h2 { font-family: "Fraunces", serif; font-weight: 600; font-size: 84px; line-height: 1.0; letter-spacing: -0.02em; }
+      .lead { font-size: 40px; line-height: 1.4; color: var(--muted); max-width: 60ch; }
+      .lead strong { color: var(--ink); font-weight: 600; }
+      .fine { font-size: 24px; color: var(--muted); }
+      .hair { height: 1px; background: var(--hairline); width: 100%; }
+
+      .coin { position: absolute; border-radius: 50%; border: 2px solid var(--forest); opacity: 0; }
+
+      .flow { display: flex; align-items: center; gap: 30px; flex-wrap: wrap; }
+      .chip {
+        font-family: "Geist Mono", monospace; font-size: 30px;
+        border: 1px solid var(--hairline); border-radius: 999px;
+        padding: 16px 30px; background: rgba(10,10,15,0.02);
+      }
+      .chip.acc { border-color: var(--forest); color: var(--forest); }
+      .arrow { color: var(--gold); font-size: 34px; font-family: "Geist Mono", monospace; }
+
+      .runrow { display: grid; grid-template-columns: 270px 1fr; gap: 34px; align-items: start; }
+      .runlabel { font-family: "Geist Mono", monospace; font-size: 30px; color: var(--forest); padding-top: 4px; }
+      .runlabel .amt { color: var(--ink); }
+      .reason { font-size: 31px; line-height: 1.34; color: var(--ink); max-width: 46ch; }
+      .tx { font-family: "Geist Mono", monospace; font-size: 22px; color: var(--muted); margin-top: 10px; }
+      .tx b { color: var(--forest); font-weight: 500; }
+
+      .statrow { display: flex; gap: 90px; }
+      .stat .num { font-family: "Fraunces", serif; font-weight: 600; font-size: 110px; color: var(--forest); line-height: 1; }
+      .stat .lbl { font-family: "Geist Mono", monospace; font-size: 24px; color: var(--muted); margin-top: 10px; text-transform: uppercase; letter-spacing: 0.12em; }
+
+      .wordmark { font-family: "Geist Mono", monospace; font-size: 28px; letter-spacing: 0.04em; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="96" data-width="1920" data-height="1080">
+
+      <!-- 1. TITLE -->
+      <div class="scene" id="s-title">
+        <div class="coin" id="coin1" style="width:520px;height:520px;right:120px;top:280px;"></div>
+        <div class="coin" id="coin2" style="width:300px;height:300px;right:520px;top:120px;border-color:var(--gold);"></div>
+        <div class="scene-content">
+          <div class="kicker" id="t-k">Lepton Agents Hackathon · Canteen × Circle</div>
+          <div class="h1" id="t-h">Obol</div>
+          <div class="h2" id="t-sub">the smallest coin, <span class="ital">for machines.</span></div>
+          <div class="lead" id="t-lead">An agent-to-agent service market settling <strong>nanopayments on Arc</strong>, in USDC.</div>
+        </div>
+      </div>
+
+      <!-- 2. PROBLEM -->
+      <div class="scene" id="s-problem">
+        <div class="scene-content">
+          <div class="kicker" id="p-k">Why nanopayments</div>
+          <div class="h2" id="p-h">AI agents are becoming <span class="ital">economic actors.</span></div>
+          <div class="hair" id="p-hair" style="margin:14px 0;"></div>
+          <div class="lead" id="p-l1">They pay each other for data, compute, and tools — value too small to move before: <strong>a fraction of a cent per call.</strong></div>
+          <div class="lead" id="p-l2">Most chains can&apos;t price it — gas eats a sub-cent payment. <strong>Arc can:</strong> native-USDC gas, sub-second finality.</div>
+        </div>
+      </div>
+
+      <!-- 3. HOW IT WORKS -->
+      <div class="scene" id="s-how">
+        <div class="scene-content">
+          <div class="kicker" id="h-k">How Obol works</div>
+          <div class="h2" id="h-h">A buyer agent, a budget, <span class="ital">a market.</span></div>
+          <div class="flow" id="h-flow" style="margin-top:24px;">
+            <span class="chip" id="h-c1">discover</span>
+            <span class="arrow" id="h-a1">→</span>
+            <span class="chip acc" id="h-c2">Claude decides</span>
+            <span class="arrow" id="h-a2">→</span>
+            <span class="chip" id="h-c3">pay USDC on Arc</span>
+            <span class="arrow" id="h-a3">→</span>
+            <span class="chip" id="h-c4">receipt-gated serve</span>
+          </div>
+          <div class="fine mono" id="h-note" style="margin-top:30px;">built on ArcPay&apos;s PayPerCall · pay() → callId from the Paid event → seller verifies the receipt</div>
+        </div>
+      </div>
+
+      <!-- 4. LIVE RUN (hero) -->
+      <div class="scene" id="s-live">
+        <div class="scene-content" style="gap:20px; justify-content:flex-start; padding-top:120px;">
+          <div class="kicker" id="l-k">Live on Arc testnet — Claude driving</div>
+          <div class="h2" id="l-goal" style="font-size:54px;">&ldquo;price of ETH, then classify: <span class="ital">Arc nanopayments are amazing</span>&rdquo;</div>
+          <div class="hair" id="l-hair" style="margin:8px 0 14px;"></div>
+
+          <div class="runrow" id="l-r1">
+            <div class="runlabel">price-lookup<br/><span class="amt">paid 80 wei</span></div>
+            <div>
+              <div class="reason">&ldquo;First part of the goal is to look up the price of ETH. This service costs 80 wei — within budget.&rdquo;</div>
+              <div class="tx">→ <b>{ symbol: ETH, priceUsd: 3200 }</b> · arcscan 0xf505e2… · callId 22880</div>
+            </div>
+          </div>
+
+          <div class="runrow" id="l-r2">
+            <div class="runlabel">classify<br/><span class="amt">paid 50 wei</span></div>
+            <div>
+              <div class="reason">&ldquo;Classify the sentiment of the tweet — the second part of the goal — within the remaining 920 wei.&rdquo;</div>
+              <div class="tx">→ <b>{ label: positive }</b> · arcscan 0xdf1a4a… · callId 22887</div>
+            </div>
+          </div>
+
+          <div class="runrow" id="l-r3">
+            <div class="runlabel" style="color:var(--gold);">stop</div>
+            <div>
+              <div class="reason">&ldquo;The goal is fully met: ETH price looked up, sentiment classified positive. Summarize would not contribute — no further actions.&rdquo;</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. SETTLED -->
+      <div class="scene" id="s-settled">
+        <div class="scene-content">
+          <div class="kicker" id="se-k">Real settlement, in-window</div>
+          <div class="h2" id="se-h">Every decision <span class="ital">settled on-chain.</span></div>
+          <div class="statrow" id="se-stats" style="margin-top:40px;">
+            <div class="stat" id="se-s1"><div class="num">130</div><div class="lbl">wei total</div></div>
+            <div class="stat" id="se-s2"><div class="num">2</div><div class="lbl">on-chain calls</div></div>
+            <div class="stat" id="se-s3"><div class="num">&lt;0.5s</div><div class="lbl">Arc finality</div></div>
+          </div>
+          <div class="fine mono" id="se-note" style="margin-top:44px;">verifiable · testnet.arcscan.app/address/0x63A1E17d…D07</div>
+        </div>
+      </div>
+
+      <!-- 6. CLOSE -->
+      <div class="scene" id="s-close">
+        <div class="scene-content" style="justify-content:center;">
+          <div class="h1" id="c-h" style="font-size:130px;">Obol</div>
+          <div class="lead" id="c-l" style="font-size:38px;">agents that pay each other <span class="ital">by the fraction</span> — settled on Arc, via ArcPay.</div>
+          <div class="wordmark" id="c-w" style="margin-top:30px; color:var(--forest);">github.com/wanggang22/arcpay · branch lepton-hackathon</div>
+        </div>
+      </div>
+
+      <script>
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        function fadeIn(sel, t) { tl.to(sel, { opacity: 1, duration: 0.7, ease: "power2.out" }, t); }
+        function fadeOut(sel, t) { tl.to(sel, { opacity: 0, duration: 0.7, ease: "power2.in" }, t); }
+
+        // Scene 1: TITLE (0 – 8)
+        fadeIn("#s-title", 0.2);
+        tl.from("#t-k", { y: 30, opacity: 0, duration: 0.6, ease: "power3.out" }, 0.3);
+        tl.from("#t-h", { y: 70, opacity: 0, duration: 0.9, ease: "expo.out" }, 0.5);
+        tl.from("#t-sub", { y: 44, opacity: 0, duration: 0.8, ease: "power3.out" }, 0.9);
+        tl.from("#t-lead", { y: 30, opacity: 0, duration: 0.7, ease: "power2.out" }, 1.3);
+        tl.to("#coin1", { opacity: 0.16, duration: 1.2, ease: "sine.out" }, 0.6);
+        tl.to("#coin2", { opacity: 0.22, duration: 1.2, ease: "sine.out" }, 0.9);
+
+        // → Scene 2 (8)
+        fadeOut("#s-title", 7.6);
+        fadeIn("#s-problem", 7.8);
+        tl.from("#p-k", { y: 28, opacity: 0, duration: 0.6, ease: "power3.out" }, 8.0);
+        tl.from("#p-h", { y: 50, opacity: 0, duration: 0.8, ease: "expo.out" }, 8.2);
+        tl.from("#p-hair", { scaleX: 0, opacity: 0, duration: 0.7, ease: "power2.inOut", transformOrigin: "left" }, 8.6);
+        tl.from("#p-l1", { y: 32, opacity: 0, duration: 0.7, ease: "power2.out" }, 8.9);
+        tl.from("#p-l2", { y: 32, opacity: 0, duration: 0.7, ease: "power2.out" }, 9.5);
+
+        // → Scene 3 (20)
+        fadeOut("#s-problem", 19.6);
+        fadeIn("#s-how", 19.8);
+        tl.from("#h-k", { y: 28, opacity: 0, duration: 0.6, ease: "power3.out" }, 20.0);
+        tl.from("#h-h", { y: 50, opacity: 0, duration: 0.8, ease: "expo.out" }, 20.2);
+        tl.from("#h-c1", { y: 26, opacity: 0, duration: 0.45, ease: "back.out(1.6)" }, 20.8);
+        tl.from("#h-a1", { opacity: 0, duration: 0.3, ease: "power1.out" }, 21.05);
+        tl.from("#h-c2", { y: 26, opacity: 0, duration: 0.45, ease: "back.out(1.6)" }, 21.25);
+        tl.from("#h-a2", { opacity: 0, duration: 0.3, ease: "power1.out" }, 21.5);
+        tl.from("#h-c3", { y: 26, opacity: 0, duration: 0.45, ease: "back.out(1.6)" }, 21.7);
+        tl.from("#h-a3", { opacity: 0, duration: 0.3, ease: "power1.out" }, 21.95);
+        tl.from("#h-c4", { y: 26, opacity: 0, duration: 0.45, ease: "back.out(1.6)" }, 22.15);
+        tl.from("#h-note", { y: 22, opacity: 0, duration: 0.7, ease: "power2.out" }, 22.7);
+
+        // → Scene 4: LIVE (34)
+        fadeOut("#s-how", 33.6);
+        fadeIn("#s-live", 33.8);
+        tl.from("#l-k", { y: 26, opacity: 0, duration: 0.6, ease: "power3.out" }, 34.0);
+        tl.from("#l-goal", { y: 40, opacity: 0, duration: 0.8, ease: "expo.out" }, 34.3);
+        tl.from("#l-hair", { scaleX: 0, opacity: 0, duration: 0.6, ease: "power2.inOut", transformOrigin: "left" }, 34.8);
+        tl.from("#l-r1", { x: -40, opacity: 0, duration: 0.7, ease: "power3.out" }, 36.0);
+        tl.from("#l-r2", { x: -40, opacity: 0, duration: 0.7, ease: "power3.out" }, 41.0);
+        tl.from("#l-r3", { x: -40, opacity: 0, duration: 0.7, ease: "power3.out" }, 46.0);
+
+        // → Scene 5: SETTLED (72)
+        fadeOut("#s-live", 71.6);
+        fadeIn("#s-settled", 71.8);
+        tl.from("#se-k", { y: 26, opacity: 0, duration: 0.6, ease: "power3.out" }, 72.0);
+        tl.from("#se-h", { y: 50, opacity: 0, duration: 0.8, ease: "expo.out" }, 72.2);
+        tl.from("#se-s1", { y: 40, opacity: 0, duration: 0.6, ease: "back.out(1.5)" }, 73.0);
+        tl.from("#se-s2", { y: 40, opacity: 0, duration: 0.6, ease: "back.out(1.5)" }, 73.25);
+        tl.from("#se-s3", { y: 40, opacity: 0, duration: 0.6, ease: "back.out(1.5)" }, 73.5);
+        tl.from("#se-note", { opacity: 0, y: 20, duration: 0.7, ease: "power2.out" }, 74.2);
+
+        // → Scene 6: CLOSE (86)
+        fadeOut("#s-settled", 85.6);
+        fadeIn("#s-close", 85.8);
+        tl.from("#c-h", { y: 60, opacity: 0, duration: 1.0, ease: "expo.out" }, 86.2);
+        tl.from("#c-l", { y: 34, opacity: 0, duration: 0.8, ease: "power3.out" }, 86.8);
+        tl.from("#c-w", { y: 24, opacity: 0, duration: 0.7, ease: "power2.out" }, 87.4);
+        tl.to("#s-close", { opacity: 0, duration: 0.9, ease: "power2.in" }, 95.0);
+
+        window.__timelines["main"] = tl;
+      </script>
+    </div>
+  </body>
+</html>
