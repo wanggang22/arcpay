@@ -75,6 +75,13 @@ export function parseDecision(text: string, options: Catalog): Decision | null {
   return null;
 }
 
+let warnedOnce = false;
+function warnFallback(why: string) {
+  if (warnedOnce) return;
+  warnedOnce = true;
+  console.warn(`[obol] LLM brain unavailable (${why}); using the deterministic policy.`);
+}
+
 export function llmChooser(opts: { apiKey?: string; model?: string } = {}): Chooser {
   const apiKey = opts.apiKey ?? loadApiKey();
   const model = opts.model ?? DEFAULT_MODEL;
@@ -86,7 +93,11 @@ export function llmChooser(opts: { apiKey?: string; model?: string } = {}): Choo
       const options = affordable(catalog, state.budgetWei - state.spentWei).filter(
         (s) => !state.history.some((h) => h.service === s.name),
       );
-      if (!client || options.length === 0) return fallback.decide(state, catalog);
+      if (!client) {
+        warnFallback("no ANTHROPIC_API_KEY");
+        return fallback.decide(state, catalog);
+      }
+      if (options.length === 0) return fallback.decide(state, catalog);
 
       try {
         const res = await client.messages.create({
@@ -99,8 +110,10 @@ export function llmChooser(opts: { apiKey?: string; model?: string } = {}): Choo
           .map((b) => b.text)
           .join("");
         const decision = parseDecision(text, options);
+        if (!decision) warnFallback("model returned unparseable output");
         return decision ?? (await fallback.decide(state, catalog));
-      } catch {
+      } catch (e) {
+        warnFallback(String((e as { message?: string })?.message ?? e).slice(0, 80));
         return fallback.decide(state, catalog);
       }
     },

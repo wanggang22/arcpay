@@ -24,12 +24,20 @@ export interface Chooser {
   decide(state: AgentState, catalog: Catalog): Promise<Decision>;
 }
 
-/** lowercase word tokens, for naive capability matching */
+// Function words that would create junk capability matches (e.g. a goal and a
+// capability both containing "of"). Dropped before scoring.
+const STOPWORDS = new Set([
+  "the", "a", "an", "of", "to", "and", "or", "for", "in", "on", "at", "is", "are",
+  "it", "this", "that", "then", "with", "as", "by", "be", "into", "couple", "your",
+  "you", "i", "me", "my", "from", "up", "down", "out", "so",
+]);
+
+/** lowercase content-word tokens, for naive capability matching */
 function tokens(s: string): string[] {
-  return s.toLowerCase().match(/[a-z0-9]+/g) ?? [];
+  return (s.toLowerCase().match(/[a-z0-9]+/g) ?? []).filter((t) => t.length > 1 && !STOPWORDS.has(t));
 }
 
-/** count how many goal tokens appear in a service's name+capability */
+/** count how many content goal-tokens appear in a service's name+capability */
 function matchScore(goal: string, s: Service): number {
   const hay = new Set(tokens(`${s.name} ${s.capability}`));
   return tokens(goal).filter((t) => hay.has(t)).length;
