@@ -9,9 +9,9 @@ import {FactoringPool} from "../src/FactoringPool.sol";
 contract FactoringPoolTest is Test {
     FactoringPool pool;
 
-    address supplier = address(0x5);
-    address buyer = address(0xB);
-    address stranger = address(0x57);
+    address supplier;
+    address buyer;
+    address stranger;
 
     bytes32 constant INV = keccak256("invoice-001");
     uint256 constant FACE = 100 ether;   // buyer owes
@@ -20,6 +20,9 @@ contract FactoringPoolTest is Test {
     uint256 constant TARGET = ADV + FEE; // 93 ether
 
     function setUp() public {
+        supplier = makeAddr("supplier");
+        buyer = makeAddr("buyer");
+        stranger = makeAddr("stranger");
         pool = new FactoringPool(); // factor = this test contract
         vm.deal(address(this), 1000 ether);
         vm.deal(buyer, 1000 ether);
@@ -116,4 +119,55 @@ contract FactoringPoolTest is Test {
         vm.expectRevert(FactoringPool.NotFunded.selector);
         pool.repay{value: 10 ether}(keccak256("nope"));
     }
+
+    function test_RepayOverpaymentRefundsExcess() public {
+        _fund();
+        uint256 buyerBefore = buyer.balance;
+        uint256 factorBefore = address(this).balance;
+        vm.prank(buyer);
+        pool.repay{value: 150 ether}(INV); // 50 over faceValue
+        assertEq(buyerBefore - buyer.balance, FACE, "buyer net out == faceValue (excess refunded)");
+        assertEq(address(this).balance - factorBefore, TARGET, "factor recovered target");
+        assertEq(supplier.balance, ADV + (FACE - TARGET), "supplier advance + surplus");
+        FactoringPool.Invoice memory inv = pool.getInvoice(INV);
+        assertEq(inv.collected, FACE, "collected capped at faceValue");
+        assertTrue(inv.settled);
+    }
+
+    function test_UnreceivableSupplierEscrowsThenWithdraws() public {
+        Recipient sup = new Recipient();
+        bytes32 id = keccak256("inv-escrow");
+        // supplier can receive at fund time (gets the advance)
+        pool.fundInvoice{value: ADV}(id, address(sup), buyer, FACE, ADV, FEE);
+        assertEq(address(sup).balance, ADV, "supplier got advance");
+
+        sup.setReject(true); // now the supplier contract reverts on receive
+        uint256 factorBefore = address(this).balance;
+        vm.prank(buyer);
+        pool.repay{value: FACE}(id); // MUST NOT revert: surplus leg escrows instead
+        assertEq(address(this).balance - factorBefore, TARGET, "factor still fully recovered");
+        assertEq(pool.pending(address(sup)), FACE - TARGET, "surplus escrowed for supplier");
+        assertEq(address(sup).balance, ADV, "no surplus pushed while unreceivable");
+        assertTrue(pool.getInvoice(id).settled, "still settles");
+
+        // supplier becomes receivable and pulls the escrowed surplus
+        sup.setReject(false);
+        vm.prank(address(sup));
+        pool.withdraw();
+        assertEq(address(sup).balance, ADV + (FACE - TARGET), "supplier withdrew surplus");
+        assertEq(pool.pending(address(sup)), 0, "pending cleared");
+    }
+
+    function test_WithdrawNothingReverts() public {
+        vm.expectRevert(FactoringPool.NothingPending.selector);
+        pool.withdraw();
+    }
+}
+
+/// @dev A recipient that can be toggled to reject incoming native USDC, to exercise the
+///      escrow-on-fail path in repay() and the withdraw() recovery.
+contract Recipient {
+    bool public reject;
+    function setReject(bool v) external { reject = v; }
+    receive() external payable { require(!reject, "reject"); }
 }
