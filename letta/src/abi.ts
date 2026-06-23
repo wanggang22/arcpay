@@ -95,6 +95,36 @@ export const payPerCallAbi = [
   },
 ] as const;
 
+// LettaPool (v2): the LP-funded liquidity pool. LPs deposit/withdraw; the operator funds
+// advances from the pool; fees accrue as yield to depositors.
+export const lettaPoolAbi = [
+  { type: "function", name: "deposit", stateMutability: "payable", inputs: [], outputs: [] },
+  { type: "function", name: "withdraw", stateMutability: "nonpayable", inputs: [{ name: "shareAmount", type: "uint256" }], outputs: [] },
+  {
+    type: "function",
+    name: "fundInvoice",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "invoiceId", type: "bytes32" },
+      { name: "supplier", type: "address" },
+      { name: "buyer", type: "address" },
+      { name: "faceValue", type: "uint256" },
+      { name: "advance", type: "uint256" },
+      { name: "fee", type: "uint256" },
+    ],
+    outputs: [],
+  },
+  { type: "function", name: "repay", stateMutability: "payable", inputs: [{ name: "invoiceId", type: "bytes32" }], outputs: [] },
+  { type: "function", name: "totalAssets", stateMutability: "view", inputs: [], outputs: [{ type: "uint256" }] },
+  { type: "function", name: "available", stateMutability: "view", inputs: [], outputs: [{ type: "uint256" }] },
+  { type: "function", name: "outstanding", stateMutability: "view", inputs: [], outputs: [{ type: "uint256" }] },
+  { type: "function", name: "totalShares", stateMutability: "view", inputs: [], outputs: [{ type: "uint256" }] },
+  { type: "function", name: "shares", stateMutability: "view", inputs: [{ name: "lp", type: "address" }], outputs: [{ type: "uint256" }] },
+  { type: "function", name: "balanceOfAssets", stateMutability: "view", inputs: [{ name: "lp", type: "address" }], outputs: [{ type: "uint256" }] },
+  { type: "event", name: "Deposited", inputs: [{ name: "lp", type: "address", indexed: true }, { name: "amount", type: "uint256", indexed: false }, { name: "sharesMinted", type: "uint256", indexed: false }] },
+  { type: "event", name: "YieldAccrued", inputs: [{ name: "invoiceId", type: "bytes32", indexed: true }, { name: "fee", type: "uint256", indexed: false }] },
+] as const;
+
 export const payPerCallPaidAbi = [
   {
     type: "event",

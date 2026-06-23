@@ -38,9 +38,19 @@ so the autonomy is real, not theater.
 npm install
 npm test                 # 14 unit tests (offline: features, underwriting, waterfall math)
 npm run typecheck
-npx tsx scripts/live.ts  # REAL end-to-end on Arc testnet (CLI, needs funded accounts)
-npm run app              # interactive console -> http://localhost:8088
+npx tsx scripts/live.ts       # REAL end-to-end on Arc testnet (CLI, needs funded accounts)
+npx tsx scripts/live-pool.ts  # the LP-funded pool model (LettaPool) — proves the operator fronts no capital
+npm run app                   # interactive console -> http://localhost:8088
 ```
+
+## Capital model — the operator fronts no money (`LettaPool.sol`)
+
+You don't lend your own balance sheet. `LettaPool.sol` ([`0x66a8…F617`](https://testnet.arcscan.app/address/0x66a8fd4cd737dC91ca285c6eC7Ef798cFa9Af617))
+is an LP-funded liquidity pool: LPs `deposit()` USDC for shares (a claim on cash + receivables),
+the agent funds advances **from the pool**, and on repayment the principal returns while the
+**fee accrues as LP yield**. Proven live: LP deposited 3,000,000 wei, the agent funded a 700,000
+advance from the pool, the buyer repaid, the pool grew to 3,045,000 (the 45,000 fee = yield),
+and the LP withdrew (`evidence/pool-run.json`). 9 forge tests cover the share math + waterfall.
 
 ## Interactive console (working frontend + backend)
 

@@ -1,0 +1,16 @@
+{
+  "model": "LP-funded liquidity pool (operator fronts no capital)",
+  "network": "Arc testnet (chainId 5042002)",
+  "lettaPool": "0x66a8fd4cd737dC91ca285c6eC7Ef798cFa9Af617",
+  "operator": "0xD37DE9d063238a3378B4dCC00F893373447D570a",
+  "lp": "0x8B39FDB526a5274e81e20c957d14fd1b63cE287b",
+  "buyer": "0x63A1E17d8f4B48a54B0200dEa96019618F179D07",
+  "supplier": "0xd8B14405E7e59C1A47E1F4F5e58b44050E0d4f97",
+  "depositWei": "3000000",
+  "advancePct": 70, "feeWei": "45000",
+  "lpRedeemableStart": "3000000", "lpRedeemableEnd": "3045000", "lpYieldWei": "45000",
+  "depositTx": "0x079f3721a82b1a130f753fbdcbf97269ca1cbc9ace96fdd96519b1224ad213cb",
+  "fundFromPoolTx": "0x673dfef2c887e91cecbf6a884a9e581fd3f1178ad3d37c8f2473cbc52f8837b4",
+  "repayTx": "0x4474ef55762e71f00ae214dcfa0c5657669f088230dac4c8084beda4dd13da3b",
+  "withdrawTx": "0x1137aa0f14a5e2506e519958fd36ece0d7d29c18bc497915142ed6cc7a6a4983"
+}

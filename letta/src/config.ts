@@ -11,7 +11,8 @@ export const ARC_TESTNET = {
 } as const;
 
 export const ADDRESSES = {
-  factoringPool: "0xcE939A8048b8BF5bE9DfE639d4C65227A99901F5" as `0x${string}`,
+  factoringPool: "0xcE939A8048b8BF5bE9DfE639d4C65227A99901F5" as `0x${string}`, // v1: single-factor
+  lettaPool: "0x66a8fd4cd737dC91ca285c6eC7Ef798cFa9Af617" as `0x${string}`, // v2: LP-funded liquidity pool
   payPerCall: "0x3a399A310965A5cbD5a2B9F21a3B9885B6372def" as `0x${string}`,
 } as const;
 

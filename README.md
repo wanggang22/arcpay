@@ -9,6 +9,7 @@
 > - 🧠 **The agent (reuses Obol's decide→pay→verify loop):** [`letta/`](./letta/) · `npm test` (14 tests) · `npx tsx scripts/live.ts` (real settlement)
 > - 📜 **Contract:** [`FactoringPool.sol`](./contracts/src/FactoringPool.sol) on Arc testnet — [`0xcE93…01F5`](https://testnet.arcscan.app/address/0xcE939A8048b8BF5bE9DfE639d4C65227A99901F5) · 18 forge tests + a 5-lens adversarial security pass
 > - 🔗 **Live on-chain evidence:** Claude underwrote **70% advance / 4.5% discount** → fund + partial + late settle, all real USDC ([`letta/evidence/run.json`](./letta/evidence/run.json))
+> - 🏦 **Capital model — the operator fronts no money:** [`LettaPool.sol`](./contracts/src/LettaPool.sol) is an LP-funded liquidity pool ([`0x66a8…F617`](https://testnet.arcscan.app/address/0x66a8fd4cd737dC91ca285c6eC7Ef798cFa9Af617)). LPs deposit USDC; the agent funds advances **from the pool**; fees accrue as LP yield. Proven live: LP redeemable 3,000,000 → 3,045,000 wei ([`letta/evidence/pool-run.json`](./letta/evidence/pool-run.json)).
 >
 > Sibling submission: **[Obol](./obol/)** (an agent-to-agent service market) is the **Lepton Agents Hackathon** entry on the `lepton-hackathon` branch. Everything below is **ArcPay** — the payments primitive both are built on.
 

@@ -49,6 +49,24 @@ test-USDC:
 - **Late remainder + settle:** tx 0x764240eaf5aff49af0d5d525d19e7585e63029f7c7591f0bca8e77c98793c9d2 — factor whole at 745k, supplier surplus 255k, settled.
 - Pool: https://testnet.arcscan.app/address/0xcE939A8048b8BF5bE9DfE639d4C65227A99901F5
 
+## Capital model — the operator fronts no money (LP-funded pool)
+
+Real invoice-financing platforms don't lend their own balance sheet — investors fund the
+advances and the platform runs the underwriting. `LettaPool.sol` (deployed at
+`0x66a8fd4cd737dC91ca285c6eC7Ef798cFa9Af617`) is that: LPs `deposit()` USDC and receive
+shares (a claim on `available` cash + `outstanding` receivables); the agent funds advances
+**from the pool**; on repayment the principal returns and the **fee accrues as LP yield**
+(share price rises); LPs `withdraw()` deposit + yield. The buyer and supplier bring their
+own wallets — only the pool holds capital, and that capital is the LPs', not the operator's.
+
+Proven live on Arc testnet: LP deposited 3,000,000 wei → agent funded a 700,000 advance from
+the pool → buyer repaid → pool grew to 3,045,000 (the 45,000 fee = LP yield) → LP withdrew.
+Evidence: `evidence/pool-run.json`. 9 forge tests cover deposit/withdraw share math,
+fund-from-pool, principal+fee recovery, pro-rata yield across LPs, and liquidity limits.
+
+(A complementary no-financier mode — *dynamic discounting*, where a cash-rich buyer pays early
+for an agent-priced discount directly to the supplier — is on the roadmap.)
+
 ## Products used (Circle / Arc)
 USDC (native gas, `pay{value}`), Arc smart contracts + sub-second finality, on-chain `Paid`
 receipts as the credit signal, Anthropic Claude as the underwriter. Roadmap: Circle Wallets
