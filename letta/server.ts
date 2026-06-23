@@ -1,30 +1,28 @@
-// Letta app backend: a thin HTTP API that wraps the agent + chain modules and serves the
-// interactive frontend. The factor's "console" — it holds the factor/buyer/supplier testnet
-// keys (read at runtime from arc-accounts, never committed) and drives the real on-chain flow.
+// Letta app backend (pool model): a thin HTTP API over LettaPool + the agent. The console
+// shows the realistic capital model — an LP funds the pool, the agent underwrites and funds
+// advances FROM the pool, and the fee accrues as the LP's yield.
 //
 //   npm run app   ->   http://localhost:8088
 //
-// Endpoints (all return JSON; bigints serialized as strings):
-//   POST /api/seed       buyer makes real PayPerCall payments (establish on-chain history)
-//   POST /api/underwrite {invoiceId, faceValueWei, dueInDays, description} -> {features, decision}
-//   POST /api/fund       {invoiceId, faceValueWei, advanceWei, feeWei} -> {txHash}
-//   POST /api/repay      {invoiceId, amountWei} -> {txHash, toFactor, toSupplier, isPartial}
-//   GET  /api/invoice?id={ref} -> {invoice, progress, memo}
+// Demo signing model: the server holds the operator / LP / buyer testnet keys (read at
+// runtime from arc-accounts, never committed) so the whole flow is one-click. In production,
+// LPs / buyers sign in with their own wallet OR with Circle Wallets (email) — see the UI note.
 
 import { createServer } from "node:http";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { keccak256, toBytes } from "viem";
+import { publicClient, walletFor } from "./src/chain.ts";
+import { ADDRESSES, addrUrl } from "./src/config.ts";
+import { lettaPoolAbi, payPerCallAbi } from "./src/abi.ts";
 import { fetchBuyerHistory } from "./src/history.ts";
 import { underwrite, loadApiKey, type Invoice } from "./src/underwrite.ts";
-import { invoiceIdOf, fundInvoice, repay, getInvoice } from "./src/pool.ts";
-import { reassess } from "./src/orchestrator.ts";
-import { walletFor, publicClient } from "./src/chain.ts";
-import { ADDRESSES, addrUrl } from "./src/config.ts";
-import { payPerCallAbi } from "./src/abi.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ACCOUNTS_DIR = "C:/Users/ASUS/arc-accounts";
+const POOL = ADDRESSES.lettaPool;
+const invoiceIdOf = (ref: string): `0x${string}` => keccak256(toBytes(ref));
 
 type Acct = { pk: `0x${string}`; address: `0x${string}` };
 function loadAccount(n: number): Acct {
@@ -33,7 +31,8 @@ function loadAccount(n: number): Acct {
   const address = env.match(/^ADDRESS=(0x[0-9a-fA-F]+)/m)?.[1] as `0x${string}`;
   return { pk, address };
 }
-const factor = loadAccount(1006);
+const operator = loadAccount(1006);
+const lp = loadAccount(1002);
 const buyer = loadAccount(1001);
 const supplier = loadAccount(1003);
 
@@ -52,14 +51,24 @@ function body(req: import("node:http").IncomingMessage): Promise<any> {
   return new Promise((resolve) => {
     let s = "";
     req.on("data", (c) => (s += c));
-    req.on("end", () => {
-      try {
-        resolve(s ? JSON.parse(s) : {});
-      } catch {
-        resolve({});
-      }
-    });
+    req.on("end", () => { try { resolve(s ? JSON.parse(s) : {}); } catch { resolve({}); } });
   });
+}
+
+const pub = publicClient();
+const readPool = (fn: string, args: unknown[] = []) =>
+  pub.readContract({ address: POOL, abi: lettaPoolAbi, functionName: fn as never, args: args as never }) as Promise<bigint>;
+async function poolWrite(pk: `0x${string}`, fn: string, args: unknown[], value = 0n) {
+  const hash = await walletFor(pk).writeContract({ address: POOL, abi: lettaPoolAbi, functionName: fn as never, args: args as never, value });
+  await pub.waitForTransactionReceipt({ hash });
+  return hash;
+}
+async function poolStateObj() {
+  const [totalAssets, available, outstanding, totalShares, lpShares, lpRedeemable] = await Promise.all([
+    readPool("totalAssets"), readPool("available"), readPool("outstanding"),
+    readPool("totalShares"), readPool("shares", [lp.address]), readPool("balanceOfAssets", [lp.address]),
+  ]);
+  return { totalAssets, available, outstanding, totalShares, lpShares, lpRedeemable };
 }
 
 const server = createServer(async (req, res) => {
@@ -72,20 +81,32 @@ const server = createServer(async (req, res) => {
     }
     if (req.method === "GET" && url.pathname === "/api/accounts") {
       send(res, 200, {
-        factor: factor.address,
-        buyer: buyer.address,
-        supplier: supplier.address,
-        pool: ADDRESSES.factoringPool,
-        poolUrl: addrUrl(ADDRESSES.factoringPool),
+        pool: POOL, poolUrl: addrUrl(POOL),
+        operator: operator.address, lp: lp.address, buyer: buyer.address, supplier: supplier.address,
         underwriter: loadApiKey() ? "Claude (LLM)" : "deterministic fallback",
       });
       return;
     }
+    if (req.method === "GET" && url.pathname === "/api/pool") {
+      send(res, 200, await poolStateObj());
+      return;
+    }
+    if (req.method === "POST" && url.pathname === "/api/deposit") {
+      const b = await body(req);
+      const tx = await poolWrite(lp.pk, "deposit", [], BigInt(b.amountWei));
+      send(res, 200, { txHash: tx, pool: await poolStateObj() });
+      return;
+    }
+    if (req.method === "POST" && url.pathname === "/api/withdraw") {
+      const shares = await readPool("shares", [lp.address]);
+      if (shares === 0n) { send(res, 400, { error: "LP has no shares" }); return; }
+      const tx = await poolWrite(lp.pk, "withdraw", [shares]);
+      send(res, 200, { txHash: tx, sharesBurned: shares.toString(), pool: await poolStateObj() });
+      return;
+    }
     if (req.method === "POST" && url.pathname === "/api/seed") {
-      const wallet = walletFor(buyer.pk);
-      const pub = publicClient();
       for (const e of SEED) {
-        const hash = await wallet.writeContract({ address: ADDRESSES.payPerCall, abi: payPerCallAbi, functionName: "pay", args: [e.id], value: e.price });
+        const hash = await walletFor(buyer.pk).writeContract({ address: ADDRESSES.payPerCall, abi: payPerCallAbi, functionName: "pay", args: [e.id], value: e.price });
         await pub.waitForTransactionReceipt({ hash });
       }
       send(res, 200, { ok: true, count: SEED.length });
@@ -94,12 +115,8 @@ const server = createServer(async (req, res) => {
     if (req.method === "POST" && url.pathname === "/api/underwrite") {
       const b = await body(req);
       const invoice: Invoice = {
-        invoiceId: String(b.invoiceId),
-        supplier: supplier.address,
-        buyer: buyer.address,
-        faceValueWei: BigInt(b.faceValueWei),
-        dueInDays: Number(b.dueInDays) || 60,
-        description: b.description ?? "",
+        invoiceId: String(b.invoiceId), supplier: supplier.address, buyer: buyer.address,
+        faceValueWei: BigInt(b.faceValueWei), dueInDays: Number(b.dueInDays) || 60, description: b.description ?? "",
       };
       const { features } = await fetchBuyerHistory(buyer.address);
       const decision = await underwrite(invoice, features);
@@ -108,38 +125,28 @@ const server = createServer(async (req, res) => {
     }
     if (req.method === "POST" && url.pathname === "/api/fund") {
       const b = await body(req);
-      const r = await fundInvoice(factor.pk, {
-        invoiceId: invoiceIdOf(String(b.invoiceId)),
-        supplier: supplier.address,
-        buyer: buyer.address,
-        faceValueWei: BigInt(b.faceValueWei),
-        advanceWei: BigInt(b.advanceWei),
-        feeWei: BigInt(b.feeWei),
-      });
-      send(res, 200, r);
+      const tx = await poolWrite(operator.pk, "fundInvoice", [
+        invoiceIdOf(String(b.invoiceId)), supplier.address, buyer.address,
+        BigInt(b.faceValueWei), BigInt(b.advanceWei), BigInt(b.feeWei),
+      ]);
+      send(res, 200, { txHash: tx, pool: await poolStateObj() });
       return;
     }
     if (req.method === "POST" && url.pathname === "/api/repay") {
       const b = await body(req);
-      const r = await repay(buyer.pk, invoiceIdOf(String(b.invoiceId)), BigInt(b.amountWei));
-      const inv = await getInvoice(invoiceIdOf(String(b.invoiceId)));
-      send(res, 200, { ...r, ...reassess(inv) });
-      return;
-    }
-    if (req.method === "GET" && url.pathname === "/api/invoice") {
-      const ref = url.searchParams.get("id") ?? "";
-      const inv = await getInvoice(invoiceIdOf(ref));
-      send(res, 200, { invoice: inv, ...reassess(inv) });
+      const tx = await poolWrite(buyer.pk, "repay", [invoiceIdOf(String(b.invoiceId))], BigInt(b.amountWei));
+      const inv = (await pub.readContract({ address: POOL, abi: lettaPoolAbi, functionName: "getInvoice", args: [invoiceIdOf(String(b.invoiceId))] })) as any;
+      send(res, 200, { txHash: tx, settled: inv.settled, collected: inv.collected.toString(), factorPaid: inv.factorPaid.toString(), pool: await poolStateObj() });
       return;
     }
     send(res, 404, { error: "not found" });
   } catch (e) {
-    send(res, 500, { error: String((e as { message?: string })?.message ?? e).slice(0, 200) });
+    send(res, 500, { error: String((e as { message?: string })?.message ?? e).slice(0, 220) });
   }
 });
 
 const PORT = Number(process.env.PORT) || 8088;
 server.listen(PORT, () => {
-  console.log(`Letta app → http://localhost:${PORT}`);
-  console.log(`factor=${factor.address}  buyer=${buyer.address}  supplier=${supplier.address}`);
+  console.log(`Letta pool app → http://localhost:${PORT}`);
+  console.log(`pool=${POOL} operator=${operator.address} lp=${lp.address} buyer=${buyer.address} supplier=${supplier.address}`);
 });

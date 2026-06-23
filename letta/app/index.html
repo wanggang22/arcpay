@@ -3,86 +3,115 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Letta — factoring console</title>
+<title>Letta — factoring pool console</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&display=swap" rel="stylesheet" />
 <style>
-  :root { --paper:#f7f4ee; --ink:#0a0a0f; --forest:#2d4a3e; --gold:#9a7d3f; --muted:rgba(10,10,15,0.6); --hair:rgba(10,10,15,0.12); --card:#fffdf8; --ok:#2d4a3e; }
+  :root { --paper:#f7f4ee; --ink:#0a0a0f; --forest:#2d4a3e; --gold:#9a7d3f; --muted:rgba(10,10,15,0.6); --hair:rgba(10,10,15,0.12); --card:#fffdf8; }
   * { box-sizing:border-box; margin:0; padding:0; }
   body { background:var(--paper); color:var(--ink); font-family:"Geist","Segoe UI",Helvetica,Arial,sans-serif; line-height:1.5; -webkit-font-smoothing:antialiased; }
   .mono { font-family:"Geist Mono",ui-monospace,"Cascadia Code","Consolas",monospace; }
   .ital { font-family:"Fraunces",Georgia,serif; font-style:italic; color:var(--forest); }
-  .wrap { max-width:1180px; margin:0 auto; padding:48px 28px 90px; }
+  .wrap { max-width:1180px; margin:0 auto; padding:44px 28px 90px; }
   header .kick { font-family:"Geist Mono",monospace; text-transform:uppercase; letter-spacing:.2em; font-size:12px; color:var(--forest); }
-  header h1 { font-family:"Fraunces",serif; font-weight:600; font-size:clamp(34px,5.5vw,58px); line-height:1; letter-spacing:-.02em; margin:10px 0 8px; }
-  header p { color:var(--muted); max-width:64ch; font-size:17px; }
-  .accts { font-family:"Geist Mono",monospace; font-size:12px; color:var(--muted); margin-top:14px; display:flex; gap:18px; flex-wrap:wrap; }
+  header h1 { font-family:"Fraunces",serif; font-weight:600; font-size:clamp(32px,5vw,54px); line-height:1; letter-spacing:-.02em; margin:10px 0 8px; }
+  header p { color:var(--muted); max-width:66ch; font-size:16px; }
+  .signin { font-family:"Geist Mono",monospace; font-size:12px; color:var(--muted); margin-top:12px; }
+  .signin b { color:var(--forest); }
+  .accts { font-family:"Geist Mono",monospace; font-size:12px; color:var(--muted); margin-top:6px; }
   .accts a { color:var(--forest); text-decoration:none; }
 
-  .grid { display:grid; grid-template-columns:380px 1fr; gap:24px; margin-top:34px; align-items:start; }
-  @media (max-width:840px){ .grid{ grid-template-columns:1fr; } }
-  .card { background:var(--card); border:1px solid var(--hair); border-radius:14px; padding:24px; }
-  .card h2 { font-family:"Geist Mono",monospace; text-transform:uppercase; letter-spacing:.14em; font-size:12px; color:var(--forest); margin-bottom:16px; }
+  .card { background:var(--card); border:1px solid var(--hair); border-radius:14px; padding:22px 24px; }
+  .card h2 { font-family:"Geist Mono",monospace; text-transform:uppercase; letter-spacing:.14em; font-size:12px; color:var(--forest); margin-bottom:14px; }
 
+  .pool { margin-top:28px; }
+  .pool .top { display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; }
+  .stats { display:flex; gap:34px; flex-wrap:wrap; }
+  .stat .num { font-family:"Fraunces",serif; font-weight:600; font-size:34px; color:var(--forest); line-height:1; }
+  .stat .lbl { font-family:"Geist Mono",monospace; font-size:10px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin-top:5px; }
+  .yield { color:var(--gold); }
+  .lpbox { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .lpbox input { width:130px; }
+  .barwrap { margin-top:16px; }
+  .bar { display:flex; height:18px; border-radius:6px; overflow:hidden; border:1px solid var(--hair); font-family:"Geist Mono",monospace; font-size:9px; color:#fff; }
+  .bar .avail{ background:var(--forest); display:flex;align-items:center;justify-content:center; }
+  .bar .out{ background:var(--gold); display:flex;align-items:center;justify-content:center; }
+
+  .grid { display:grid; grid-template-columns:380px 1fr; gap:22px; margin-top:22px; align-items:start; }
+  @media (max-width:840px){ .grid{ grid-template-columns:1fr; } }
   label { display:block; font-size:13px; color:var(--muted); margin:12px 0 5px; }
   input, textarea { width:100%; font-family:"Geist Mono",monospace; font-size:15px; padding:10px 12px; border:1px solid var(--hair); border-radius:8px; background:#fff; color:var(--ink); }
-  textarea { resize:vertical; min-height:54px; font-family:inherit; }
-  .steps { display:flex; flex-direction:column; gap:10px; margin-top:18px; }
-  button { font-family:"Geist","Segoe UI",sans-serif; font-size:15px; font-weight:600; padding:12px 16px; border-radius:9px; border:1px solid var(--forest); background:var(--forest); color:#fff; cursor:pointer; text-align:left; transition:opacity .15s; }
+  textarea { resize:vertical; min-height:48px; font-family:inherit; }
+  .steps { display:flex; flex-direction:column; gap:9px; margin-top:16px; }
+  button { font-family:"Geist","Segoe UI",sans-serif; font-size:14px; font-weight:600; padding:11px 14px; border-radius:9px; border:1px solid var(--forest); background:var(--forest); color:#fff; cursor:pointer; text-align:left; }
   button.ghost { background:transparent; color:var(--forest); }
+  button.sm { padding:9px 14px; }
   button:disabled { opacity:.4; cursor:not-allowed; }
-  button .sub { display:block; font-weight:400; font-size:12px; opacity:.85; margin-top:2px; }
-
-  .log { min-height:520px; }
-  .entry { border-left:3px solid var(--hair); padding:2px 0 14px 18px; margin-bottom:4px; position:relative; }
-  .entry.done { border-color:var(--forest); }
+  button .sub { display:block; font-weight:400; font-size:11px; opacity:.85; margin-top:2px; }
+  .log { min-height:440px; }
+  .entry { border-left:3px solid var(--forest); padding:2px 0 13px 16px; margin-bottom:4px; }
   .entry .t { font-family:"Geist Mono",monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--forest); }
-  .entry .m { font-size:15px; margin-top:5px; }
+  .entry .m { font-size:14.5px; margin-top:5px; }
   .entry .m b { color:var(--forest); }
-  .entry .memo { font-size:14.5px; line-height:1.55; color:var(--ink); background:rgba(45,74,62,0.05); border-radius:8px; padding:11px 14px; margin-top:8px; }
+  .entry .memo { font-size:14px; line-height:1.55; background:rgba(45,74,62,0.05); border-radius:8px; padding:10px 13px; margin-top:8px; }
   .entry a { font-family:"Geist Mono",monospace; font-size:12px; color:var(--gold); text-decoration:none; border-bottom:1px solid var(--gold); }
-  .decision { display:flex; gap:30px; margin:8px 0; }
-  .decision .num { font-family:"Fraunces",serif; font-weight:600; font-size:46px; color:var(--forest); line-height:1; }
-  .decision .lbl { font-family:"Geist Mono",monospace; font-size:11px; text-transform:uppercase; color:var(--muted); }
-  .bar { display:flex; height:24px; border-radius:6px; overflow:hidden; border:1px solid var(--hair); margin-top:8px; font-family:"Geist Mono",monospace; font-size:10px; color:#fff; }
-  .bar .f{ background:var(--forest); display:flex;align-items:center;justify-content:center; }
-  .bar .s{ background:var(--gold); display:flex;align-items:center;justify-content:center; }
+  .decision { display:flex; gap:26px; margin:8px 0; }
+  .decision .num { font-family:"Fraunces",serif; font-weight:600; font-size:40px; color:var(--forest); line-height:1; }
+  .decision .lbl { font-family:"Geist Mono",monospace; font-size:10px; text-transform:uppercase; color:var(--muted); }
   .placeholder { color:var(--muted); font-size:15px; }
-  .spin { color:var(--gold); }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
     <div class="kick">Ignyte · Stablecoins Commerce Stack · Track 2 · live on Arc testnet</div>
-    <h1>Letta — the factoring <span class="ital">console.</span></h1>
-    <p>Submit an invoice. The agent reads the buyer's on-chain history, prices the advance with money at stake, funds the supplier in USDC, and runs the repayment waterfall — every step is a real transaction on Arc.</p>
+    <h1>Letta — the factoring <span class="ital">pool.</span></h1>
+    <p>LPs fund the pool. The agent reads a buyer's on-chain history, prices an advance, and funds it <b>from the pool</b> — the operator fronts no capital. Buyers repay; the fee accrues as LP yield. Every step is a real transaction on Arc.</p>
+    <div class="signin">Sign-in (this demo): <b>preset testnet accounts</b>, one-click · Production: <b>Circle Wallets (email)</b> for no-crypto users, or connect your own wallet.</div>
     <div class="accts" id="accts">connecting…</div>
   </header>
+
+  <!-- POOL / LP PANEL -->
+  <div class="card pool">
+    <h2>The liquidity pool — funded by LPs, not the operator</h2>
+    <div class="top">
+      <div class="stats">
+        <div class="stat"><div class="num" id="tvl">—</div><div class="lbl">pool TVL (wei)</div></div>
+        <div class="stat"><div class="num" id="avail">—</div><div class="lbl">available</div></div>
+        <div class="stat"><div class="num" id="out">—</div><div class="lbl">deployed (advances)</div></div>
+        <div class="stat"><div class="num" id="lpred">—</div><div class="lbl">your redeemable</div></div>
+        <div class="stat"><div class="num yield" id="lpyield">+0</div><div class="lbl">your yield</div></div>
+      </div>
+      <div>
+        <div class="lpbox">
+          <input id="dep" value="3000000" />
+          <button class="sm" id="b-dep">Deposit (as LP)</button>
+          <button class="sm ghost" id="b-wd" disabled>Withdraw all</button>
+        </div>
+      </div>
+    </div>
+    <div class="barwrap"><div class="bar" id="bar"><div class="avail" style="width:100%"></div></div></div>
+  </div>
 
   <div class="grid">
     <div class="card">
       <h2>The invoice</h2>
-      <label>Face value (wei)</label>
-      <input id="face" value="1000000" />
-      <label>Payment term (days)</label>
-      <input id="term" value="60" />
-      <label>Description</label>
-      <textarea id="desc">Export of 500 units, net-60 (represents a $100k invoice)</textarea>
-
+      <label>Face value (wei)</label><input id="face" value="1000000" />
+      <label>Payment term (days)</label><input id="term" value="60" />
+      <label>Description</label><textarea id="desc">Export of 500 units, net-60 ($100k invoice)</textarea>
       <div class="steps">
         <button id="b-seed" class="ghost">1 · Establish buyer history<span class="sub">buyer makes 3 real PayPerCall payments</span></button>
         <button id="b-uw" disabled>2 · Underwrite<span class="sub">Claude prices the advance + memo</span></button>
-        <button id="b-fund" disabled>3 · Fund<span class="sub">disburse the advance in USDC</span></button>
-        <button id="b-p1" disabled>4 · Buyer pays 40%<span class="sub">partial — agent re-assesses</span></button>
-        <button id="b-p2" disabled>5 · Buyer pays remainder (late)<span class="sub">waterfall settles</span></button>
+        <button id="b-fund" disabled>3 · Fund from the pool<span class="sub">advance disbursed from LP liquidity</span></button>
+        <button id="b-p1" disabled>4 · Buyer pays 40%<span class="sub">partial — pool recovers principal</span></button>
+        <button id="b-p2" disabled>5 · Buyer pays remainder (late)<span class="sub">settles — fee becomes LP yield</span></button>
       </div>
     </div>
 
     <div class="card log">
       <h2>Agent activity</h2>
-      <div id="log"><div class="placeholder">Run the steps on the left — results stream here with arcscan links.</div></div>
+      <div id="log"><div class="placeholder">Deposit as an LP, then run the steps — results stream here with arcscan links.</div></div>
     </div>
   </div>
 </div>
@@ -90,69 +119,95 @@
 <script>
 const $ = (id) => document.getElementById(id);
 const api = (p, opts) => fetch(p, opts).then(r => r.json());
-const post = (p, body) => api(p, { method:"POST", headers:{"content-type":"application/json"}, body: JSON.stringify(body||{}) });
+const post = (p, b) => api(p, { method:"POST", headers:{"content-type":"application/json"}, body: JSON.stringify(b||{}) });
 const tx = (h) => `https://testnet.arcscan.app/tx/${h}`;
 let invoiceId = "letta-" + Date.now();
-let decision = null, collected = 0n, face = 0n, logEl = $("log");
+let decision = null, collected = 0n, face = 0n, depositBaseline = null, logEl = $("log");
 
 function clearPlaceholder(){ const p=logEl.querySelector(".placeholder"); if(p) p.remove(); }
-function add(title, html){ clearPlaceholder(); const d=document.createElement("div"); d.className="entry done"; d.innerHTML=`<div class="t">${title}</div><div class="m">${html}</div>`; logEl.appendChild(d); return d; }
-function busy(btn, on){ btn.disabled = on; if(on){ btn.dataset.txt=btn.innerHTML; btn.innerHTML = `<span class="spin">…</span> ${btn.textContent.trim().split("\n")[0]}`; } else if(btn.dataset.txt){ btn.innerHTML=btn.dataset.txt; } }
+function add(title, html){ clearPlaceholder(); const d=document.createElement("div"); d.className="entry"; d.innerHTML=`<div class="t">${title}</div><div class="m">${html}</div>`; logEl.appendChild(d); return d; }
+function setBusy(b){ b.disabled = true; b.dataset.t = b.innerHTML; b.innerHTML = "… " + b.textContent.trim().split("\n")[0]; }
+
+function renderPool(p){
+  const ta = BigInt(p.totalAssets), av = BigInt(p.available), out = BigInt(p.outstanding), red = BigInt(p.lpRedeemable);
+  $("tvl").textContent = ta.toString();
+  $("avail").textContent = av.toString();
+  $("out").textContent = out.toString();
+  $("lpred").textContent = red.toString();
+  if (depositBaseline !== null) $("lpyield").textContent = "+" + (red - depositBaseline).toString();
+  const total = Number(ta) || 1;
+  $("bar").innerHTML = `<div class="avail" style="width:${Math.max(2, Number(av)/total*100)}%">available</div>` + (out>0n?`<div class="out" style="width:${Number(out)/total*100}%">deployed</div>`:"");
+}
+async function refreshPool(){ renderPool(await api("/api/pool")); }
 
 (async () => {
   const a = await api("/api/accounts");
-  $("accts").innerHTML = `factor ${a.factor.slice(0,8)}…  ·  buyer ${a.buyer.slice(0,8)}…  ·  supplier ${a.supplier.slice(0,8)}…  ·  underwriter: ${a.underwriter}  ·  <a href="${a.poolUrl}" target="_blank">FactoringPool ↗</a>`;
+  $("accts").innerHTML = `LP ${a.lp.slice(0,8)}…  ·  operator ${a.operator.slice(0,8)}…  ·  buyer ${a.buyer.slice(0,8)}…  ·  supplier ${a.supplier.slice(0,8)}…  ·  underwriter: ${a.underwriter}  ·  <a href="${a.poolUrl}" target="_blank">LettaPool ↗</a>`;
+  await refreshPool();
 })();
 
+$("b-dep").onclick = async () => {
+  setBusy($("b-dep"));
+  const r = await post("/api/deposit", { amountWei: $("dep").value });
+  depositBaseline = BigInt(r.pool.lpRedeemable);
+  renderPool(r.pool);
+  add("LP · deposited", `An LP added <b>${$("dep").value}</b> wei to the pool — this is the capital, not the operator's. <a href="${tx(r.txHash)}" target="_blank">arcscan ↗</a>`);
+  $("b-dep").innerHTML = $("b-dep").dataset.t; $("b-dep").disabled = false;
+  $("b-wd").disabled = false;
+};
+
 $("b-seed").onclick = async () => {
-  busy($("b-seed"), true);
+  setBusy($("b-seed"));
   const r = await post("/api/seed");
-  add("0 · history established", `Buyer made <b>${r.count} real payments</b> on Arc (PayPerCall).`);
-  busy($("b-seed"), false); $("b-seed").disabled = true; $("b-uw").disabled = false;
+  add("0 · history established", `Buyer made <b>${r.count} real payments</b> on Arc.`);
+  $("b-uw").disabled = false;
 };
 
 $("b-uw").onclick = async () => {
-  busy($("b-uw"), true);
+  setBusy($("b-uw"));
   face = BigInt($("face").value);
   const r = await post("/api/underwrite", { invoiceId, faceValueWei: $("face").value, dueInDays: $("term").value, description: $("desc").value });
-  decision = r.decision;
-  const f = r.features;
-  add("1 · read on-chain history", `<b>${f.paymentCount}</b> prior payments · <b>${f.totalVolumeWei}</b> wei · ${f.distinctEndpoints} counterparties · ${f.blocksSinceLast} blocks since last`);
-  const d = add("2 · underwriting decision — " + decision.source, "");
-  d.querySelector(".m").innerHTML =
-    `<div class="decision"><div><div class="num">${decision.advancePct}%</div><div class="lbl">advance</div></div><div><div class="num">${decision.discountRatePct}%</div><div class="lbl">discount</div></div></div>
-     <div>advance <b>${decision.advanceWei}</b> wei · fee <b>${decision.feeWei}</b> wei</div>
-     <div class="memo">${decision.reasoning}</div>`;
-  busy($("b-uw"), false); $("b-uw").disabled = true; $("b-fund").disabled = false;
+  decision = r.decision; const f = r.features;
+  add("1 · read on-chain history", `<b>${f.paymentCount}</b> payments · <b>${f.totalVolumeWei}</b> wei · ${f.distinctEndpoints} counterparties`);
+  const d = add("2 · underwriting — " + decision.source, "");
+  d.querySelector(".m").innerHTML = `<div class="decision"><div><div class="num">${decision.advancePct}%</div><div class="lbl">advance</div></div><div><div class="num">${decision.discountRatePct}%</div><div class="lbl">discount</div></div></div><div class="memo">${decision.reasoning}</div>`;
+  $("b-fund").disabled = false;
 };
 
 $("b-fund").onclick = async () => {
-  busy($("b-fund"), true);
+  setBusy($("b-fund"));
   const r = await post("/api/fund", { invoiceId, faceValueWei: face.toString(), advanceWei: decision.advanceWei, feeWei: decision.feeWei });
-  add("3 · funded", `Disbursed <b>${decision.advanceWei}</b> wei to the supplier, now. <a href="${tx(r.txHash)}" target="_blank">arcscan ↗</a>`);
-  busy($("b-fund"), false); $("b-fund").disabled = true; $("b-p1").disabled = false;
+  renderPool(r.pool);
+  add("3 · funded from the pool", `Advance <b>${decision.advanceWei}</b> wei → supplier, drawn from LP liquidity (pool available dropped). <a href="${tx(r.txHash)}" target="_blank">arcscan ↗</a>`);
+  $("b-p1").disabled = false;
 };
 
 $("b-p1").onclick = async () => {
-  busy($("b-p1"), true);
+  setBusy($("b-p1"));
   const amt = (face * 40n) / 100n; collected += amt;
   const r = await post("/api/repay", { invoiceId, amountWei: amt.toString() });
-  const d = add("4 · partial payment — re-assessed", `Buyer paid <b>${amt}</b> wei → toFactor ${r.toFactor}, toSupplier ${r.toSupplier}. <a href="${tx(r.txHash)}" target="_blank">arcscan ↗</a>`);
-  d.querySelector(".m").innerHTML += `<div class="memo">${r.memo}</div>`;
-  busy($("b-p1"), false); $("b-p1").disabled = true; $("b-p2").disabled = false;
+  renderPool(r.pool);
+  add("4 · partial payment", `Buyer paid <b>${amt}</b> wei → pool recovers principal (deployed shrinks). <a href="${tx(r.txHash)}" target="_blank">arcscan ↗</a>`);
+  $("b-p2").disabled = false;
 };
 
 $("b-p2").onclick = async () => {
-  busy($("b-p2"), true);
+  setBusy($("b-p2"));
   const amt = face - collected; collected += amt;
   const r = await post("/api/repay", { invoiceId, amountWei: amt.toString() });
-  const tgt = BigInt(decision.advanceWei) + BigInt(decision.feeWei);
-  const sup = face - tgt;
-  const d = add("5 · settled", `Buyer paid <b>${amt}</b> wei (late) → factor whole, surplus to supplier. <a href="${tx(r.txHash)}" target="_blank">arcscan ↗</a>`);
-  const fpct = Number(tgt * 1000n / face) / 10, spct = (100 - fpct).toFixed(1);
-  d.querySelector(".m").innerHTML += `<div class="bar"><div class="f" style="width:${fpct}%">factor recovers ${tgt}</div><div class="s" style="width:${spct}%">supplier +${sup}</div></div>
-    <div style="margin-top:8px">Settled. collected <b>${face}</b> · factor profit = fee <b>${decision.feeWei}</b> · supplier net <b>${face - BigInt(decision.feeWei)}</b> (face − fee).</div>`;
-  busy($("b-p2"), false); $("b-p2").disabled = true;
+  renderPool(r.pool);
+  const fee = decision.feeWei;
+  add("5 · settled — LP earns the fee", `Buyer paid <b>${amt}</b> wei (late) → invoice settled. The <b>${fee}</b> wei fee is now pool yield: <b>your redeemable grew by ${fee}</b>. <a href="${tx(r.txHash)}" target="_blank">arcscan ↗</a>`);
+};
+
+$("b-wd").onclick = async () => {
+  setBusy($("b-wd"));
+  const r = await post("/api/withdraw");
+  depositBaseline = null; // reset yield tracking after exit
+  renderPool(r.pool);
+  $("lpyield").textContent = "+0";
+  add("LP · withdrew", `LP redeemed all shares (deposit + earned yield). <a href="${tx(r.txHash)}" target="_blank">arcscan ↗</a>`);
+  $("b-wd").innerHTML = $("b-wd").dataset.t;
 };
 </script>
 </body>
