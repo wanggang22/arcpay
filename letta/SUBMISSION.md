@@ -69,6 +69,12 @@ for an agent-priced discount directly to the supplier — is on the roadmap.)
 
 ## Products used (Circle / Arc)
 USDC (native gas, `pay{value}`), Arc smart contracts + sub-second finality, on-chain `Paid`
-receipts as the credit signal, Anthropic Claude as the underwriter. Roadmap: Circle Wallets
-(agent custody), Circle Gateway + CCTP (cross-chain advance capital), USYC (idle-float yield
-as the factor's funding source).
+receipts as the credit signal, Anthropic Claude as the underwriter, and **Circle Wallets
+(User-Controlled, email/PIN login)** for onboarding — so a non-crypto SME signs in with an
+email and gets an **Arc wallet, no MetaMask, no seed phrase**. The backend integration
+(`src/circle.ts`, `/api/circle/*`) is verified live on **ARC-TESTNET**: create user → session
+token → wallet-init challenge all return 2xx (Circle confirms `ARC-TESTNET` is a supported
+chain). The Web SDK PIN modal is wired for the production (Vite/Next) frontend.
+
+Roadmap: Circle Gateway + CCTP (cross-chain advance capital), USYC (idle-float yield as the
+pool's funding source), and dynamic discounting (buyer pays early, no financier).

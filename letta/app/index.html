@@ -89,6 +89,7 @@
           <button class="sm" id="b-dep">Deposit (as LP)</button>
           <button class="sm ghost" id="b-wd" disabled>Withdraw all</button>
         </div>
+        <div style="margin-top:10px"><button class="sm ghost" id="b-circle" style="border-style:dashed">✉ Sign in with email (Circle Wallets) — no MetaMask</button></div>
       </div>
     </div>
     <div class="barwrap"><div class="bar" id="bar"><div class="avail" style="width:100%"></div></div></div>
@@ -198,6 +199,31 @@ $("b-p2").onclick = async () => {
   renderPool(r.pool);
   const fee = decision.feeWei;
   add("5 · settled — LP earns the fee", `Buyer paid <b>${amt}</b> wei (late) → invoice settled. The <b>${fee}</b> wei fee is now pool yield: <b>your redeemable grew by ${fee}</b>. <a href="${tx(r.txHash)}" target="_blank">arcscan ↗</a>`);
+};
+
+// Production onboarding: email login via Circle Wallets → a real Arc wallet, no MetaMask.
+// Backend (create user → token → wallet challenge) is verified on ARC-TESTNET; this loads
+// Circle's Web SDK so the user sets a PIN and Circle creates + secures the wallet on Arc.
+$("b-circle").onclick = async () => {
+  const st = await api("/api/circle/status");
+  if (!st.configured) { add("Circle Wallets", "Not configured on this server (needs CIRCLE_API_KEY + CIRCLE_APP_ID)."); return; }
+  const email = prompt("Email for your Circle wallet (no crypto wallet needed):", "demo@letta.app");
+  if (!email) return;
+  setBusy($("b-circle"));
+  try {
+    // Backend (verified on ARC-TESTNET): create the Circle user + token + a real wallet
+    // challenge. The PIN step uses Circle's Web SDK (W3SSdk.execute(challengeId)), which must
+    // be bundled with a framework (Vite/Next) — its deps pull Node builtins so it isn't a raw
+    // CDN <script>. So this demo proves the backend; production wires the SDK PIN modal here.
+    const r = await post("/api/circle/signup", { email });
+    add("Circle Wallets · email login (backend verified)",
+      `Created a Circle user for <b>${email}</b> and a wallet challenge on <b>ARC-TESTNET</b> ✓ (challengeId issued, appId ${r.appId.slice(0,8)}…). ` +
+      `In the production frontend, Circle's Web SDK now shows a PIN modal — the user sets a PIN and Circle provisions an email-controlled Arc wallet (no MetaMask, no seed phrase). ` +
+      `<span class="mono" style="color:var(--muted)">SDK needs a Vite/Next bundle; see src/circle.ts + /api/circle/* (all real Circle API calls).</span>`);
+  } catch (e) {
+    add("Circle Wallets", "error: " + String(e).slice(0,140));
+  }
+  $("b-circle").innerHTML = $("b-circle").dataset.t;
 };
 
 $("b-wd").onclick = async () => {

@@ -18,6 +18,7 @@ import { ADDRESSES, addrUrl } from "./src/config.ts";
 import { lettaPoolAbi, payPerCallAbi } from "./src/abi.ts";
 import { fetchBuyerHistory } from "./src/history.ts";
 import { underwrite, loadApiKey, type Invoice } from "./src/underwrite.ts";
+import { circleSignup, circleWallet, circleConfigured, circleAppId, circleContractExecution } from "./src/circle.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ACCOUNTS_DIR = "C:/Users/ASUS/arc-accounts";
@@ -84,11 +85,38 @@ const server = createServer(async (req, res) => {
         pool: POOL, poolUrl: addrUrl(POOL),
         operator: operator.address, lp: lp.address, buyer: buyer.address, supplier: supplier.address,
         underwriter: loadApiKey() ? "Claude (LLM)" : "deterministic fallback",
+        circle: circleConfigured(),
       });
       return;
     }
     if (req.method === "GET" && url.pathname === "/api/pool") {
       send(res, 200, await poolStateObj());
+      return;
+    }
+    // ── Circle Wallets (email/PIN login → an Arc wallet, no MetaMask) ──
+    if (req.method === "GET" && url.pathname === "/api/circle/status") {
+      send(res, 200, { configured: circleConfigured(), appId: circleConfigured() ? circleAppId() : null });
+      return;
+    }
+    if (req.method === "POST" && url.pathname === "/api/circle/signup") {
+      if (!circleConfigured()) { send(res, 400, { error: "Circle not configured (set CIRCLE_API_KEY + CIRCLE_APP_ID)" }); return; }
+      const b = await body(req);
+      const r = await circleSignup(String(b.email || "lp@letta.demo"));
+      send(res, 200, r); // userToken, encryptionKey, challengeId, appId — consumed by the Web SDK
+      return;
+    }
+    if (req.method === "GET" && url.pathname === "/api/circle/wallet") {
+      const ut = url.searchParams.get("userToken") ?? "";
+      send(res, 200, { wallet: await circleWallet(ut) });
+      return;
+    }
+    if (req.method === "POST" && url.pathname === "/api/circle/deposit-challenge") {
+      const b = await body(req);
+      const r = await circleContractExecution({
+        userToken: String(b.userToken), walletId: String(b.walletId),
+        contractAddress: POOL, abiFunctionSignature: "deposit()", amount: String(b.amount ?? "0"),
+      });
+      send(res, 200, r);
       return;
     }
     if (req.method === "POST" && url.pathname === "/api/deposit") {
