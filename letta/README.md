@@ -38,8 +38,18 @@ so the autonomy is real, not theater.
 npm install
 npm test                 # 14 unit tests (offline: features, underwriting, waterfall math)
 npm run typecheck
-npx tsx scripts/live.ts  # REAL end-to-end on Arc testnet (needs funded accounts)
+npx tsx scripts/live.ts  # REAL end-to-end on Arc testnet (CLI, needs funded accounts)
+npm run app              # interactive console -> http://localhost:8088
 ```
+
+## Interactive console (working frontend + backend)
+
+`npm run app` serves a single-page factoring console (`app/index.html`) backed by a thin
+HTTP API (`server.ts`) that wraps the agent + chain modules. Submit an invoice and click
+through: **establish buyer history → underwrite (Claude prices it live) → fund → buyer pays
+40% (agent re-assesses) → buyer pays the rest (late) → waterfall settles** — every step is a
+real transaction on Arc, each with an arcscan link. Verified end-to-end through the UI
+(e.g. fund `0xbcdff6e3…`, partial `0x418e4534…`, settle `0x812015c7…`).
 
 ## Verified live run (in-window, real USDC on Arc testnet)
 

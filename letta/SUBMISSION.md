@@ -33,6 +33,10 @@ repointed from "which service to buy" to "should I advance against this invoice.
 - `history.ts` → credit features from on-chain `Paid` events. `underwrite.ts` → Claude prices
   the advance + memo (deterministic fallback). `pool.ts` / `orchestrator.ts` → fund + live
   re-assessment. 14 unit tests + typecheck clean.
+- **Working frontend + backend:** `npm run app` serves an interactive factoring console
+  (`app/index.html`) backed by a thin HTTP API (`server.ts`). Submit an invoice and click
+  through underwrite → fund → partial → late settle — each a real Arc tx. Verified end-to-end
+  through the UI (fund `0xbcdff6e3…`, partial `0x418e4534…`, settle `0x812015c7…`).
 
 ## Traction — verified live on Arc testnet, in-window
 Claude underwrote a thin-file buyer and the contract settled the full waterfall with real

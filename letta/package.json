@@ -5,7 +5,8 @@
   "description": "Letta — autonomous invoice-factoring agent on Arc, settled in USDC (Ignyte Stablecoins Commerce Stack, Track 2)",
   "scripts": {
     "test": "node --import tsx --test test/**/*.test.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "app": "tsx server.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.105.0",
