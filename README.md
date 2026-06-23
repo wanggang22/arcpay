@@ -1,14 +1,15 @@
-<!-- LEPTON AGENTS HACKATHON SUBMISSION -->
-> # 🏛️ Obol — Lepton Agents Hackathon submission
+<!-- IGNYTE STABLECOINS COMMERCE STACK — TRACK 2 SUBMISSION -->
+> # 🧾 Letta — Ignyte Stablecoins Commerce Stack · Track 2
 >
-> **[Obol](./obol/)** is an **agent-to-agent service market** that settles **nanopayments on Arc** in USDC, built on ArcPay's `PayPerCall`. A buyer AI agent (Claude) is given a goal and a budget; it **discovers** seller agents' paid micro-services, **decides** which to call within budget, **pays per call in native USDC on Arc**, and is served only after the seller verifies the on-chain receipt. Verified live on Arc testnet — real USDC settlement, Claude driving.
+> **[Letta](./letta/)** is an **autonomous invoice-factoring agent** on Arc, settled in USDC. It reads a buyer's **real on-chain payment history**, prices an advance (advance % + discount rate) with a written reasoning memo, disburses USDC to the supplier now, and runs a **3-way repayment waterfall** — re-assessing exposure live on every partial/late payment. The autonomy is real: the agent prices risk with **money at stake**, not "approve a document I wrote."
 >
-> - 📄 **Submission writeup:** [`obol/SUBMISSION.md`](./obol/SUBMISSION.md)
-> - 🎬 **Demo video:** https://youtu.be/EkZ8INtytV4
-> - 🧠 **The agent layer (all new in-window work):** [`obol/`](./obol/) · `npm test` (35 tests) · `npx tsx scripts/live.ts` (real settlement)
-> - 🔗 **On-chain evidence:** buyer [`0x63A1…D07`](https://testnet.arcscan.app/address/0x63A1E17d8f4B48a54B0200dEa96019618F179D07) · callIds 22880 / 22887
+> - 📄 **Submission writeup:** [`letta/SUBMISSION.md`](./letta/SUBMISSION.md)
+> - 🎬 **Demo video:** https://youtu.be/VXIsBh_R7m4
+> - 🧠 **The agent (reuses Obol's decide→pay→verify loop):** [`letta/`](./letta/) · `npm test` (14 tests) · `npx tsx scripts/live.ts` (real settlement)
+> - 📜 **Contract:** [`FactoringPool.sol`](./contracts/src/FactoringPool.sol) on Arc testnet — [`0xcE93…01F5`](https://testnet.arcscan.app/address/0xcE939A8048b8BF5bE9DfE639d4C65227A99901F5) · 18 forge tests + a 5-lens adversarial security pass
+> - 🔗 **Live on-chain evidence:** Claude underwrote **70% advance / 4.5% discount** → fund + partial + late settle, all real USDC ([`letta/evidence/run.json`](./letta/evidence/run.json))
 >
-> Everything below is **ArcPay** — the payments primitive Obol is built on (the April baseline; Obol is the new work on the `lepton-hackathon` branch).
+> Sibling submission: **[Obol](./obol/)** (an agent-to-agent service market) is the **Lepton Agents Hackathon** entry on the `lepton-hackathon` branch. Everything below is **ArcPay** — the payments primitive both are built on.
 
 ---
 
