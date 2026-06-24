@@ -86,7 +86,16 @@ npx tsx scripts/live.ts  # REAL end-to-end on Arc testnet</code></pre>
     <li><strong>Partial (40%):</strong> <span class="tx">tx 0xebb83f06084df34aed7e7a65bd7b6e92d3d64bbf3ca18a570e98798eb38aa6b1</span> — all to factor; agent re-rated exposure 745k → 345k.</li>
     <li><strong>Late remainder + settle:</strong> <span class="tx">tx 0x764240eaf5aff49af0d5d525d19e7585e63029f7c7591f0bca8e77c98793c9d2</span> — factor whole at 745k, supplier surplus 255k, settled.</li>
   </ol>
-  <p>Outcome: collected 1,000,000 · factor recovered 745,000 (profit = fee 45,000) · supplier 955,000 (= face − fee). Pool: <span class="tx">https://testnet.arcscan.app/address/0xcE939A8048b8BF5bE9DfE639d4C65227A99901F5</span></p>
+  <p>Outcome: collected 1,000,000 · factor recovered 745,000 (profit = fee 45,000) · supplier 955,000 (= face − fee). FactoringPool: <span class="tx">0xcE939A8048b8BF5bE9DfE639d4C65227A99901F5</span></p>
+
+  <h2>Capital model — the operator fronts no money (LP-funded pool)</h2>
+  <p>Real invoice-financing platforms don't lend their own balance sheet — investors fund the advances and the platform underwrites. <code>LettaPool.sol</code> (<span class="tx">0x66a8fd4cd737dC91ca285c6eC7Ef798cFa9Af617</span>) is that: LPs <code>deposit()</code> USDC for shares (a claim on idle cash + outstanding receivables), the agent funds advances <strong>from the pool</strong>, and on repayment the principal returns while the <strong>fee accrues as LP yield</strong> (share price rises). <strong>Proven live on Arc testnet:</strong> an LP deposited 3,000,000 wei → the agent funded a 700,000 advance from the pool → the buyer repaid → the pool grew to 3,045,000 (the 45,000 fee = LP yield) → the LP withdrew. 9 forge tests cover the share math, fund-from-pool, principal+fee recovery, pro-rata yield, and liquidity limits. So the operator just runs the underwriting engine and never fronts capital; buyers and suppliers bring their own wallets.</p>
+
+  <h2>Onboarding — Circle Wallets (email login, no MetaMask)</h2>
+  <p>SMEs aren't crypto-native, so the product onboards with <strong>Circle Wallets (User-Controlled, email/PIN)</strong>: a user signs in with an email and gets an <strong>Arc wallet — no MetaMask, no seed phrase</strong>. The backend (<code>src/circle.ts</code>, <code>/api/circle/*</code>) is <strong>verified live on ARC-TESTNET</strong>: create user (201) → session token (200) → wallet-init challenge (201, challengeId issued); Circle lists <code>ARC-TESTNET</code> as a supported chain. The Web SDK PIN modal is wired for the production (Vite/Next) frontend.</p>
+
+  <h2>Interactive console — working frontend + backend</h2>
+  <p><code>npm run app</code> → <code>localhost:8088</code> serves a guided console over the live pool: deposit as an LP, then establish buyer history → underwrite (Claude prices it) → fund from the pool → buyer pays 40% (pool recovers principal) → late remainder (settles, fee → LP yield) → LP withdraws with yield. Every step is a real Arc transaction with an arcscan link. Verified end-to-end by clicking through the UI.</p>
 
   <h2>Documentation</h2>
   <p>In the repo (<code>letta/</code> on the <code>letta</code> branch): <code>SUBMISSION.md</code>, <code>README.md</code> (run instructions), <code>docs/superpowers/specs/2026-06-23-letta-factoring-agent-design.md</code> (design), <code>evidence/run.json</code> (live-run evidence), <code>dashboard/index.html</code> (visual), <code>contracts/src/FactoringPool.sol</code> + tests. MIT licensed.</p>

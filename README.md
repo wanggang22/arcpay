@@ -4,7 +4,7 @@
 > **[Letta](./letta/)** is an **autonomous invoice-factoring agent** on Arc, settled in USDC. It reads a buyer's **real on-chain payment history**, prices an advance (advance % + discount rate) with a written reasoning memo, disburses USDC to the supplier now, and runs a **3-way repayment waterfall** — re-assessing exposure live on every partial/late payment. The autonomy is real: the agent prices risk with **money at stake**, not "approve a document I wrote."
 >
 > - 📄 **Submission writeup:** [`letta/SUBMISSION.md`](./letta/SUBMISSION.md)
-> - 🎬 **Demo video:** https://youtu.be/VXIsBh_R7m4
+> - 🎬 **Demo video:** https://youtu.be/3ErfvB2JpM0
 > - 🖥️ **Interactive console (working frontend + backend):** `cd letta && npm run app` → `localhost:8088` — submit an invoice and watch it underwrite → fund → partial → settle, each a real Arc tx.
 > - 🧠 **The agent (reuses Obol's decide→pay→verify loop):** [`letta/`](./letta/) · `npm test` (14 tests) · `npx tsx scripts/live.ts` (real settlement)
 > - 📜 **Contract:** [`FactoringPool.sol`](./contracts/src/FactoringPool.sol) on Arc testnet — [`0xcE93…01F5`](https://testnet.arcscan.app/address/0xcE939A8048b8BF5bE9DfE639d4C65227A99901F5) · 18 forge tests + a 5-lens adversarial security pass
